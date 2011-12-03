@@ -11,6 +11,9 @@ void run(long literals[], byte instructions[]) {
   Object *stack[STACK_MAX];   // the Data stack
   Object **sp = stack; // the stack pointer
 
+  // Initialize the main Runtime object
+  Object *self = Object_new();
+
   // Main VM loop
   while(1) {
     printf("Executing instruction [%i]\n", *ip);
@@ -22,6 +25,9 @@ void run(long literals[], byte instructions[]) {
       case PUSH_STRING:
         ip++; // Moving to the operand
         STACK_PUSH(String_new((char *)literals[*ip]));
+        break;
+      case PUSH_SELF:
+        STACK_PUSH(self);
         break;
       case ADD: {
         Object *a = STACK_POP();
@@ -65,6 +71,7 @@ int main(int argc, char const *argv[])
     POP,
     ADD,
     PUSH_STRING, 1,
+    PUSH_SELF,
     DEBUG,
     RET
   };

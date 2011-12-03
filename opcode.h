@@ -3,6 +3,7 @@
 enum {
   PUSH_INT,
   PUSH_STRING,
+  PUSH_SELF,
   ADD,
   POP,
   RET,

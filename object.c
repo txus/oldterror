@@ -8,7 +8,9 @@ Public: Allocates a new Object.
 Returns a pointer to the newly allocated object.
 */
 Object *Object_new() {
-  return malloc(sizeof(Object));
+  Object *object = malloc(sizeof(Object));
+  object->type = tObject;
+  return object;
 }
 
 /*
@@ -53,6 +55,9 @@ void Object_print(Object* object) {
       break;
     case tString:
       printf("#<tString:%p @value=\"%s\">", object, object->value.string);
+      break;
+    case tObject:
+      printf("#<tObject:%p>", object);
       break;
   }
 }
