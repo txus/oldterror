@@ -2,6 +2,7 @@
 #define __opcode_h__
 enum {
   PUSH_INT,
+  PUSH_STRING,
   ADD,
   POP,
   RET,

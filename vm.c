@@ -19,6 +19,10 @@ void run(long literals[], byte instructions[]) {
         ip++; // Moving to the operand
         STACK_PUSH(Integer_new((int)literals[*ip]));
         break;
+      case PUSH_STRING:
+        ip++; // Moving to the operand
+        STACK_PUSH(String_new((char *)literals[*ip]));
+        break;
       case ADD: {
         Object *a = STACK_POP();
         Object *b = STACK_POP();
@@ -48,7 +52,8 @@ void run(long literals[], byte instructions[]) {
 int main(int argc, char const *argv[])
 {
   long literals[] = {
-    (long) 30
+    (long) 30,
+    (long) "this is a string test, pretty long by the way. do you think it will fit in a (long)?"
   };
 
   byte instructions[] = {
@@ -59,6 +64,7 @@ int main(int argc, char const *argv[])
     POP,
     POP,
     ADD,
+    PUSH_STRING, 1,
     DEBUG,
     RET
   };
