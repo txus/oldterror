@@ -2,6 +2,7 @@
 #include <assert.h>
 #include "dbg.h"
 #include "opcode.h"
+#include "object.h"
 
 int main(int argc, char const *argv[])
 {
