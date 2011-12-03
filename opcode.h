@@ -4,6 +4,10 @@ enum {
   PUSH_INT,
   PUSH_STRING,
   PUSH_SELF,
+
+  GET_LOCAL,
+  SET_LOCAL,
+
   ADD,
   POP,
   RET,

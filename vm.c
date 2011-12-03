@@ -11,6 +11,8 @@ void run(long literals[], byte instructions[]) {
   Object *stack[STACK_MAX];   // the Data stack
   Object **sp = stack; // the stack pointer
 
+  Object *locals[STACK_MAX] = {};
+
   // Initialize the main Runtime object
   Object *self = Object_new();
 
@@ -18,6 +20,7 @@ void run(long literals[], byte instructions[]) {
   while(1) {
     printf("Executing instruction [%i]\n", *ip);
     switch(*ip) {
+      // PUSH literals
       case PUSH_INT:
         ip++; // Moving to the operand
         STACK_PUSH(Integer_new((int)literals[*ip]));
@@ -26,9 +29,29 @@ void run(long literals[], byte instructions[]) {
         ip++; // Moving to the operand
         STACK_PUSH(String_new((char *)literals[*ip]));
         break;
+
+      // Local variables
+      case GET_LOCAL:
+        ip++;
+        STACK_PUSH(locals[*ip]);
+        break;
+      case SET_LOCAL:
+        ip++;
+        locals[*ip] = STACK_PEEK();
+        break;
+
+      // POP
+      case POP: {
+        Object *popped = STACK_POP();
+        break;
+      }
+
+      // PUSH the self object
       case PUSH_SELF:
         STACK_PUSH(self);
         break;
+
+      // Arithmetic
       case ADD: {
         Object *a = STACK_POP();
         Object *b = STACK_POP();
@@ -39,10 +62,8 @@ void run(long literals[], byte instructions[]) {
         STACK_PUSH(Integer_new(result));
         break;
       }
-      case POP: {
-        Object *popped = STACK_POP();
-        break;
-      }
+
+      // Other
       case DEBUG: {
         Stack_print(stack, sp);
         break;
@@ -71,7 +92,9 @@ int main(int argc, char const *argv[])
     POP,
     ADD,
     PUSH_STRING, 1,
+    SET_LOCAL, 0,
     PUSH_SELF,
+    GET_LOCAL, 0,
     DEBUG,
     RET
   };
