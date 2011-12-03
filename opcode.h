@@ -3,7 +3,9 @@
 enum {
   PUSH_INT,
   ADD,
-  RET
+  POP,
+  RET,
+  DEBUG
 };
 
 typedef unsigned char byte;

@@ -11,4 +11,8 @@ typedef struct {
   } value;
 } Object;
 
+Object *Object_new();
+Object *Integer_new();
+void Object_print(Object *);
+
 #endif

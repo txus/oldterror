@@ -2,7 +2,7 @@ CFLAGS=-Wall -g
 
 all: vm
 
-vm: object.o
+vm: object.o stack.o
 
 clean:
 	rm -f vm
