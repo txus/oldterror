@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "object.h"
+#include "vmmethod.h"
 
 /*
 Public: Allocates a new Object.
@@ -85,6 +87,7 @@ Returns a pointer to the object.
 Object *Main_new() {
   Object *main_object = Object_new();
   main_object->type = tObject;
+
   return main_object;
 }
 
@@ -116,4 +119,19 @@ void Object_print(Object* object) {
       printf("#<tObject:%p>", object);
       break;
   }
+}
+
+VMMethod* Object_lookup_method(Object *object, char *name) {
+  int i = 0;
+  VMMethod *method;
+
+  for (i = 0; i < 10; i++) {
+    if (object->slots[i]) {
+      if (strcmp(object->slots[i]->name, name) == 0) {
+        method = object->slots[i]->value.method;
+        return method;
+      }
+    }
+  }
+  return NULL;
 }

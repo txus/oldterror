@@ -2,6 +2,7 @@
 #define __object_h__
 
 #include "slot.h"
+#include "vmmethod.h"
 
 enum {
   tObject,
@@ -31,6 +32,7 @@ Object *Nil_new();
 
 Object *Main_new();
 
-void Object_print(Object *);
+void Object_print(Object *object);
+VMMethod* Object_lookup_method(Object *receiver, char *method);
 
 #endif
