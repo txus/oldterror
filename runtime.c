@@ -27,6 +27,11 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
   if (!vmmethod) {
     // Native global methods
     if (receiver == MainObject) {
+
+      /*
+       * #print
+       */
+
       if (strcmp(method, "print")==0) {
         if (!argv[0]) {
           printf("[#print] Wrong number of arguments: 0 for 1\n");
@@ -55,6 +60,21 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
         }
         return NilObject;
       }
+
+      /*
+       * #. . .
+       */
+
+
+      /*
+       * RAISE!
+       */
+
+      printf("Could not find method %s on ", method);
+      Object_print(receiver);
+      printf("\n");
+      exit(1);
+
     } else {
       printf("Could not find method %s on ", method);
       Object_print(receiver);

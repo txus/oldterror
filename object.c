@@ -3,6 +3,7 @@
 #include <string.h>
 #include "object.h"
 #include "vmmethod.h"
+#include "runtime.h"
 
 /*
 Public: Allocates a new Object.
@@ -119,6 +120,13 @@ void Object_print(Object* object) {
       printf("#<tObject:%p>", object);
       break;
   }
+}
+
+char Object_is_true(Object *self) {
+  // false and nil are == false,
+  // everything else is true.
+  if (self == FalseObject || self == NilObject) return 0;
+  return 1;
 }
 
 VMMethod* Object_lookup_method(Object *object, char *name) {

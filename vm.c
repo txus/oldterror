@@ -35,7 +35,11 @@ int main(int argc, char const *argv[])
   byte instructions[] = {
     PUSH_SELF,
     PUSH_STRING, 1,
+
+    PUSH_BOOL, 1,
+    JUMP_UNLESS, 4,
     CALL, 2, 1,
+
     DEBUG,
     RET,
   };

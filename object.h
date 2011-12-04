@@ -32,6 +32,8 @@ Object *Nil_new();
 
 Object *Main_new();
 
+char Object_is_true(Object *self);
+
 void Object_print(Object *object);
 VMMethod* Object_lookup_method(Object *receiver, char *method);
 

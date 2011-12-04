@@ -102,6 +102,17 @@ void Machine_run(Machine *machine, Object **sp, Object *self) {
         break;
       }
 
+      // JUMP
+      case JUMP_UNLESS: {
+        ip++; // number of bytes to move forward
+        byte offset = *ip;
+        Object *condition = STACK_POP();
+
+        if (!Object_is_true(condition)) ip += offset;
+
+        break;
+      }
+
       // Other
       case DEBUG: {
         Stack_print(stack, sp);

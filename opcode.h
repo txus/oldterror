@@ -14,6 +14,7 @@ enum {
   ADD,
   POP,
   CALL,
+  JUMP_UNLESS,
   RET,
   DEBUG
 };
