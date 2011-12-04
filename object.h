@@ -1,6 +1,8 @@
 #ifndef __object_h__
 #define __object_h__
 
+#include "slot.h"
+
 enum {
   tObject,
   tInteger,
@@ -16,6 +18,7 @@ typedef struct {
     char *string;
     int integer;
   } value;
+  Slot *slots[10];
 } Object;
 
 Object *Object_new();
@@ -25,6 +28,8 @@ Object *String_new(char *value);
 Object *True_new();
 Object *False_new();
 Object *Nil_new();
+
+Object *Main_new();
 
 void Object_print(Object *);
 

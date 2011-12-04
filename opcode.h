@@ -13,6 +13,7 @@ enum {
 
   ADD,
   POP,
+  CALL,
   RET,
   DEBUG
 };

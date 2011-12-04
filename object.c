@@ -78,6 +78,17 @@ Object *Nil_new() {
 }
 
 /*
+Public: Allocates the special Main object
+
+Returns a pointer to the object.
+*/
+Object *Main_new() {
+  Object *main_object = Object_new();
+  main_object->type = tObject;
+  return main_object;
+}
+
+/*
 Public: Prints an Object to STDOUT depending on its type.
 
 Object *object - a pointer to the object.

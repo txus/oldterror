@@ -9,6 +9,7 @@
 Object *TrueObject;
 Object *FalseObject;
 Object *NilObject;
+Object *MainObject;
 
 void run(long literals[], byte instructions[]) {
   // Instruction pointer
@@ -20,7 +21,7 @@ void run(long literals[], byte instructions[]) {
   Object *locals[STACK_MAX] = {};
 
   // Initialize the main Runtime object
-  Object *self = Object_new();
+  Object *self = MainObject;
 
   // Main VM loop
   while(1) {
@@ -46,6 +47,25 @@ void run(long literals[], byte instructions[]) {
       case PUSH_NIL:
         STACK_PUSH(NilObject);
         break;
+
+      case CALL: {
+        ip++; // advance to index of method name in literal table
+        char *method = (char *)literals[*ip];
+        ip++; // number of arguments
+        int argc = *ip;
+        Object *argv[10];
+
+        // Pop all the arguments
+        int i;
+        for(i = 0; i < argc; ++i) argv[i] = STACK_POP();
+
+        Object *receiver = STACK_POP();
+
+        Object *result = call(receiver, method, argv, argc);
+        STACK_PUSH(result);
+
+        break;
+      }
 
       // Local variables
       case GET_LOCAL:
@@ -97,7 +117,8 @@ int main(int argc, char const *argv[])
 {
   long literals[] = {
     (long) 30,
-    (long) "this is a string test, pretty long by the way. do you think it will fit in a (long)?"
+    (long) "this is a string test, pretty long by the way. do you think it will fit in a (long)?",
+    (long) "print"
   };
 
   byte instructions[] = {
@@ -112,9 +133,7 @@ int main(int argc, char const *argv[])
     SET_LOCAL, 0,
     PUSH_SELF,
     GET_LOCAL, 0,
-    PUSH_BOOL, 0,
-    PUSH_BOOL, 1,
-    PUSH_NIL,
+    CALL, 2, 1,
     DEBUG,
     RET
   };

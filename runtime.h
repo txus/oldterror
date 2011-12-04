@@ -5,8 +5,11 @@
 extern Object *TrueObject;
 extern Object *FalseObject;
 extern Object *NilObject;
+extern Object *MainObject;
 
 void init_runtime();
 void destroy_runtime();
+
+Object *call(Object *receiver, char *method, Object **argv, int argc);
 
 #endif
