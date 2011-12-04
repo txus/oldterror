@@ -42,6 +42,42 @@ Object *String_new(char *value) {
 }
 
 /*
+Public: Allocates a new True object.
+
+Returns a pointer to the object.
+*/
+Object *True_new() {
+  Object *true_object = Object_new();
+  true_object->type = tTrue;
+  true_object->value.integer = 1;
+  return true_object;
+}
+
+/*
+Public: Allocates a new False object.
+
+Returns a pointer to the object.
+*/
+Object *False_new() {
+  Object *false_object = Object_new();
+  false_object->type = tFalse;
+  false_object->value.integer = 0;
+  return false_object;
+}
+
+/*
+Public: Allocates a new Nil object.
+
+Returns a pointer to the object.
+*/
+Object *Nil_new() {
+  Object *nil_object = Object_new();
+  nil_object->type = tNil;
+  nil_object->value.integer = 0;
+  return nil_object;
+}
+
+/*
 Public: Prints an Object to STDOUT depending on its type.
 
 Object *object - a pointer to the object.
@@ -55,6 +91,15 @@ void Object_print(Object* object) {
       break;
     case tString:
       printf("#<tString:%p @value=\"%s\">", object, object->value.string);
+      break;
+    case tTrue:
+      printf("#<tTrue:%p>", object);
+      break;
+    case tFalse:
+      printf("#<tFalse:%p>", object);
+      break;
+    case tNil:
+      printf("#<tNil:%p>", object);
       break;
     case tObject:
       printf("#<tObject:%p>", object);

@@ -3,6 +3,12 @@
 #include "opcode.h"
 #include "object.h"
 #include "stack.h"
+#include "runtime.h"
+
+// Extern global objects declared in runtime.h
+Object *TrueObject;
+Object *FalseObject;
+Object *NilObject;
 
 void run(long literals[], byte instructions[]) {
   // Instruction pointer
@@ -28,6 +34,17 @@ void run(long literals[], byte instructions[]) {
       case PUSH_STRING:
         ip++; // Moving to the operand
         STACK_PUSH(String_new((char *)literals[*ip]));
+        break;
+      case PUSH_BOOL:
+        ip++; // 0=false, 1=true
+        if (*ip == 0) {
+          STACK_PUSH(FalseObject);
+        } else {
+          STACK_PUSH(TrueObject);
+        }
+        break;
+      case PUSH_NIL:
+        STACK_PUSH(NilObject);
         break;
 
       // Local variables
@@ -95,11 +112,16 @@ int main(int argc, char const *argv[])
     SET_LOCAL, 0,
     PUSH_SELF,
     GET_LOCAL, 0,
+    PUSH_BOOL, 0,
+    PUSH_BOOL, 1,
+    PUSH_NIL,
     DEBUG,
     RET
   };
 
+  init_runtime();
   run(literals, instructions);
+  destroy_runtime();
 
   return 0;
 }

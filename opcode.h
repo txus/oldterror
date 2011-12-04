@@ -5,6 +5,9 @@ enum {
   PUSH_STRING,
   PUSH_SELF,
 
+  PUSH_BOOL,
+  PUSH_NIL,
+
   GET_LOCAL,
   SET_LOCAL,
 
