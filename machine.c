@@ -155,8 +155,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       }
       case RET: {
         printf("Object is %p", *sp);
-        Object *result = *sp;
-        return result;
+        return *sp;
       }
     }
     ip++;

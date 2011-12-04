@@ -15,5 +15,8 @@ VMMethod* VMMethod_new(byte *start_ip, long *literals) {
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
   // Start a new machine to execute the method.
   Machine *machine = Machine_new(method->start_ip, method->literals, locals);
-  return Machine_run(machine, self);
+
+  Object *result = Machine_run(machine, self);
+  printf("But now object is %p", result);
+  return result;
 }
