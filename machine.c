@@ -18,12 +18,13 @@ Machine* Machine_new(byte *ip, long *literals, Object **locals) {
   return machine;
 }
 
-void Machine_run(Machine *machine, Object **sp, Object *self) {
+Object* Machine_run(Machine *machine, Object *self) {
   byte *ip        = machine->ip;
   long *literals  = machine->literals;
   Object **locals = machine->locals;
 
-  Object **stack  = sp;
+  Object *stack[STACK_MAX];   // the Data stack
+  Object **sp = stack; // the stack pointer
 
   // Main VM loop
   while(1) {
@@ -101,6 +102,40 @@ void Machine_run(Machine *machine, Object **sp, Object *self) {
         STACK_PUSH(Integer_new(result));
         break;
       }
+      case SUB: {
+        Object *a = STACK_POP();
+        Object *b = STACK_POP();
+
+        // Subtract the two integer values
+        int result = a->value.integer - b->value.integer;
+
+        STACK_PUSH(Integer_new(result));
+        break;
+      }
+      case MUL: {
+        Object *a = STACK_POP();
+        Object *b = STACK_POP();
+
+        // Multiply the two integer values
+        int result = a->value.integer * b->value.integer;
+
+        STACK_PUSH(Integer_new(result));
+        break;
+      }
+      case DIV: {
+        Object *a = STACK_POP();
+        Object *b = STACK_POP();
+        if (b->value.integer == 0) {
+          printf("Invalid DIV opcode: dividing by 0\n");
+          exit(1);
+        }
+
+        // Multiply the two integer values
+        int result = a->value.integer / b->value.integer;
+
+        STACK_PUSH(Integer_new(result));
+        break;
+      }
 
       // JUMP
       case JUMP_UNLESS: {
@@ -119,7 +154,9 @@ void Machine_run(Machine *machine, Object **sp, Object *self) {
         break;
       }
       case RET: {
-        return;
+        printf("Object is %p", *sp);
+        Object *result = *sp;
+        return result;
       }
     }
     ip++;

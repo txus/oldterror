@@ -12,6 +12,10 @@ enum {
   SET_LOCAL,
 
   ADD,
+  SUB,
+  MUL,
+  DIV,
+
   POP,
   CALL,
   JUMP_UNLESS,

@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "slot.h"
 #include "object.h"
+#include "opcode.h"
 #include "vmmethod.h"
 #include "runtime.h"
 
@@ -27,6 +29,25 @@ Object *Integer_new(int value) {
   Object *integer = Object_new();
   integer->type = tInteger;
   integer->value.integer = value;
+
+  // DEFINE #add method for integers
+  byte add_instructions[] = {
+    GET_LOCAL, 0,
+    GET_LOCAL, 1,
+    ADD,
+    RET,
+  };
+
+  byte *ip = add_instructions;
+  long literals[] = {};
+  VMMethod *add = VMMethod_new(ip, literals);
+
+  Slot *slot = Slot_new("add");
+  slot->value.method = add;
+
+  integer->slots[0] = slot;
+
+
   return integer;
 }
 

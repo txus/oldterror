@@ -17,11 +17,11 @@ void run(long literals[], byte instructions[]) {
   byte *ip = instructions;
   Object *locals[STACK_MAX] = {};
 
-  Object *stack[STACK_MAX];   // the Data stack
-  Object **sp = stack; // the stack pointer
+  /* Object *stack[STACK_MAX];   // the Data stack */
+  /* Object **sp = stack; // the stack pointer */
 
   Machine *machine = Machine_new(ip, literals, locals);
-  Machine_run(machine, sp, MainObject);
+  Machine_run(machine, MainObject);
 }
 
 int main(int argc, char const *argv[])
@@ -29,19 +29,21 @@ int main(int argc, char const *argv[])
   long literals[] = {
     (long) 30,
     (long) "this is a string test, pretty long by the way. do you think it will fit in a (long)?",
-    (long) "print"
+    (long) "print",
+    (long) "add"
   };
 
   byte instructions[] = {
     PUSH_SELF,
-    PUSH_STRING, 1,
 
-    PUSH_BOOL, 1,
-    JUMP_UNLESS, 4,
-    CALL, 2, 1,
+    PUSH_INT, 30,
+    PUSH_INT, 30,
+    CALL, 3, 1,
 
+    /* DEBUG, */
+    /* CALL, 2, 1, */
     DEBUG,
-    RET,
+    RET
   };
 
   init_runtime();

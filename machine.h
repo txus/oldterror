@@ -11,6 +11,6 @@ typedef struct {
 } Machine;
 
 Machine* Machine_new(byte *ip, long *literals, Object **locals);
-void Machine_run(Machine *machine, Object **sp, Object *self);
+Object* Machine_run(Machine *machine, Object *self);
 
 #endif

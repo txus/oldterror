@@ -93,6 +93,7 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
   }
 
   Object *result = VMMethod_execute(vmmethod, literals, locals, receiver);
+  printf("...but result is %p", result);
 
   return result;
 }

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "object.h"
 #include "vmmethod.h"
@@ -12,12 +13,7 @@ VMMethod* VMMethod_new(byte *start_ip, long *literals) {
 }
 
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
-  // Create a stack for the method
-  Object *stack[STACK_MAX];   // the Data stack
-  Object **sp = stack; // the stack pointer
-
   // Start a new machine to execute the method.
   Machine *machine = Machine_new(method->start_ip, method->literals, locals);
-  Machine_run(machine, sp, self);
-  return *sp;
+  return Machine_run(machine, self);
 }

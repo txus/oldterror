@@ -2,7 +2,6 @@
 #define __slot_h__
 
 #include "vmmethod.h"
-#include "object.h"
 
 typedef struct {
   char *name;
@@ -11,5 +10,7 @@ typedef struct {
     // Object *object;
   } value;
 } Slot;
+
+Slot* Slot_new(char *name);
 
 #endif

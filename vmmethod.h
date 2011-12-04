@@ -2,7 +2,6 @@
 #define __vmmethod_h__
 
 #include "opcode.h"
-#include "object.h"
 
 typedef struct {
   byte *start_ip;
