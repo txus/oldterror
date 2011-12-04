@@ -7,4 +7,7 @@ typedef struct {
   byte **start_ip;
 } VMMethod;
 
+VMMethod *VMMethod_new(byte **start_ip);
+// Object *VMMethod_execute(long literals[], Object *locals[]);
+
 #endif
