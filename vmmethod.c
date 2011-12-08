@@ -21,6 +21,6 @@ Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
   printf("\n");
 
   Object *result = Machine_run(machine, self);
-  printf("But now object is %p\n", result);
+  printf("and now object is %p\n", result);
   return result;
 }

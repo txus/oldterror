@@ -38,16 +38,20 @@ Object *Integer_new(int value) {
     RET,
   };
 
-  byte *ip = add_instructions;
-  long literals[] = {};
-  VMMethod *add = VMMethod_new(ip, literals);
-
-  Slot *slot = Slot_new("add");
-  slot->value.method = add;
-
-  integer->slots[0] = slot;
+  Object_define_method(integer, 0, "add", add_instructions);
 
   return integer;
+}
+
+void Object_define_method(Object *object, int idx, char *name, byte instructions[]) {
+  byte *ip = instructions;
+  long literals[] = {};
+  VMMethod *method = VMMethod_new(ip, literals);
+
+  Slot *slot = Slot_new(name);
+  slot->value.method = method;
+
+  object->slots[idx] = slot;
 }
 
 /*
