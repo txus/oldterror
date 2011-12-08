@@ -23,6 +23,10 @@ Object* Machine_run(Machine *machine, Object *self) {
   long *literals  = machine->literals;
   Object **locals = machine->locals;
 
+  printf("ENTERING METHOD. SELF IS ");
+  Object_print(self);
+  printf("\n");
+
   Object *stack[STACK_MAX];   // the Data stack
   Object **sp = stack; // the stack pointer
 
@@ -96,6 +100,15 @@ Object* Machine_run(Machine *machine, Object *self) {
         Object *a = STACK_POP();
         Object *b = STACK_POP();
 
+        if(a->type != tInteger || b->type != tInteger) {
+          printf("Cannot ADD two non-integers.\n");
+          printf("\t- ");
+          Object_print(a);
+          printf("\n\t- ");
+          Object_print(b);
+          printf("\n");
+          exit(1);
+        }
         // Add the two integer values
         int result = a->value.integer + b->value.integer;
 
@@ -153,8 +166,14 @@ Object* Machine_run(Machine *machine, Object *self) {
         Stack_print(stack, sp);
         break;
       }
+      case DEBUG_TOS: {
+        printf("Top of the Stack: ");
+        Object_print(*sp);
+        printf("\n");
+        break;
+      }
       case RET: {
-        printf("Object is %p", *sp);
+        printf("RETurning %p\n", *sp);
         return *sp;
       }
     }

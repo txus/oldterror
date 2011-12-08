@@ -32,8 +32,8 @@ Object *Integer_new(int value) {
 
   // DEFINE #add method for integers
   byte add_instructions[] = {
+    PUSH_SELF,
     GET_LOCAL, 0,
-    GET_LOCAL, 1,
     ADD,
     RET,
   };
@@ -46,7 +46,6 @@ Object *Integer_new(int value) {
   slot->value.method = add;
 
   integer->slots[0] = slot;
-
 
   return integer;
 }
@@ -126,7 +125,8 @@ void Object_print(Object* object) {
       printf("#<tInteger:%p @value=%i>", object, object->value.integer);
       break;
     case tString:
-      printf("#<tString:%p @value=\"%s\">", object, object->value.string);
+      printf("#<tString:%p>", object);
+      /* printf("#<tString:%p @value=\\"%s\\">", object, object->value.string); */
       break;
     case tTrue:
       printf("#<tTrue:%p>", object);

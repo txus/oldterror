@@ -16,7 +16,11 @@ Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
   // Start a new machine to execute the method.
   Machine *machine = Machine_new(method->start_ip, method->literals, locals);
 
+  printf("ABOUT TO ENTER METHOD. SELF IS ");
+  Object_print(self);
+  printf("\n");
+
   Object *result = Machine_run(machine, self);
-  printf("But now object is %p", result);
+  printf("But now object is %p\n", result);
   return result;
 }

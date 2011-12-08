@@ -83,7 +83,6 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
     }
   }
 
-  long *literals;
   int i = 0;
   Object *locals[STACK_MAX] = {};
 
@@ -92,7 +91,14 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
     locals[i] = argv[i];
   }
 
-  Object *result = VMMethod_execute(vmmethod, literals, locals, receiver);
+  printf("Entering submethod\n");
+  printf("    receiver is %p, ", receiver);
+  Object_print(receiver);
+  printf("    local is %p, ", locals[0]);
+  Object_print(locals[0]);
+  printf("\n");
+
+  Object *result = VMMethod_execute(vmmethod, locals, receiver);
   printf("...but result is %p", result);
 
   return result;

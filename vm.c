@@ -34,15 +34,10 @@ int main(int argc, char const *argv[])
   };
 
   byte instructions[] = {
-    PUSH_SELF,
-
-    PUSH_INT, 30,
-    PUSH_INT, 30,
+    PUSH_INT, 0,
+    PUSH_INT, 0,
     CALL, 3, 1,
-
-    /* DEBUG, */
-    /* CALL, 2, 1, */
-    DEBUG,
+    DEBUG_TOS,
     RET
   };
 

@@ -20,7 +20,8 @@ enum {
   CALL,
   JUMP_UNLESS,
   RET,
-  DEBUG
+  DEBUG,
+  DEBUG_TOS
 };
 
 typedef unsigned char byte;
