@@ -13,4 +13,12 @@ For now it comes with a default program whose instructions are hardcoded inside
     $ make
     $ ./vm
 
+To run the tests:
+
+    $ make test
+
+And to clean the mess:
+
+    $ make clean
+
 Anyway, it's a work in progress!
