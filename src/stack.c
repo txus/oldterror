@@ -6,10 +6,10 @@ void Stack_print(Object **stack, Object **sp) {
   Object **peek = stack;
   int i=0;
 
-  while(peek < sp) {
+  while(peek <= sp) {
     // Print the contents of each stack cell up until the Stack Pointer.
     printf("STACK[%i]\n", i);
-    if (*(++peek)) {
+    if (*peek) {
       Object_print(*peek);
     } else {
       printf("NULL");
@@ -17,5 +17,6 @@ void Stack_print(Object **stack, Object **sp) {
     printf("\n");
 
     i++;
+    peek++;
   }
 }

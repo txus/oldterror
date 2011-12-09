@@ -76,7 +76,6 @@ Returns a pointer to the object.
 Object *True_new() {
   Object *true_object = Object_new();
   true_object->type = tTrue;
-  true_object->value.integer = 1;
   return true_object;
 }
 
@@ -88,7 +87,6 @@ Returns a pointer to the object.
 Object *False_new() {
   Object *false_object = Object_new();
   false_object->type = tFalse;
-  false_object->value.integer = 0;
   return false_object;
 }
 
@@ -100,7 +98,6 @@ Returns a pointer to the object.
 Object *Nil_new() {
   Object *nil_object = Object_new();
   nil_object->type = tNil;
-  nil_object->value.integer = 0;
   return nil_object;
 }
 
@@ -129,8 +126,7 @@ void Object_print(Object* object) {
       printf("#<tInteger:%p @value=%i>", object, object->value.integer);
       break;
     case tString:
-      printf("#<tString:%p>", object);
-      /* printf("#<tString:%p @value=\\"%s\\">", object, object->value.string); */
+      printf("#<tString:%p @value=\"%s\">", object, object->value.string);
       break;
     case tTrue:
       printf("#<tTrue:%p>", object);
@@ -150,7 +146,7 @@ void Object_print(Object* object) {
 char Object_is_true(Object *self) {
   // false and nil are == false,
   // everything else is true.
-  if (self == FalseObject || self == NilObject) return 0;
+  if (self->type == tFalse || self->type == tNil) return 0;
   return 1;
 }
 
