@@ -11,7 +11,5 @@ test-compile: all
 	gcc test/clay_main.c test/*_test.c -o test/test
 
 clean:
-	rm test/clay.h
-	rm test/clay_main.c
-	rm test/test
+	rm -f test/clay.h test/clay_main.c test/test
 	cd src; make clean

@@ -2,6 +2,7 @@
 This will eventually become a stack-based VM running under the [NoScript](http://github.com/txus/noscript)
 language.
 
+
 # Building the VM
 
 For now it comes with a default program whose instructions are hardcoded inside

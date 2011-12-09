@@ -1,3 +1,6 @@
 *.dSYM
 vm
 *.o
+test/test
+test/clay.h
+test/clay_main.c
