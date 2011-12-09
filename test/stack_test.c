@@ -8,11 +8,11 @@ void test_stack_test__print(void)
   Object *nil = Nil_new();
 
   Object *stack[10];
-  stack[0] = foo;
-  stack[1] = bar;
-  stack[2] = nil; // top of the stack
+  Object **sp = stack;
 
-  Object **sp = &stack[2]; // Set the pointer to the top of the stack
+  STACK_PUSH(foo);
+  STACK_PUSH(bar);
+  STACK_PUSH(nil);
 
   Stack_print(stack, sp);
 }
