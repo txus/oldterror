@@ -1,10 +1,17 @@
 CFLAGS=-Wall -g
 
-all: vm
+all:
+	cd src; make
 
-vm: object.o stack.o runtime.o vmmethod.o machine.o slot.o
+test: test-compile
+	./test/test
+
+test-compile: all
+	./test/clay.py test
+	gcc test/clay_main.c test/*_test.c -o test/test
 
 clean:
-	rm -f vm
-	rm -f *.o
-	rm -fR *.dSYM
+	rm test/clay.h
+	rm test/clay_main.c
+	rm test/test
+	cd src; make clean
