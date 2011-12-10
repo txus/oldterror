@@ -23,16 +23,11 @@ Object* Machine_run(Machine *machine, Object *self) {
   long *literals  = machine->literals;
   Object **locals = machine->locals;
 
-  printf("ENTERING METHOD. SELF IS ");
-  Object_print(self);
-  printf("\n");
-
   Object *stack[STACK_MAX];   // the Data stack
   Object **sp = stack; // the stack pointer
 
   // Main VM loop
   while(1) {
-    printf("Executing instruction [%i]\n", *ip);
     switch(*ip) {
       // PUSH literals
       case PUSH_INT:

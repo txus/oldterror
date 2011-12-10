@@ -38,7 +38,9 @@ Object *Integer_new(int value) {
     RET,
   };
 
-  byte *instructions = allocate_instructions(add_instructions);
+  int count = (sizeof(add_instructions) / sizeof(byte)) + 1;
+
+  byte *instructions = allocate_instructions(add_instructions, count);
 
   Object_define_method(integer, 0, "add", instructions);
 

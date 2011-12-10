@@ -16,7 +16,8 @@ static VMMethod *test_create_method()
     RET,
   };
 
-  byte *allocated_instructions = allocate_instructions(instructions);
+  int count = (sizeof(instructions) / sizeof(byte)) + 1;
+  byte *allocated_instructions = allocate_instructions(instructions, count);
 
   VMMethod *method = VMMethod_new(allocated_instructions, literals);
   return method;

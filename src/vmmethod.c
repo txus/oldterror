@@ -18,8 +18,7 @@ Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
   return result;
 }
 
-byte* allocate_instructions(byte *instructions) {
-  int count = sizeof(instructions) / sizeof(byte);
+byte* allocate_instructions(byte *instructions, int count) {
   byte *allocated_instructions = malloc(sizeof(byte) * count);
 
   int i = 0;
@@ -28,4 +27,15 @@ byte* allocate_instructions(byte *instructions) {
   }
 
   return allocated_instructions;
+}
+
+long* allocate_literals(long literals[], int count) {
+  long *allocated_literals = malloc(sizeof(long) * count);
+
+  int i = 0;
+  for(i = 0; i < count; i++) {
+    allocated_literals[i] = literals[i];
+  }
+
+  return allocated_literals;
 }
