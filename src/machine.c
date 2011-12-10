@@ -20,6 +20,10 @@ Machine* Machine_new(byte *ip, long *literals, Object **locals) {
   return machine;
 }
 
+void Machine_destroy(Machine *machine) {
+  free(machine);
+}
+
 Object* Machine_run(Machine *machine, Object *self) {
   byte *ip        = machine->ip;
   long *literals  = machine->literals;

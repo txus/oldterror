@@ -23,6 +23,7 @@ typedef struct {
 } Object;
 
 Object *Object_new();
+void Object_destroy(Object *object);
 Object *Integer_new(int value);
 Object *String_new(char *value);
 

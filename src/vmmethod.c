@@ -14,9 +14,16 @@ VMMethod* VMMethod_new(byte *start_ip, long *literals) {
   return method;
 }
 
+void VMMethod_destroy(VMMethod *method) {
+  if (method->start_ip) free(method->start_ip);
+  free(method);
+}
+
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
   Machine *machine = Machine_new(method->start_ip, method->literals, locals);
-  return Machine_run(machine, self);
+  Object *result = Machine_run(machine, self);
+  Machine_destroy(machine);
+  return result;
 }
 
 byte* allocate_instructions(byte *instructions, int count) {

@@ -9,6 +9,7 @@ Object* retain(Object *self) {
 
 void release(Object *self) {
   self->refcount--;
-  if (self->refcount <= 0)
-    free(self);
+  if (self->refcount <= 0) {
+    Object_destroy(self);
+  }
 }

@@ -19,6 +19,17 @@ Object *Object_new() {
   return object;
 }
 
+void Object_destroy(Object *object) {
+  int i = 0;
+  for(i = 0; i < 10; i++) {
+    if (object->slots[i]) {
+      VMMethod_destroy(object->slots[i]->value.method);
+      free(object->slots[i]);
+    }
+  }
+  free(object);
+}
+
 /*
 Public: Allocates a new Integer object.
 

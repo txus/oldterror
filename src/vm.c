@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include "dbg.h"
 #include "opcode.h"
@@ -19,6 +20,7 @@ void run(long literals[], byte instructions[]) {
 
   Machine *machine = Machine_new(ip, literals, locals);
   Machine_run(machine, MainObject);
+  Machine_destroy(machine);
 }
 
 int main(int argc, char const *argv[])

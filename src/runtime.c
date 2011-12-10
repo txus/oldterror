@@ -18,6 +18,10 @@ void init_runtime() {
 }
 
 void destroy_runtime() {
+  free(TrueObject);
+  free(FalseObject);
+  free(NilObject);
+  free(MainObject);
 }
 
 Object* call(Object *receiver, char *method, Object **argv, int argc) {
