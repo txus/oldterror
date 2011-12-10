@@ -72,6 +72,11 @@ Object* Machine_run(Machine *machine, Object *self) {
         Object *receiver = STACK_POP();
 
         Object *result = call(receiver, method, argv, argc);
+
+        // Release popped arguments
+        release(receiver);
+        for(i = 0; i < argc; ++i) release(argv[i]);
+
         STACK_PUSH(result);
 
         break;
@@ -93,7 +98,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       case POP: {
         debug("POP");
         Object *popped = STACK_POP();
-        free(popped);
+        release(popped);
         break;
       }
 
@@ -121,6 +126,9 @@ Object* Machine_run(Machine *machine, Object *self) {
         // Add the two integer values
         int result = a->value.integer + b->value.integer;
 
+        release(a);
+        release(b);
+
         STACK_PUSH(Integer_new(result));
         break;
       }
@@ -132,6 +140,9 @@ Object* Machine_run(Machine *machine, Object *self) {
         // Subtract the two integer values
         int result = a->value.integer - b->value.integer;
 
+        release(a);
+        release(b);
+
         STACK_PUSH(Integer_new(result));
         break;
       }
@@ -142,6 +153,9 @@ Object* Machine_run(Machine *machine, Object *self) {
 
         // Multiply the two integer values
         int result = a->value.integer * b->value.integer;
+
+        release(a);
+        release(b);
 
         STACK_PUSH(Integer_new(result));
         break;
@@ -158,6 +172,9 @@ Object* Machine_run(Machine *machine, Object *self) {
         // Multiply the two integer values
         int result = a->value.integer / b->value.integer;
 
+        release(a);
+        release(b);
+
         STACK_PUSH(Integer_new(result));
         break;
       }
@@ -170,6 +187,8 @@ Object* Machine_run(Machine *machine, Object *self) {
         Object *condition = STACK_POP();
 
         if (!Object_is_true(condition)) ip += offset;
+
+        release(condition);
 
         break;
       }
