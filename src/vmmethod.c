@@ -17,3 +17,15 @@ Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
   Object *result = Machine_run(machine, self);
   return result;
 }
+
+byte* allocate_instructions(byte *instructions) {
+  int count = sizeof(instructions) / sizeof(byte);
+  byte *allocated_instructions = malloc(sizeof(byte) * count);
+
+  int i = 0;
+  for(i = 0; i < count; i++) {
+    allocated_instructions[i] = instructions[i];
+  }
+
+  return allocated_instructions;
+}

@@ -16,7 +16,9 @@ static VMMethod *test_create_method()
     RET,
   };
 
-  VMMethod *method = VMMethod_new(instructions, literals);
+  byte *allocated_instructions = allocate_instructions(instructions);
+
+  VMMethod *method = VMMethod_new(allocated_instructions, literals);
   return method;
 }
 

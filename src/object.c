@@ -38,13 +38,7 @@ Object *Integer_new(int value) {
     RET,
   };
 
-  // Instructions must be allocated on the heap
-  int count = sizeof(add_instructions) / sizeof(byte);
-  byte *instructions = malloc(sizeof(byte) * count);
-  int i = 0;
-  for(i = 0; i < count; i++) {
-    instructions[i] = add_instructions[i];
-  }
+  byte *instructions = allocate_instructions(add_instructions);
 
   Object_define_method(integer, 0, "add", instructions);
 

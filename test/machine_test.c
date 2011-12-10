@@ -15,20 +15,22 @@ static VMMethod* test_create_method_for_machine()
     RET,
   };
 
-  VMMethod *method = VMMethod_new(instructions, literals);
+  byte *allocated_instructions = allocate_instructions(instructions);
+
+  VMMethod *method = VMMethod_new(allocated_instructions, literals);
   return method;
 }
 
-/* static Machine* test_create_machine() */
-/* { */
-  /* VMMethod *method = test_create_method_for_machine(); */
-  /* Object **locals; */
-  /* Machine *machine = Machine_new(method->start_ip, method->literals, locals); */
-  /* return machine; */
-/* } */
+static Machine* test_create_machine()
+{
+  VMMethod *method = test_create_method_for_machine();
+  Object **locals;
+  Machine *machine = Machine_new(method->start_ip, method->literals, locals);
+  return machine;
+}
 
-/* void test_machine_test__new(void) */
-/* { */
-/*   Machine *machine = test_create_machine(); */
-/*   cl_assert(*(machine->ip) == PUSH_STRING); */
-/* } */
+void test_machine_test__new(void)
+{
+  Machine *machine = test_create_machine();
+  cl_assert(*(machine->ip) == PUSH_STRING);
+}

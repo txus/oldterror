@@ -10,5 +10,8 @@ typedef struct {
 
 VMMethod* VMMethod_new(byte *start_ip, long *literals);
 // Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
+//
+
+byte* allocate_instructions(byte *instructions);
 
 #endif
