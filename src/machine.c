@@ -82,6 +82,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       // POP
       case POP: {
         Object *popped = STACK_POP();
+        free(popped);
         break;
       }
 
@@ -168,7 +169,6 @@ Object* Machine_run(Machine *machine, Object *self) {
         break;
       }
       case RET: {
-        printf("RETurning %p\n", *sp);
         return *sp;
       }
     }

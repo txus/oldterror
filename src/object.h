@@ -2,7 +2,6 @@
 #define __object_h__
 
 #include "slot.h"
-#include "vmmethod.h"
 
 enum {
   tObject,

@@ -5,6 +5,8 @@
 #include "stack.h"
 #include "machine.h"
 
+Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
+
 VMMethod* VMMethod_new(byte *start_ip, long *literals) {
   VMMethod *method = malloc(sizeof(VMMethod));
   method->start_ip = start_ip;
@@ -14,8 +16,7 @@ VMMethod* VMMethod_new(byte *start_ip, long *literals) {
 
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
   Machine *machine = Machine_new(method->start_ip, method->literals, locals);
-  Object *result = Machine_run(machine, self);
-  return result;
+  return Machine_run(machine, self);
 }
 
 byte* allocate_instructions(byte *instructions, int count) {

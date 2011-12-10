@@ -2,6 +2,8 @@
 #include "../src/vmmethod.h"
 #include "../src/object.h"
 
+Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
+
 static VMMethod *test_create_method()
 {
   long literals[] = {

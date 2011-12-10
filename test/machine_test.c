@@ -3,11 +3,12 @@
 #include "../src/machine.h"
 #include "../src/runtime.h"
 
-static VMMethod* test_create_method_for_machine(byte instructions[], int instructions_count)
+static VMMethod* test_create_method(byte instructions[], int instructions_count)
 {
   long literals[] = {
     (long) "foo",
     (long) 30,
+    (long) "add",
   };
 
   int literals_count = sizeof(literals) / sizeof(long);
@@ -20,7 +21,7 @@ static VMMethod* test_create_method_for_machine(byte instructions[], int instruc
 
 static Machine* test_create_machine(byte instructions[], int count)
 {
-  VMMethod *method = test_create_method_for_machine(instructions, count);
+  VMMethod *method = test_create_method(instructions, count);
 
   Object **locals = malloc(sizeof(Object) * 1);
   locals[0] = Integer_new(123); // Set a local variable
@@ -276,4 +277,20 @@ void test_machine_test__run_jump_unless(void)
   cl_assert(jump_result);
   cl_assert(jump_result->type == tInteger);
   cl_assert(jump_result->value.integer == 30);
+}
+
+void test_machine_test__call(void)
+{
+  byte instructions[] = {
+    PUSH_INT, 1,
+    PUSH_INT, 1,
+    CALL, 2, 1,
+    RET,
+  };
+
+  Object *result = test_run_instructions(instructions, 8);
+
+  cl_assert(result);
+  cl_assert(result->type == tInteger);
+  cl_assert(result->value.integer == 60);
 }

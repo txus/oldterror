@@ -6,6 +6,8 @@
 #include "vmmethod.h"
 #include "stack.h"
 
+Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
+
 void init_runtime() {
   // Init extern constants
   TrueObject  = True_new();
@@ -19,10 +21,12 @@ void destroy_runtime() {
 
 Object* call(Object *receiver, char *method, Object **argv, int argc) {
   VMMethod *vmmethod = Object_lookup_method(receiver, method);
+
   if (!vmmethod) {
     // Native global methods
     if (receiver == MainObject) {
-      call_kernel_method(method, argv, argc);
+      Object *result = call_kernel_method(method, argv, argc);
+      return result;
     } else {
       printf("Could not find method %s on ", method);
       Object_print(receiver);
@@ -31,10 +35,7 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
     }
   }
 
-  Object *result = VMMethod_execute(vmmethod, argv, receiver);
-  printf("...but result is %p", result);
-
-  return result;
+  return VMMethod_execute(vmmethod, argv, receiver);
 }
 
 Object* call_kernel_method(char *method, Object **argv, int argc) {
