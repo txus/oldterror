@@ -17,9 +17,6 @@ void run(long literals[], byte instructions[]) {
   byte *ip = instructions;
   Object *locals[STACK_MAX] = {};
 
-  /* Object *stack[STACK_MAX];   // the Data stack */
-  /* Object **sp = stack; // the stack pointer */
-
   Machine *machine = Machine_new(ip, literals, locals);
   Machine_run(machine, MainObject);
 }

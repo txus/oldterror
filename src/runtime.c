@@ -5,6 +5,7 @@
 #include "object.h"
 #include "vmmethod.h"
 #include "stack.h"
+#include "dbg.h"
 
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
 
@@ -22,6 +23,8 @@ void destroy_runtime() {
 Object* call(Object *receiver, char *method, Object **argv, int argc) {
   VMMethod *vmmethod = Object_lookup_method(receiver, method);
 
+  debug("Entering #%s", method);
+
   if (!vmmethod) {
     // Native global methods
     if (receiver == MainObject) {
@@ -35,7 +38,11 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
     }
   }
 
-  return VMMethod_execute(vmmethod, argv, receiver);
+  Object *result = VMMethod_execute(vmmethod, argv, receiver);
+
+  debug("Returning from #%s", method);
+
+  return result;
 }
 
 Object* call_kernel_method(char *method, Object **argv, int argc) {

@@ -4,6 +4,7 @@
 #include "stack.h"
 #include "object.h"
 #include "runtime.h"
+#include "dbg.h"
 
 Object *TrueObject;
 Object *FalseObject;
@@ -32,14 +33,17 @@ Object* Machine_run(Machine *machine, Object *self) {
       // PUSH literals
       case PUSH_INT:
         ip++; // Moving to the operand
+        debug("PUSH_INT %i", *ip);
         STACK_PUSH(Integer_new((int)literals[*ip]));
         break;
       case PUSH_STRING:
         ip++; // Moving to the operand
+        debug("PUSH_STRING %i", *ip);
         STACK_PUSH(String_new((char *)literals[*ip]));
         break;
       case PUSH_BOOL:
         ip++; // 0=false, 1=true
+        debug("PUSH_BOOL %i", *ip);
         if (*ip == 0) {
           STACK_PUSH(FalseObject);
         } else {
@@ -47,6 +51,7 @@ Object* Machine_run(Machine *machine, Object *self) {
         }
         break;
       case PUSH_NIL:
+        debug("PUSH_NIL");
         STACK_PUSH(NilObject);
         break;
 
@@ -56,6 +61,8 @@ Object* Machine_run(Machine *machine, Object *self) {
         ip++; // number of arguments
         int argc = *ip;
         Object *argv[10];
+
+        debug("CALL %i %i", *(ip-1), *(ip));
 
         // Pop all the arguments
         int i;
@@ -72,15 +79,18 @@ Object* Machine_run(Machine *machine, Object *self) {
       // Local variables
       case GET_LOCAL:
         ip++;
+        debug("GET_LOCAL %i", *ip);
         STACK_PUSH(locals[*ip]);
         break;
       case SET_LOCAL:
         ip++;
+        debug("SET_LOCAL %i", *ip);
         locals[*ip] = STACK_PEEK();
         break;
 
       // POP
       case POP: {
+        debug("POP");
         Object *popped = STACK_POP();
         free(popped);
         break;
@@ -88,11 +98,13 @@ Object* Machine_run(Machine *machine, Object *self) {
 
       // PUSH the self object
       case PUSH_SELF:
+        debug("PUSH_SELF");
         STACK_PUSH(self);
         break;
 
       // Arithmetic
       case ADD: {
+        debug("ADD");
         Object *a = STACK_POP();
         Object *b = STACK_POP();
 
@@ -112,6 +124,7 @@ Object* Machine_run(Machine *machine, Object *self) {
         break;
       }
       case SUB: {
+        debug("SUB");
         Object *a = STACK_POP();
         Object *b = STACK_POP();
 
@@ -122,6 +135,7 @@ Object* Machine_run(Machine *machine, Object *self) {
         break;
       }
       case MUL: {
+        debug("MUL");
         Object *a = STACK_POP();
         Object *b = STACK_POP();
 
@@ -132,6 +146,7 @@ Object* Machine_run(Machine *machine, Object *self) {
         break;
       }
       case DIV: {
+        debug("DIV");
         Object *a = STACK_POP();
         Object *b = STACK_POP();
         if (b->value.integer == 0) {
@@ -150,6 +165,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       case JUMP_UNLESS: {
         ip++; // number of bytes to move forward
         byte offset = *ip;
+        debug("JUMP_UNLESS %i", offset);
         Object *condition = STACK_POP();
 
         if (!Object_is_true(condition)) ip += offset;
@@ -159,16 +175,19 @@ Object* Machine_run(Machine *machine, Object *self) {
 
       // Other
       case DEBUG: {
+        debug("DEBUG");
         Stack_print(stack, sp);
         break;
       }
       case DEBUG_TOS: {
+        debug("DEBUG_TOS");
         printf("Top of the Stack: ");
         Object_print(*sp);
         printf("\n");
         break;
       }
       case RET: {
+        debug("RET");
         return *sp;
       }
     }
