@@ -15,6 +15,7 @@ Returns a pointer to the newly allocated object.
 Object *Object_new() {
   Object *object = malloc(sizeof(Object));
   object->type = tObject;
+  object->refcount = 0;
   return object;
 }
 

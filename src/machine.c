@@ -5,6 +5,7 @@
 #include "object.h"
 #include "runtime.h"
 #include "dbg.h"
+#include "gc.h"
 
 Object *TrueObject;
 Object *FalseObject;

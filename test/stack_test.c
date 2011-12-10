@@ -1,5 +1,6 @@
 #include "clay.h"
 #include "../src/stack.h"
+#include "../src/gc.h"
 
 void test_stack_test__print(void)
 {

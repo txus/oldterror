@@ -19,6 +19,7 @@ typedef struct {
     int integer;
   } value;
   Slot *slots[10];
+  int refcount;
 } Object;
 
 Object *Object_new();
