@@ -5,24 +5,21 @@ void test_object_test__new(void)
 {
   Object *object = Object_new();
 
-  cl_must_pass(object);
-  cl_must_pass(object->type == tObject);
+  cl_assert(object->type == tObject);
 }
 
 void test_object_test__True_new(void)
 {
   Object *True = True_new();
 
-  cl_must_pass(True);
-  cl_must_pass(True->type == tTrue);
+  cl_assert(True->type == tTrue);
 }
 
 void test_object_test__False_new(void)
 {
   Object *False = False_new();
 
-  cl_must_pass(False);
-  cl_must_pass(False->type == tFalse);
+  cl_assert(False->type == tFalse);
 }
 
 void test_object_test__Nil_new(void)
@@ -37,8 +34,7 @@ void test_object_test__Main_new(void)
 {
   Object *Main = Main_new();
 
-  cl_must_pass(Main);
-  cl_must_pass(Main->type == tObject);
+  cl_assert(Main->type == tObject);
 }
 
 void test_object_test__print(void)
@@ -64,9 +60,9 @@ void test_object_test__is_true(void)
   Object *Nil    = Nil_new();
   Object *object = Object_new();
 
-  cl_must_pass(Object_is_true(object) == 1);
-  cl_must_pass(Object_is_true(False) == 0);
-  cl_must_pass(Object_is_true(Nil) == 0);
+  cl_assert(Object_is_true(object) == 1);
+  cl_assert(Object_is_true(False) == 0);
+  cl_assert(Object_is_true(Nil) == 0);
 }
 
 void test_object_lookup_method(void)
@@ -82,26 +78,23 @@ void test_object_lookup_method(void)
 
   VMMethod *method = Object_lookup_method(object, "foo");
 
-  cl_must_pass(method);
-  cl_must_pass(*(method->start_ip) == GET_LOCAL);
+  cl_assert(*(method->start_ip) == GET_LOCAL);
 }
 
 void test_object_test__String_new_assigns_value(void)
 {
   Object *string = String_new("foo");
 
-  cl_must_pass(string);
-  cl_must_pass(string->type == tString);
-  cl_must_pass(strcmp(string->value.string, "foo"));
+  cl_assert(string->type == tString);
+  cl_assert(strcmp(string->value.string, "foo") == 0);
 }
 
 void test_object_test__Integer_new_assigns_value(void)
 {
   Object *integer = Integer_new(3);
 
-  cl_must_pass(integer);
-  cl_must_pass(integer->type == tInteger);
-  cl_must_pass(integer->value.integer == 3);
+  cl_assert(integer->type == tInteger);
+  cl_assert(integer->value.integer == 3);
 }
 
 void test_object_test__Integer_new_has_add_method(void)
@@ -110,11 +103,8 @@ void test_object_test__Integer_new_has_add_method(void)
 
   Slot *slot = integer->slots[0];
 
-  cl_must_pass(slot);
-  cl_must_pass(strcmp(slot->name, "add"));
-
-  cl_must_pass(slot->value.method);
-  cl_must_pass(*(slot->value.method->start_ip) == PUSH_SELF);
+  cl_assert(strcmp(slot->name, "add") == 0);
+  cl_assert(*(slot->value.method->start_ip) == PUSH_SELF);
 }
 
 void test_object_test__define_method(void)
@@ -130,8 +120,7 @@ void test_object_test__define_method(void)
 
   Slot *slot = object->slots[0];
 
-  cl_must_pass(slot);
-  cl_must_pass(strcmp(slot->name, "foo"));
-  cl_must_pass(slot->value.method);
-  cl_must_pass(*(slot->value.method->start_ip) == GET_LOCAL);
+  cl_assert(strcmp(slot->name, "foo") == 0);
+  cl_assert(slot->value.method);
+  cl_assert(*(slot->value.method->start_ip) == GET_LOCAL);
 }

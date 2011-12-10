@@ -15,11 +15,6 @@ void init_runtime() {
 }
 
 void destroy_runtime() {
-  // Destroy extern constants
-  free(TrueObject);
-  free(FalseObject);
-  free(NilObject);
-  free(MainObject);
 }
 
 Object* call(Object *receiver, char *method, Object **argv, int argc) {
@@ -27,54 +22,7 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
   if (!vmmethod) {
     // Native global methods
     if (receiver == MainObject) {
-
-      /*
-       * #print
-       */
-
-      if (strcmp(method, "print")==0) {
-        if (!argv[0]) {
-          printf("[#print] Wrong number of arguments: 0 for 1\n");
-          exit(1);
-        }
-        switch(argv[0]->type) {
-          case tString:
-            printf("%s", argv[0]->value.string);
-            break;
-          case tInteger:
-            printf("%i", argv[0]->value.integer);
-            break;
-          case tTrue:
-            printf("true");
-            break;
-          case tFalse:
-            printf("false");
-            break;
-          case tNil:
-            printf("nil");
-            break;
-          case tObject:
-            Object_print(argv[0]);
-            printf("%i", argv[0]->value.integer);
-            break;
-        }
-        return NilObject;
-      }
-
-      /*
-       * #. . .
-       */
-
-
-      /*
-       * RAISE!
-       */
-
-      printf("Could not find method %s on ", method);
-      Object_print(receiver);
-      printf("\n");
-      exit(1);
-
+      call_kernel_method(method, argv, argc);
     } else {
       printf("Could not find method %s on ", method);
       Object_print(receiver);
@@ -83,23 +31,57 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
     }
   }
 
-  int i = 0;
-  Object *locals[STACK_MAX] = {};
-
-  // Copy arguments to locals
-  for (i = 0; i < argc; i++) {
-    locals[i] = argv[i];
-  }
-
-  printf("Entering submethod\n");
-  printf("    receiver is %p, ", receiver);
-  Object_print(receiver);
-  printf("    local is %p, ", locals[0]);
-  Object_print(locals[0]);
-  printf("\n");
-
-  Object *result = VMMethod_execute(vmmethod, locals, receiver);
+  Object *result = VMMethod_execute(vmmethod, argv, receiver);
   printf("...but result is %p", result);
 
   return result;
+}
+
+Object* call_kernel_method(char *method, Object **argv, int argc) {
+  /*
+   * #print
+   */
+
+  if (strcmp(method, "print")==0) {
+    if (!argv[0]) {
+      printf("[#print] Wrong number of arguments: 0 for 1\n");
+      exit(1);
+    }
+    switch(argv[0]->type) {
+      case tString:
+        printf("%s", argv[0]->value.string);
+        break;
+      case tInteger:
+        printf("%i", argv[0]->value.integer);
+        break;
+      case tTrue:
+        printf("true");
+        break;
+      case tFalse:
+        printf("false");
+        break;
+      case tNil:
+        printf("nil");
+        break;
+      case tObject:
+        Object_print(argv[0]);
+        printf("%i", argv[0]->value.integer);
+        break;
+    }
+    return NilObject;
+  }
+
+  /*
+   * #. . .
+   */
+
+
+  /*
+   * RAISE!
+   */
+
+  printf("Could not find method %s on ", method);
+  Object_print(MainObject);
+  printf("\n");
+  exit(1);
 }
