@@ -34,11 +34,18 @@ int main(int argc, char const *argv[])
   };
 
   byte instructions[] = {
-    PUSH_STRING, 1,
-    PUSH_STRING, 2,
-    /* PUSH_INT, 0, */
-    /* CALL, 3, 1, */
-    /* DEBUG_TOS, */
+    PUSH_INT, 0,
+    PUSH_INT, 0,
+    PUSH_INT, 0,
+    PUSH_SELF,
+    PUSH_BOOL, 0,
+    PUSH_BOOL, 1,
+    PUSH_INT, 0,
+    PUSH_INT, 0,
+    PUSH_INT, 0,
+    CALL, 3, 1,
+    CALL, 3, 1,
+    DEBUG_TOS,
     RET
   };
 

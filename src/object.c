@@ -16,6 +16,7 @@ Object *Object_new() {
   Object *object = malloc(sizeof(Object));
   object->type = tObject;
   object->refcount = 0;
+  object->immortal = 0;
 
   // Initialize slots to NULL
   int i = 0;
@@ -27,6 +28,11 @@ Object *Object_new() {
 }
 
 void Object_destroy(Object *object) {
+  if (object->immortal) {
+    // Immortal objects cannot be garbage collected
+    return;
+  }
+
   int i = 0;
   for(i = 0; i < 10; i++) {
     if (object->slots[i]) {
@@ -100,6 +106,7 @@ Returns a pointer to the object.
 Object *True_new() {
   Object *true_object = Object_new();
   true_object->type = tTrue;
+  true_object->immortal = 1;
   return true_object;
 }
 
@@ -111,6 +118,7 @@ Returns a pointer to the object.
 Object *False_new() {
   Object *false_object = Object_new();
   false_object->type = tFalse;
+  false_object->immortal = 1;
   return false_object;
 }
 
@@ -122,6 +130,7 @@ Returns a pointer to the object.
 Object *Nil_new() {
   Object *nil_object = Object_new();
   nil_object->type = tNil;
+  nil_object->immortal = 1;
   return nil_object;
 }
 
@@ -133,6 +142,7 @@ Returns a pointer to the object.
 Object *Main_new() {
   Object *main_object = Object_new();
   main_object->type = tObject;
+  main_object->immortal = 1;
 
   return main_object;
 }

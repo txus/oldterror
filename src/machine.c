@@ -102,7 +102,9 @@ Object* Machine_run(Machine *machine, Object *self) {
       case POP: {
         debug("POP");
         Object *popped = STACK_POP();
-        release(popped);
+        if (popped != MainObject && popped != FalseObject && popped != TrueObject && popped != NilObject) {
+          release(popped);
+        }
         break;
       }
 

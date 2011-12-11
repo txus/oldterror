@@ -15,6 +15,7 @@ enum {
 
 typedef struct {
   char type;
+  char immortal;
   union {
     char *string;
     int integer;
