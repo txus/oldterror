@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "object.h"
 #include "gc.h"
+#include "dbg.h"
 
 Object* retain(Object *self) {
   self->refcount++;

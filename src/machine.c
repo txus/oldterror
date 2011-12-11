@@ -62,10 +62,10 @@ Object* Machine_run(Machine *machine, Object *self) {
 
       case CALL: {
         ip++; // advance to index of method name in literal table
-        char *method = (char *)literals[*ip];
+        const char *method = (const char *)literals[*ip];
         ip++; // number of arguments
         int argc = *ip;
-        Object *argv[10];
+        Object *argv[argc];
 
         debug("CALL %i %i", *(ip-1), *(ip));
 
@@ -82,6 +82,10 @@ Object* Machine_run(Machine *machine, Object *self) {
         for(i = 0; i < argc; ++i) release(argv[i]);
 
         STACK_PUSH(result);
+
+        // Object has an extra refcount because it comes from a method call.
+        // Fix that or it will never be garbage collected.
+        result->refcount--;
 
         break;
       }
@@ -102,9 +106,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       case POP: {
         debug("POP");
         Object *popped = STACK_POP();
-        if (popped != MainObject && popped != FalseObject && popped != TrueObject && popped != NilObject) {
-          release(popped);
-        }
+        release(popped);
         break;
       }
 
