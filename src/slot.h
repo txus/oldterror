@@ -7,10 +7,10 @@ typedef struct {
   char *name;
   union {
     VMMethod *method;
-    // Object *object;
   } value;
 } Slot;
 
-Slot* Slot_new(char *name);
+Slot* Slot_new(const char *name);
+void Slot_destroy(Slot *slot);
 
 #endif

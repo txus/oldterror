@@ -16,6 +16,13 @@ Object *Object_new() {
   Object *object = malloc(sizeof(Object));
   object->type = tObject;
   object->refcount = 0;
+
+  // Initialize slots to NULL
+  int i = 0;
+  for(i = 0; i < MAX_SLOTS; i++) {
+    object->slots[i] = NULL;
+  }
+
   return object;
 }
 
@@ -23,9 +30,11 @@ void Object_destroy(Object *object) {
   int i = 0;
   for(i = 0; i < 10; i++) {
     if (object->slots[i]) {
-      VMMethod_destroy(object->slots[i]->value.method);
-      free(object->slots[i]);
+      Slot_destroy(object->slots[i]);
     }
+  }
+  if (object->type == tString) {
+    free(object->value.string);
   }
   free(object);
 }
@@ -59,10 +68,9 @@ Object *Integer_new(int value) {
   return integer;
 }
 
-void Object_define_method(Object *object, int idx, char *name, byte instructions[]) {
-  byte *ip = instructions;
+void Object_define_method(Object *object, int idx, const char *name, byte *instructions) {
   long literals[] = {};
-  VMMethod *method = VMMethod_new(ip, literals);
+  VMMethod *method = VMMethod_new(instructions, literals);
 
   Slot *slot = Slot_new(name);
   slot->value.method = method;
@@ -77,10 +85,10 @@ char *value - the value of the String.
 
 Returns a pointer to the object.
 */
-Object *String_new(char *value) {
+Object *String_new(const char *value) {
   Object *string = Object_new();
   string->type = tString;
-  string->value.string = value;
+  string->value.string = strdup(value);
   return string;
 }
 
@@ -166,7 +174,7 @@ char Object_is_true(Object *self) {
   return 1;
 }
 
-VMMethod* Object_lookup_method(Object *object, char *name) {
+VMMethod* Object_lookup_method(Object *object, const char *name) {
   int i = 0;
   VMMethod *method;
 

@@ -11,7 +11,7 @@ extern Object *MainObject;
 void init_runtime();
 void destroy_runtime();
 
-Object* call(Object *receiver, char *method, Object **argv, int argc);
-Object* call_kernel_method(char *method, Object **argv, int argc);
+Object* call(Object *receiver, const char *method, Object **argv, int argc);
+Object* call_kernel_method(const char *method, Object **argv, int argc);
 
 #endif

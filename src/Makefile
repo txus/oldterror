@@ -1,9 +1,9 @@
 CFLAGS=-Wall -g
 
 all: vm
-	mv vm ../
+	cp vm ../vm
 
-vm: object.o stack.o runtime.o vmmethod.o machine.o slot.o gc.o
+vm: object.o stack.o runtime.o vmmethod.o machine.o slot.o gc.o util.o
 
 clean:
 	rm -f ../vm

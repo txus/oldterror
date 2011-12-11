@@ -12,4 +12,5 @@
 #define STACK_PEEK()   ( *sp )
 
 void Stack_print(Object **, Object **);
+void Stack_cleanup(Object **, Object **);
 #endif

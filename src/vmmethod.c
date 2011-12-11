@@ -4,18 +4,20 @@
 #include "vmmethod.h"
 #include "stack.h"
 #include "machine.h"
+#include "util.h"
 
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
 
 VMMethod* VMMethod_new(byte *start_ip, long *literals) {
   VMMethod *method = malloc(sizeof(VMMethod));
+  if (!method) die("Could not allocate VMMethod");
   method->start_ip = start_ip;
   method->literals = literals;
   return method;
 }
 
 void VMMethod_destroy(VMMethod *method) {
-  if (method->start_ip) free(method->start_ip);
+  free(method->start_ip);
   free(method);
 }
 

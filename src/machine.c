@@ -212,6 +212,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       }
       case RET: {
         debug("RET");
+        Stack_cleanup(stack, sp);
         return *sp;
       }
     }

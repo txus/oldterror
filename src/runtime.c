@@ -24,7 +24,7 @@ void destroy_runtime() {
   free(MainObject);
 }
 
-Object* call(Object *receiver, char *method, Object **argv, int argc) {
+Object* call(Object *receiver, const char *method, Object **argv, int argc) {
   VMMethod *vmmethod = Object_lookup_method(receiver, method);
 
   debug("Entering #%s", method);
@@ -49,7 +49,7 @@ Object* call(Object *receiver, char *method, Object **argv, int argc) {
   return result;
 }
 
-Object* call_kernel_method(char *method, Object **argv, int argc) {
+Object* call_kernel_method(const char *method, Object **argv, int argc) {
   /*
    * #print
    */
