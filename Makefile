@@ -5,6 +5,7 @@ all:
 
 test: test-compile
 	./test/test
+	./test/leaks vm && ./test/leaks test/test
 
 test-compile:
 	./test/clay.py test

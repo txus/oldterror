@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+options="--log-fd=1"
+program=$1
+
+main() {
+  leaks=`valgrind ${options} ./${program} | grep lost | awk '{print $4}'`
+
+  for retval in $leaks; do
+    if [[ $retval != 0 ]]; then
+      echo "Found memory leaks. Valgrind the hell out of this!"
+      exit 1
+    fi
+  done
+
+  echo "Succeed! No memory leaks!"
+  exit 0
+}
+
+main
