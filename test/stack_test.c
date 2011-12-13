@@ -17,3 +17,22 @@ void test_stack_test__print(void)
 
   Stack_print(stack, sp);
 }
+
+void test_stack_test__cleanup(void)
+{
+  Object *foo = Integer_new(30);
+  foo->refcount = 1;
+  Object *bar = String_new("foo");
+  bar->refcount = 2;
+
+  Object *stack[10];
+  Object **sp = stack;
+
+  STACK_PUSH(foo);
+  STACK_PUSH(bar);
+
+  Stack_cleanup(stack, sp);
+
+  cl_assert(foo->refcount == 1);
+  cl_assert(bar->refcount == 3);
+}
