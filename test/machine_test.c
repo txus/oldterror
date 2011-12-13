@@ -27,6 +27,8 @@ static Machine* test_create_machine(byte instructions[], int count)
   locals[0] = Integer_new(123); // Set a local variable
 
   Machine *machine = Machine_new(method->start_ip, method->literals, locals);
+
+  VMMethod_destroy(method);
   return machine;
 }
 
@@ -35,6 +37,9 @@ static Object* test_run_instructions(byte instructions[], int count)
   Machine *machine = test_create_machine(instructions, count);
   Object *self = Object_new();
   Object *result = Machine_run(machine, self);
+
+  Object_destroy(self);
+  Machine_destroy(machine);
   return result;
 }
 
@@ -47,6 +52,8 @@ void test_machine_test__new(void)
 
   Machine *machine = test_create_machine(instructions, 3);
   cl_assert(*(machine->ip) == PUSH_INT);
+
+  Machine_destroy(machine);
 }
 
 /*
@@ -65,6 +72,8 @@ void test_machine_test__run_push_int(void)
   cl_assert(result);
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 30);
+
+  Object_destroy(result);
 }
 
 void test_machine_test__run_push_string(void)
@@ -81,7 +90,7 @@ void test_machine_test__run_push_string(void)
   cl_assert(strcmp(result->value.string, "foo") == 0);
 }
 
-void test_machine_test__run_push_bool(void)
+void test_machine_test__run_push_false(void)
 {
   byte instructions[] = {
     PUSH_BOOL, 0,
@@ -93,6 +102,8 @@ void test_machine_test__run_push_bool(void)
 
   cl_assert(result);
   cl_assert(result->type == tFalse);
+
+  destroy_runtime();
 }
 
 void test_machine_test__run_push_true(void)
@@ -107,6 +118,8 @@ void test_machine_test__run_push_true(void)
 
   cl_assert(result);
   cl_assert(result->type == tTrue);
+
+  destroy_runtime();
 }
 
 void test_machine_test__run_push_nil(void)
@@ -121,6 +134,8 @@ void test_machine_test__run_push_nil(void)
 
   cl_assert(result);
   cl_assert(result->type == tNil);
+
+  destroy_runtime();
 }
 
 void test_machine_test__run_get_local(void)
@@ -135,6 +150,8 @@ void test_machine_test__run_get_local(void)
   cl_assert(result);
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 123);
+
+  Object_destroy(result);
 }
 
 void test_machine_test__run_set_local(void)
@@ -151,6 +168,8 @@ void test_machine_test__run_set_local(void)
   cl_assert(result);
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 30);
+
+  Object_destroy(result);
 }
 
 void test_machine_test__run_pop(void)
@@ -167,6 +186,8 @@ void test_machine_test__run_pop(void)
   cl_assert(result);
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 30);
+
+  Object_destroy(result);
 }
 
 void test_machine_test__run_push_self(void)
@@ -180,6 +201,8 @@ void test_machine_test__run_push_self(void)
 
   cl_assert(result);
   cl_assert(result->type == tObject);
+
+  Object_destroy(result);
 }
 
 void test_machine_test__run_add(void)
@@ -196,6 +219,8 @@ void test_machine_test__run_add(void)
   cl_assert(result);
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 60);
+
+  Object_destroy(result);
 }
 
 void test_machine_test__run_sub(void)
@@ -212,6 +237,8 @@ void test_machine_test__run_sub(void)
   cl_assert(result);
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 0);
+
+  Object_destroy(result);
 }
 
 void test_machine_test__run_mul(void)
@@ -228,6 +255,8 @@ void test_machine_test__run_mul(void)
   cl_assert(result);
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 900);
+
+  Object_destroy(result);
 }
 
 void test_machine_test__run_div(void)
@@ -244,6 +273,8 @@ void test_machine_test__run_div(void)
   cl_assert(result);
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 1);
+
+  Object_destroy(result);
 }
 
 void test_machine_test__run_jump_unless(void)
@@ -277,6 +308,9 @@ void test_machine_test__run_jump_unless(void)
   cl_assert(jump_result);
   cl_assert(jump_result->type == tInteger);
   cl_assert(jump_result->value.integer == 30);
+
+  Object_destroy(dont_jump_result);
+  Object_destroy(jump_result);
 }
 
 void test_machine_test__call(void)
@@ -294,4 +328,6 @@ void test_machine_test__call(void)
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 60);
   cl_assert(result->refcount == 1);
+
+  Object_destroy(result);
 }

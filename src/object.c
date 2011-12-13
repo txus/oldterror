@@ -75,7 +75,7 @@ Object *Integer_new(int value) {
 }
 
 void Object_define_method(Object *object, int idx, const char *name, byte *instructions) {
-  long literals[] = {};
+  long *literals = malloc(sizeof(long) * 10);
   VMMethod *method = VMMethod_new(instructions, literals);
 
   Slot *slot = Slot_new(name);

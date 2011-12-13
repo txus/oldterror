@@ -16,6 +16,10 @@ void test_stack_test__print(void)
   STACK_PUSH(nil);
 
   Stack_print(stack, sp);
+
+  Object_destroy(foo);
+  Object_destroy(bar);
+  free(nil);
 }
 
 void test_stack_test__cleanup(void)
@@ -35,4 +39,7 @@ void test_stack_test__cleanup(void)
 
   cl_assert(foo->refcount == 1);
   cl_assert(bar->refcount == 3);
+
+  Object_destroy(foo);
+  Object_destroy(bar);
 }

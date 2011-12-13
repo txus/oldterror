@@ -8,4 +8,6 @@ void test_slot_test__new(void)
 
   cl_assert(slot);
   cl_assert(strcmp(slot->name, "foo") == 0);
+
+  Slot_destroy(slot);
 }

@@ -16,7 +16,7 @@ Object *MainObject;
 void run(long literals[], byte instructions[]) {
   // Instruction pointer
   byte *ip = instructions;
-  Object *locals[STACK_MAX] = {};
+  Object *locals[STACK_MAX];
 
   Machine *machine = Machine_new(ip, literals, locals);
   Object *result = Machine_run(machine, MainObject);

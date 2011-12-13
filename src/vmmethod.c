@@ -18,6 +18,7 @@ VMMethod* VMMethod_new(byte *start_ip, long *literals) {
 
 void VMMethod_destroy(VMMethod *method) {
   free(method->start_ip);
+  free(method->literals);
   free(method);
 }
 

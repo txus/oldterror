@@ -32,6 +32,8 @@ void test_vmmethod_test__new(void)
   cl_must_pass(method);
   cl_must_pass(*(method->start_ip) == PUSH_STRING);
   cl_must_pass(*(method->literals) == (long) "foo");
+
+  VMMethod_destroy(method);
 }
 
 void test_vmmethod_test__execute(void)
@@ -44,4 +46,8 @@ void test_vmmethod_test__execute(void)
   Object *result = VMMethod_execute(method, locals, self);
 
   cl_must_pass(result->value.integer == 30);
+
+  VMMethod_destroy(method);
+  Object_destroy(result);
+  free(self);
 }
