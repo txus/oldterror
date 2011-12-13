@@ -293,4 +293,5 @@ void test_machine_test__call(void)
   cl_assert(result);
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 60);
+  cl_assert(result->refcount == 1);
 }
