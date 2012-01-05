@@ -21,6 +21,7 @@ Machine* Machine_new(byte *ip, long *literals, Object **locals) {
 }
 
 void Machine_destroy(Machine *machine) {
+  free(machine->locals);
   free(machine);
 }
 

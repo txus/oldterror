@@ -7,6 +7,8 @@ void test_gc_test__retain(void)
   Object *object = Object_new();
   retain(object);
   cl_assert(object->refcount == 1);
+
+  Object_destroy(object);
 }
 
 void test_gc_test__release(void)
@@ -17,4 +19,6 @@ void test_gc_test__release(void)
   release(object);
 
   cl_assert(object->refcount == 2);
+
+  Object_destroy(object);
 }

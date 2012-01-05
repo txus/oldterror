@@ -146,7 +146,7 @@ void test_object_test__define_method(void)
     RET
   };
 
-  Object_define_method(object, 0, "foo", instructions);
+  Object_define_method(object, 0, "foo", allocate_instructions(instructions, 3));
 
   Slot *slot = object->slots[0];
 
@@ -154,5 +154,5 @@ void test_object_test__define_method(void)
   cl_assert(slot->value.method);
   cl_assert(*(slot->value.method->start_ip) == GET_LOCAL);
 
-  Object_destroy(integer);
+  Object_destroy(object);
 }
