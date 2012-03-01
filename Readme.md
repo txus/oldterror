@@ -1,7 +1,8 @@
 # TerrorVM
-This will eventually become a stack-based VM running under the [NoScript](http://github.com/txus/noscript)
-language.
+This will eventually become a register-based VM for ARM architectures.
 
+In the branch `old`, there's the version where it's a very basic stack-based VM,
+compiling on both ARM and x86.
 
 # Building the VM
 
