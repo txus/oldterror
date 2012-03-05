@@ -13,6 +13,16 @@ enum {
   tNil
 };
 
+#define DO_IF_OBJECT(O, C) {    \
+  if (O && O->type) {           \
+    if (O->type == tObject   || \
+        O->type == tInteger  || \
+        O->type == tString   || \
+        O->type == tTrue     || \
+        O->type == tFalse    || \
+        O->type == tNil) (C);   \
+  } }
+
 typedef struct {
   char type;
   char immortal;

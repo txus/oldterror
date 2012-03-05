@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#define REGISTER(R, V) { Object *obj = (V); retain(obj); (R) = obj; }
-
 typedef struct {
   uint8_t opcode;
   struct {

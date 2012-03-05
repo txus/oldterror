@@ -27,6 +27,6 @@ Registers_cleanup(Object **registers)
 
   // Don't wipe the register 0
   for(i=1; i < NUM_REGISTERS; i++) {
-    if (registers[i] && registers[i]->type) release(registers[i]);
+    DO_IF_OBJECT(registers[i], release(registers[i]));
   }
 }
