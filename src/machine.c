@@ -38,12 +38,12 @@ Object* Machine_run(Machine *machine, Object *self) {
     switch(ip->opcode) {
       case MOVE: {
         debug("MOVE %i %i", ip->fields.a, ip->fields.b);
-        regs[ip->fields.a] = regs[ip->fields.b];
+        REGISTER(regs[ip->fields.a], regs[ip->fields.b]);
         break;
       }
       case LOADI: {
         debug("LOADI %i %i", ip->fields.a, ip->fields.b);
-        regs[ip->fields.a] = Integer_new((int)literals[ip->fields.b]);
+        REGISTER(regs[ip->fields.a], Integer_new((int)literals[ip->fields.b]));
         break;
       }
       case ADD: {
@@ -66,7 +66,7 @@ Object* Machine_run(Machine *machine, Object *self) {
         /* release(left); */
         /* release(right); */
 
-        regs[ip->fields.a] = Integer_new(result);
+        REGISTER(regs[ip->fields.a], Integer_new(result));
         break;
       }
       case SUB: {
@@ -89,7 +89,7 @@ Object* Machine_run(Machine *machine, Object *self) {
         release(left);
         release(right);
 
-        regs[ip->fields.a] = Integer_new(result);
+        REGISTER(regs[ip->fields.a], Integer_new(result));
         break;
       }
       case DUMP: {
