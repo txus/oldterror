@@ -46,6 +46,11 @@ Object* Machine_run(Machine *machine, Object *self) {
         REGISTER(regs[ip->fields.a], Integer_new((int)literals[ip->fields.b]));
         break;
       }
+      case LOADS: {
+        debug("LOADS %i %i", ip->fields.a, ip->fields.b);
+        REGISTER(regs[ip->fields.a], Integer_new((const char *)literals[ip->fields.b]));
+        break;
+      }
       case ADD: {
         debug("ADD %i %i %i", ip->fields.a, ip->fields.b, ip->fields.c);
         Object *left  = regs[ip->fields.b];

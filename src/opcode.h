@@ -4,6 +4,7 @@
 typedef enum {
   MOVE,
   LOADI,
+  LOADS,
 
   // Numerical operations.
   //  Each instruction takes three registers.
