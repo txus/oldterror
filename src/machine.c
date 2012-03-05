@@ -67,9 +67,6 @@ Object* Machine_run(Machine *machine, Object *self) {
         // Add the two integer values
         int result = left->value.integer + right->value.integer;
 
-        /* release(left); */
-        /* release(right); */
-
         REGISTER(regs[ip->fields.a], Integer_new(result));
         break;
       }
@@ -90,8 +87,25 @@ Object* Machine_run(Machine *machine, Object *self) {
         // Subtract the two integer values
         int result = left->value.integer - right->value.integer;
 
-        release(left);
-        release(right);
+        REGISTER(regs[ip->fields.a], Integer_new(result));
+        break;
+      }
+      case MUL: {
+        debug("MUL");
+        Object *left  = regs[ip->fields.b];
+        Object *right = regs[ip->fields.c];
+
+        if(left->type != tInteger || right->type != tInteger) {
+          printf("Cannot MUL two non-integers.\n");
+          printf("\t- ");
+          Object_print(left);
+          printf("\n\t- ");
+          Object_print(right);
+          printf("\n");
+          exit(1);
+        }
+        // Subtract the two integer values
+        int result = left->value.integer * right->value.integer;
 
         REGISTER(regs[ip->fields.a], Integer_new(result));
         break;

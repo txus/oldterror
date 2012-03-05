@@ -221,7 +221,7 @@ void test_machine_test__run_sub(void)
   cl_assert(result->type == tInteger);
   cl_assert(result->value.integer == 0);
 
-  /* Object_destroy(result); */
+  Object_destroy(result);
 }
 
 void test_machine_test__run_mul(void)
