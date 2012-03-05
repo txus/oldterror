@@ -22,7 +22,6 @@ Machine* Machine_new(Instruction *ip, long *literals, Object **locals) {
 }
 
 void Machine_destroy(Machine *machine) {
-  /* free(machine->locals); */
   free(machine);
 }
 
@@ -48,7 +47,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       }
       case LOADS: {
         debug("LOADS %i %i", ip->fields.a, ip->fields.b);
-        REGISTER(regs[ip->fields.a], Integer_new((const char *)literals[ip->fields.b]));
+        REGISTER(regs[ip->fields.a], String_new((const char *)literals[ip->fields.b]));
         break;
       }
       case ADD: {

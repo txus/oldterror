@@ -67,9 +67,7 @@ Object *Integer_new(int value) {
     Instruction_new(0x90000000), // RET
   };
 
-  int count = (sizeof(add_instructions) / sizeof(Instruction)) + 1;
-
-  Instruction *instructions = allocate_instructions(add_instructions, count);
+  Instruction *instructions = allocate_instructions(add_instructions, 4);
 
   Object_define_method(integer, 0, "add", instructions);
 

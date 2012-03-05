@@ -6,10 +6,15 @@ typedef enum {
   LOADI,
   LOADS,
 
+  LOADNIL = 0x08,
+  LOADBOOL,
+
   // Numerical operations.
   //  Each instruction takes three registers.
   ADD = 0x10,
   SUB,
+  MUL,
+  DIV,
 
   // Object operations
   LOADSELF = 0x30,

@@ -146,7 +146,7 @@ void test_object_test__define_method(void)
     Instruction_new(0x90000000),
   };
 
-  Object_define_method(object, 0, "foo", allocate_instructions(instructions, 3));
+  Object_define_method(object, 0, "foo", allocate_instructions(instructions, 2));
 
   Slot *slot = object->slots[0];
 
