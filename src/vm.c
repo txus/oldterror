@@ -1,9 +1,10 @@
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdio.h> #include <stdint.h>
 #include "dbg.h"
 #include "opcode.h"
+#include "instruction.h"
 #include "object.h"
-#include "stack.h"
+#include "registers.h"
 #include "runtime.h"
 #include "machine.h"
 
@@ -13,10 +14,10 @@ Object *FalseObject;
 Object *NilObject;
 Object *MainObject;
 
-void run(long literals[], byte instructions[]) {
+void run(long literals[], Instruction instructions[]) {
   // Instruction pointer
-  byte *ip = instructions;
-  Object *locals[STACK_MAX];
+  Instruction *ip = instructions;
+  Object *locals[NUM_REGISTERS];
 
   Machine *machine = Machine_new(ip, literals, locals);
   Object *result = Machine_run(machine, MainObject);
@@ -33,15 +34,22 @@ int main(int argc, char const *argv[])
     (long) "add"
   };
 
-  byte instructions[] = {
-    PUSH_INT, 0,
-    PUSH_INT, 0,
-    PUSH_INT, 0,
-    CALL, 3, 1,
-    CALL, 3, 1,
-    DEBUG_TOS,
-    RET
+  uint32_t encoded_instructions[] = {
+    0x01010000, // LOADI 1 0        Load integer 0 (30) to register 1
+    0x01020000, // LOADI 2 0     Load integer 1 to register 2
+    0x10000102, // ADD   0 1 2   Add registers 1 and 2 to 0
+    0x01040000, // MOVE  4 0     Moves result to register 4
+    0x91000000, // DEBUG
+    0x90000000  // RET
   };
+
+  Instruction instructions[20];
+
+  int i = 0;
+  int length = sizeof(encoded_instructions) / sizeof(uint32_t);
+  for(i=0; i < length; i++) {
+    instructions[i] = Instruction_new(encoded_instructions[i]);
+  }
 
   init_runtime();
   run(literals, instructions);
