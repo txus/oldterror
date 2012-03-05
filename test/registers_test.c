@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "clay.h"
 #include "../src/registers.h"
+#include "../src/runtime.h"
 #include "../src/gc.h"
 
 void test_registers_test__print(void)
@@ -24,7 +25,8 @@ void test_registers_test__print(void)
 
 void test_registers_test__cleanup(void)
 {
-  Object **registers = { Nil_new() };
+  Object *nil = Nil_new();
+  Object **registers = { nil };
 
   REGISTER(registers[0], Integer_new(30));
   REGISTER(registers[1], String_new("foo"));

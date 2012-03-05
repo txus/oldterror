@@ -10,6 +10,13 @@ typedef enum {
   ADD = 0x10,
   SUB,
 
+  // Object operations
+  LOADSELF = 0x30,
+
+  // Local variables
+  LOAD_LOCAL = 0x50,
+  SET_LOCAL,
+
   RET = 0x90,
   DUMP,
 

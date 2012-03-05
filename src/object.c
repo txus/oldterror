@@ -4,6 +4,7 @@
 #include "slot.h"
 #include "object.h"
 #include "opcode.h"
+#include "instruction.h"
 #include "vmmethod.h"
 #include "runtime.h"
 
@@ -58,18 +59,19 @@ Object *Integer_new(int value) {
   integer->value.integer = value;
 
   // DEFINE #add method for integers
-  /* byte add_instructions[] = { */
-  /*   PUSH_SELF, */
-  /*   GET_LOCAL, 0, */
-  /*   ADD, */
-  /*   RET, */
-  /* }; */
 
-  /* int count = (sizeof(add_instructions) / sizeof(byte)) + 1; */
+  Instruction add_instructions[] = {
+    Instruction_new(0x30010000), // LOADSELF 1
+    Instruction_new(0x50020000), // LOAD_LOCAL 2 0
+    Instruction_new(0x10000102), // ADD 0 1 2
+    Instruction_new(0x90000000), // RET
+  };
 
-  /* byte *instructions = allocate_instructions(add_instructions, count); */
+  int count = (sizeof(add_instructions) / sizeof(Instruction)) + 1;
 
-  /* Object_define_method(integer, 0, "add", instructions); */
+  Instruction *instructions = allocate_instructions(add_instructions, count);
+
+  Object_define_method(integer, 0, "add", instructions);
 
   return integer;
 }

@@ -29,7 +29,7 @@ void Machine_destroy(Machine *machine) {
 Object* Machine_run(Machine *machine, Object *self) {
   Instruction *ip = machine->ip;
   long *literals  = machine->literals;
-  /* Object **locals = machine->locals; */
+  Object **locals = machine->locals;
 
   Object *regs[NUM_REGISTERS] = { NilObject };   // the registers
 
@@ -90,6 +90,21 @@ Object* Machine_run(Machine *machine, Object *self) {
         release(right);
 
         REGISTER(regs[ip->fields.a], Integer_new(result));
+        break;
+      }
+      case LOADSELF: {
+        debug("LOADSELF %i", ip->fields.a);
+        REGISTER(regs[ip->fields.a], self);
+        break;
+      }
+      case LOAD_LOCAL: {
+        debug("LOAD_LOCAL %i %i", ip->fields.a, ip->fields.b);
+        REGISTER(regs[ip->fields.a], locals[ip->fields.b]);
+        break;
+      }
+      case SET_LOCAL: {
+        debug("SET_LOCAL %i %i", ip->fields.a, ip->fields.b);
+        locals[ip->fields.b] = regs[ip->fields.a];
         break;
       }
       case DUMP: {
