@@ -93,7 +93,7 @@ void test_machine_test__run_load_string(void)
 void test_machine_test__run_load_false(void)
 {
   Instruction instructions[] = {
-    Instruction_new(0x09000000), // LOADBOOL 0
+    Instruction_new(0x09000000), // LOADBOOL 0 0
     Instruction_new(0x90000000), // RET
   };
 
@@ -109,7 +109,7 @@ void test_machine_test__run_load_false(void)
 void test_machine_test__run_load_true(void)
 {
   Instruction instructions[] = {
-    Instruction_new(0x09000100), // LOADBOOL 1
+    Instruction_new(0x09000100), // LOADBOOL 0 1
     Instruction_new(0x90000000), // RET
   };
 

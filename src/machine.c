@@ -50,6 +50,21 @@ Object* Machine_run(Machine *machine, Object *self) {
         REGISTER(regs[ip->fields.a], String_new((const char *)literals[ip->fields.b]));
         break;
       }
+      case LOADBOOL: {
+        debug("LOADBOOL %i %i", ip->fields.a, ip->fields.b);
+        if (ip->fields.b == 0)
+        {
+          REGISTER(regs[ip->fields.a], FalseObject);
+        } else {
+          REGISTER(regs[ip->fields.a], TrueObject);
+        }
+        break;
+      }
+      case LOADNIL: {
+        debug("LOADNIL %i", ip->fields.a);
+        REGISTER(regs[ip->fields.a], NilObject);
+        break;
+      }
       case ADD: {
         debug("ADD %i %i %i", ip->fields.a, ip->fields.b, ip->fields.c);
         Object *left  = regs[ip->fields.b];
