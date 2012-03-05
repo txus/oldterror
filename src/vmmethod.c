@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include "object.h"
 #include "vmmethod.h"
-#include "stack.h"
+#include "registers.h"
 #include "machine.h"
 #include "util.h"
 
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
 
-VMMethod* VMMethod_new(byte *start_ip, long *literals) {
+VMMethod* VMMethod_new(Instruction *start_ip, long *literals) {
   VMMethod *method = malloc(sizeof(VMMethod));
   if (!method) die("Could not allocate VMMethod");
   method->start_ip = start_ip;
@@ -29,8 +29,8 @@ Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
   return result;
 }
 
-byte* allocate_instructions(byte *instructions, int count) {
-  byte *allocated_instructions = malloc(sizeof(byte) * count);
+Instruction* allocate_instructions(Instruction *instructions, int count) {
+  Instruction *allocated_instructions = malloc(sizeof(Instruction) * count);
 
   int i = 0;
   for(i = 0; i < count; i++) {

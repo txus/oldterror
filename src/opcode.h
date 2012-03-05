@@ -1,28 +1,18 @@
 #ifndef __opcode_h__
 #define __opcode_h__
-enum {
-  PUSH_INT,
-  PUSH_STRING,
-  PUSH_SELF,
 
-  PUSH_BOOL,
-  PUSH_NIL,
+typedef enum {
+  MOVE,
+  LOADI,
 
-  GET_LOCAL,
-  SET_LOCAL,
-
-  ADD,
+  // Numerical operations.
+  //  Each instruction takes three registers.
+  ADD = 0x10,
   SUB,
-  MUL,
-  DIV,
 
-  POP,
-  CALL,
-  JUMP_UNLESS,
-  RET,
-  DEBUG,
-  DEBUG_TOS
-};
+  RET = 0x90,
+  DUMP,
 
-typedef unsigned char byte;
+} OpCode;
+
 #endif
