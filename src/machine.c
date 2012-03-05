@@ -99,7 +99,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       }
       case RET: {
         debug("RET");
-        /* Registers_cleanup(regs); */
+        Registers_cleanup(regs);
         return regs[0];
         break;
       }
