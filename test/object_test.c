@@ -91,16 +91,16 @@ void test_object_lookup_method(void)
 {
   Object *object = Object_new();
 
-  byte instructions[] = {
-    GET_LOCAL, 0,
-    RET
+  Instruction instructions[] = {
+    Instruction_new(0x50000000),
+    Instruction_new(0x90000000),
   };
 
   Object_define_method(object, 0, "foo", instructions);
 
   VMMethod *method = Object_lookup_method(object, "foo");
 
-  cl_assert(*(method->start_ip) == GET_LOCAL);
+  cl_assert(method->start_ip->opcode == LOAD_LOCAL);
 
   Object_destroy(object);
 }
@@ -132,7 +132,7 @@ void test_object_test__Integer_new_has_add_method(void)
   Slot *slot = integer->slots[0];
 
   cl_assert(strcmp(slot->name, "add") == 0);
-  cl_assert(*(slot->value.method->start_ip) == PUSH_SELF);
+  cl_assert(slot->value.method->start_ip->opcode == LOADSELF);
 
   Object_destroy(integer);
 }
@@ -141,9 +141,9 @@ void test_object_test__define_method(void)
 {
   Object *object = Object_new();
 
-  byte instructions[] = {
-    GET_LOCAL, 0,
-    RET
+  Instruction instructions[] = {
+    Instruction_new(0x50000000),
+    Instruction_new(0x90000000),
   };
 
   Object_define_method(object, 0, "foo", allocate_instructions(instructions, 3));
@@ -152,7 +152,7 @@ void test_object_test__define_method(void)
 
   cl_assert(strcmp(slot->name, "foo") == 0);
   cl_assert(slot->value.method);
-  cl_assert(*(slot->value.method->start_ip) == GET_LOCAL);
+  cl_assert(slot->value.method->start_ip->opcode == LOAD_LOCAL);
 
   Object_destroy(object);
 }
