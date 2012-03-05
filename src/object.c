@@ -58,23 +58,23 @@ Object *Integer_new(int value) {
   integer->value.integer = value;
 
   // DEFINE #add method for integers
-  byte add_instructions[] = {
-    PUSH_SELF,
-    GET_LOCAL, 0,
-    ADD,
-    RET,
-  };
+  /* byte add_instructions[] = { */
+  /*   PUSH_SELF, */
+  /*   GET_LOCAL, 0, */
+  /*   ADD, */
+  /*   RET, */
+  /* }; */
 
-  int count = (sizeof(add_instructions) / sizeof(byte)) + 1;
+  /* int count = (sizeof(add_instructions) / sizeof(byte)) + 1; */
 
-  byte *instructions = allocate_instructions(add_instructions, count);
+  /* byte *instructions = allocate_instructions(add_instructions, count); */
 
-  Object_define_method(integer, 0, "add", instructions);
+  /* Object_define_method(integer, 0, "add", instructions); */
 
   return integer;
 }
 
-void Object_define_method(Object *object, int idx, const char *name, byte *instructions) {
+void Object_define_method(Object *object, int idx, const char *name, Instruction *instructions) {
   long *literals = malloc(sizeof(long) * 10);
   VMMethod *method = VMMethod_new(instructions, literals);
 

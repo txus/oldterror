@@ -38,7 +38,7 @@ Object *Main_new();
 char Object_is_true(Object *self);
 
 void Object_print(Object *object);
-void Object_define_method(Object *object, int idx, const char *name, byte instructions[]);
+void Object_define_method(Object *object, int idx, const char *name, Instruction instructions[]);
 
 VMMethod* Object_lookup_method(Object *receiver, const char *method);
 

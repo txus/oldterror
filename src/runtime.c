@@ -4,7 +4,7 @@
 #include "runtime.h"
 #include "object.h"
 #include "vmmethod.h"
-#include "stack.h"
+#include "registers.h"
 #include "dbg.h"
 
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
