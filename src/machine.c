@@ -160,9 +160,23 @@ Object* Machine_run(Machine *machine, Object *self) {
         locals[ip->fields.b] = regs[ip->fields.a];
         break;
       }
-      case DUMP: {
-        debug("DUMP");
-        Registers_print(regs);
+      case SEND: {
+        Object   *receiver  = regs[ip->fields.a];
+        const char *message = (const char *)(regs[ip->fields.b]->value.string);
+        VMMethod *method    = Object_lookup_method(receiver, message);
+
+        Object *argv[method->arity - 1];
+        int i = 0;
+
+        // From the start register of the arguments (C),
+        // get the arguments R(C+0), R(C+1) ... R(C+ARITY)
+        for(i=0; i<method->arity; i++) {
+          argv[i] = regs[ip->fields.c + i];
+        }
+
+        REGISTER(regs[ip->fields.a],
+            call(receiver, message, argv, method->arity));
+
         break;
       }
       case RET: {

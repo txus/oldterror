@@ -296,21 +296,22 @@ void test_machine_test__run_div(void)
 /*   Object_destroy(jump_result); */
 /* } */
 
-/* void test_machine_test__call(void) */
-/* { */
-/*   Instruction instructions[] = { */
-/*     PUSH_INT, 1, */
-/*     PUSH_INT, 1, */
-/*     CALL, 2, 1, */
-/*     RET, */
-/*   }; */
-/*  */
-/*   Object *result = test_run_instructions(instructions, 8); */
-/*  */
-/*   cl_assert(result); */
-/*   cl_assert(result->type == tInteger); */
-/*   cl_assert(result->value.integer == 60); */
-/*   cl_assert(result->refcount == 1); */
-/*  */
-/*   Object_destroy(result); */
-/* } */
+void test_machine_test__send(void)
+{
+  Instruction instructions[] = {
+    Instruction_new(0x01000100), // LOADI 0 1  receiver
+    Instruction_new(0x02010200), // LOADS 1 2  message
+    Instruction_new(0x01020100), // LOADI 2 1  argstart
+    Instruction_new(0x80000102), // SEND  0 1 2
+    Instruction_new(0x90000000)  // RET
+  };
+
+  Object *result = test_run_instructions(instructions, 5);
+
+  cl_assert(result);
+  cl_assert(result->type == tInteger);
+  cl_assert(result->value.integer == 60);
+  cl_assert(result->refcount > 0);
+
+  Object_destroy(result);
+}

@@ -23,6 +23,8 @@ typedef enum {
   LOAD_LOCAL = 0x50,
   SET_LOCAL,
 
+  SEND = 0x80,
+
   RET = 0x90,
   DUMP,
 
