@@ -16,7 +16,7 @@ static VMMethod* test_create_method(Instruction instructions[], int count)
   long *allocated_literals     = allocate_literals(literals, literals_count);
   Instruction *allocated_instructions = allocate_instructions(instructions, count);
 
-  VMMethod *method = VMMethod_new(allocated_instructions, allocated_literals);
+  VMMethod *method = VMMethod_new(allocated_instructions, allocated_literals, 0);
   return method;
 }
 

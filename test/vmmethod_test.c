@@ -13,6 +13,8 @@ static VMMethod *test_create_method()
     (long) 30,
   };
 
+  short arity = 0;
+
   Instruction instructions[] = {
     Instruction_new(0x02020000), // LOADS 2 0
     Instruction_new(0x30010000), // LOADSELF 1
@@ -22,7 +24,7 @@ static VMMethod *test_create_method()
 
   Instruction *allocated_instructions = allocate_instructions(instructions, 4);
 
-  VMMethod *method = VMMethod_new(allocated_instructions, allocate_literals(literals, 2));
+  VMMethod *method = VMMethod_new(allocated_instructions, allocate_literals(literals, 2), arity);
   return method;
 }
 

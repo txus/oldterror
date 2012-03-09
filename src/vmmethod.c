@@ -8,11 +8,12 @@
 
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
 
-VMMethod* VMMethod_new(Instruction *start_ip, long *literals) {
+VMMethod* VMMethod_new(Instruction *start_ip, long *literals, short arity) {
   VMMethod *method = malloc(sizeof(VMMethod));
   if (!method) die("Could not allocate VMMethod");
   method->start_ip = start_ip;
   method->literals = literals;
+  method->arity    = arity;
   return method;
 }
 

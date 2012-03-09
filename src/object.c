@@ -68,15 +68,16 @@ Object *Integer_new(int value) {
   };
 
   Instruction *instructions = allocate_instructions(add_instructions, 4);
+  short arity = 1;
 
-  Object_define_method(integer, 0, "add", instructions);
+  Object_define_method(integer, 0, "add", instructions, arity);
 
   return integer;
 }
 
-void Object_define_method(Object *object, int idx, const char *name, Instruction *instructions) {
+void Object_define_method(Object *object, int idx, const char *name, Instruction *instructions, short arity) {
   long *literals = malloc(sizeof(long) * 10);
-  VMMethod *method = VMMethod_new(instructions, literals);
+  VMMethod *method = VMMethod_new(instructions, literals, arity);
 
   Slot *slot = Slot_new(name);
   slot->value.method = method;
