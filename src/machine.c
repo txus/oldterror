@@ -171,6 +171,11 @@ Object* Machine_run(Machine *machine, Object *self) {
         return regs[0];
         break;
       }
+      case DUMP: {
+        debug("DUMP");
+        Registers_print(regs);
+        break;
+      }
     }
     ip++;
   }
