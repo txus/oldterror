@@ -1,0 +1,11 @@
+#!/usr/bin/env rbx
+$: << 'lib'
+require 'terror'
+
+unless ARGV.first
+  puts "Terror #{Terror::VERSION}\n================"
+  puts "\tUsage: terror my_file.rb > my_file.tc"
+  exit(1)
+end
+
+puts Terror.parse_file(ARGV[0])
