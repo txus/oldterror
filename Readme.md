@@ -35,3 +35,9 @@ And to clean the mess:
 
 Instructions have a compact 3-operand representation, 8-bit each, for a total
 of 32-bit per instruction.
+
+## Who's this
+
+This was made by [Josep M. Bach (Txus)](http://txustice.me) under the MIT
+license. I'm [@txustice](http://twitter.com/txustice) on twitter (where you
+should probably follow me!).
