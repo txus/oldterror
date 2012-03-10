@@ -1,5 +1,6 @@
 #include <stdlib.h>
-#include <stdio.h> #include <stdint.h>
+#include <stdio.h>
+#include <stdint.h>
 #include "dbg.h"
 #include "opcode.h"
 #include "instruction.h"
@@ -35,12 +36,12 @@ int main(int argc, char const *argv[])
   };
 
   uint32_t encoded_instructions[] = {
-    0x01010000, // LOADI 1 0        Load integer 0 (30) to register 1
-    0x01020000, // LOADI 2 0     Load integer 1 to register 2
-    0x10000102, // ADD   0 1 2   Add registers 1 and 2 to 0
-    0x01040000, // MOVE  4 0     Moves result to register 4
-    0x91000000, // DEBUG
-    0x90000000  // RET
+    OP_LOADI(1, 0),
+    OP_LOADI(2, 0),
+    OP_ADD(0, 1, 2),
+    OP_MOVE(4, 0),
+    OP_DUMP(),
+    OP_RET(),
   };
 
   Instruction instructions[20];

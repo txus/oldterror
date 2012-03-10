@@ -150,13 +150,13 @@ Object* Machine_run(Machine *machine, Object *self) {
         REGISTER(regs[ip->fields.a], self);
         break;
       }
-      case LOAD_LOCAL: {
-        debug("LOAD_LOCAL %i %i", ip->fields.a, ip->fields.b);
+      case LOADLOCAL: {
+        debug("LOADLOCAL %i %i", ip->fields.a, ip->fields.b);
         REGISTER(regs[ip->fields.a], locals[ip->fields.b]);
         break;
       }
-      case SET_LOCAL: {
-        debug("SET_LOCAL %i %i", ip->fields.a, ip->fields.b);
+      case SETLOCAL: {
+        debug("SETLOCAL %i %i", ip->fields.a, ip->fields.b);
         locals[ip->fields.b] = regs[ip->fields.a];
         break;
       }

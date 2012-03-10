@@ -100,7 +100,7 @@ void test_object_lookup_method(void)
 
   VMMethod *method = Object_lookup_method(object, "foo");
 
-  cl_assert(method->start_ip->opcode == LOAD_LOCAL);
+  cl_assert(method->start_ip->opcode == LOADLOCAL);
 
   Object_destroy(object);
 }
@@ -152,7 +152,7 @@ void test_object_test__define_method(void)
 
   cl_assert(strcmp(slot->name, "foo") == 0);
   cl_assert(slot->value.method);
-  cl_assert(slot->value.method->start_ip->opcode == LOAD_LOCAL);
+  cl_assert(slot->value.method->start_ip->opcode == LOADLOCAL);
 
   Object_destroy(object);
 }

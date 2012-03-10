@@ -61,10 +61,10 @@ Object *Integer_new(int value) {
   // DEFINE #add method for integers
 
   Instruction add_instructions[] = {
-    Instruction_new(0x30010000), // LOADSELF 1
-    Instruction_new(0x50020000), // LOAD_LOCAL 2 0
-    Instruction_new(0x10000102), // ADD 0 1 2
-    Instruction_new(0x90000000), // RET
+    Instruction_new(OP_LOADSELF(1)), // LOADSELF 1
+    Instruction_new(OP_LOADLOCAL(2,0)), // LOAD_LOCAL 2 0
+    Instruction_new(OP_ADD(0,1,2)), // ADD 0 1 2
+    Instruction_new(OP_RET()), // RET
   };
 
   Instruction *instructions = allocate_instructions(add_instructions, 4);
