@@ -10,7 +10,7 @@ void test_registers_test__print(void)
   Object *bar = String_new("foo");
   Object *nil = Nil_new();
 
-  Object *registers[10];
+  Object *registers[2];
 
   registers[0] = foo;
   registers[1] = bar;
