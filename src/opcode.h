@@ -50,7 +50,7 @@ typedef enum {
 #define OP_SETLOCAL(A,B)  __OP__(SETLOCAL, A, B, 0)
 
 #define OP_SEND(A,B,C)    __OP__(SEND, A, B, C)
-#define OP_RET()          __OP__(RET, 0, 0, 0)
+#define OP_RET(A)         __OP__(RET, A, 0, 0)
 #define OP_DUMP()         __OP__(DUMP, 0, 0, 0)
 
 #endif

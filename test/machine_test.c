@@ -47,7 +47,7 @@ void test_machine_test__new(void)
 {
   Instruction instructions[] = {
     Instruction_new(OP_LOADI(0,1)),
-    Instruction_new(OP_RET()),
+    Instruction_new(OP_RET(0)),
   };
 
   Machine *machine = test_create_machine(instructions, 2);
@@ -64,7 +64,7 @@ void test_machine_test__run_load_int(void)
 {
   Instruction instructions[] = {
     Instruction_new(OP_LOADI(0,1)),
-    Instruction_new(OP_RET()),
+    Instruction_new(OP_RET(0)),
   };
 
   Object *result = test_run_instructions(instructions, 2);
@@ -80,7 +80,7 @@ void test_machine_test__run_load_string(void)
 {
   Instruction instructions[] = {
     Instruction_new(OP_LOADS(0,0)),
-    Instruction_new(OP_RET()),
+    Instruction_new(OP_RET(0)),
   };
 
   Object *result = test_run_instructions(instructions, 2);
@@ -94,7 +94,7 @@ void test_machine_test__run_load_false(void)
 {
   Instruction instructions[] = {
     Instruction_new(OP_LOADBOOL(0,0)),
-    Instruction_new(OP_RET()),
+    Instruction_new(OP_RET(0)),
   };
 
   init_runtime(); //needed for FalseObject and TrueObject
@@ -110,7 +110,7 @@ void test_machine_test__run_load_true(void)
 {
   Instruction instructions[] = {
     Instruction_new(OP_LOADBOOL(0,1)),
-    Instruction_new(OP_RET()),
+    Instruction_new(OP_RET(0)),
   };
 
   init_runtime(); //needed for FalseObject and TrueObject
@@ -126,7 +126,7 @@ void test_machine_test__run_load_nil(void)
 {
   Instruction instructions[] = {
     Instruction_new(OP_LOADNIL(0)),
-    Instruction_new(OP_RET()),
+    Instruction_new(OP_RET(0)),
   };
 
   init_runtime(); //needed for FalseObject and TrueObject
@@ -142,7 +142,7 @@ void test_machine_test__run_loadlocal(void)
 {
   Instruction instructions[] = {
     Instruction_new(OP_LOADLOCAL(0,0)),
-    Instruction_new(OP_RET()),
+    Instruction_new(OP_RET(0)),
   };
 
   Object *result = test_run_instructions(instructions, 2);
@@ -160,7 +160,7 @@ void test_machine_test__run_setlocal(void)
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_SETLOCAL(1,1)),
     Instruction_new(OP_LOADLOCAL(0,1)),
-    Instruction_new(OP_RET()),
+    Instruction_new(OP_RET(0)),
   };
 
   Object *result = test_run_instructions(instructions, 4);
@@ -177,7 +177,7 @@ void test_machine_test__run_loadself(void)
 {
   Instruction instructions[] = {
     Instruction_new(OP_LOADSELF(0)),
-    Instruction_new(OP_RET()),
+    Instruction_new(OP_RET(0)),
   };
 
   Object *result = test_run_instructions(instructions, 2);
@@ -194,7 +194,7 @@ void test_machine_test__run_add(void)
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_LOADI(2,1)),
     Instruction_new(OP_ADD(0,1,2)),
-    Instruction_new(OP_RET())
+    Instruction_new(OP_RET(0))
   };
 
   Object *result = test_run_instructions(instructions, 4);
@@ -212,7 +212,7 @@ void test_machine_test__run_sub(void)
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_LOADI(2,1)),
     Instruction_new(OP_SUB(0,1,2)),
-    Instruction_new(OP_RET())
+    Instruction_new(OP_RET(0))
   };
 
   Object *result = test_run_instructions(instructions, 4);
@@ -230,7 +230,7 @@ void test_machine_test__run_mul(void)
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_LOADI(2,1)),
     Instruction_new(OP_MUL(0,1,2)),
-    Instruction_new(OP_RET())
+    Instruction_new(OP_RET(0))
   };
 
   Object *result = test_run_instructions(instructions, 4);
@@ -248,7 +248,7 @@ void test_machine_test__run_div(void)
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_LOADI(2,1)),
     Instruction_new(OP_DIV(0,1,2)),
-    Instruction_new(OP_RET())
+    Instruction_new(OP_RET(0))
   };
 
   Object *result = test_run_instructions(instructions, 4);
@@ -303,7 +303,7 @@ void test_machine_test__send(void)
     Instruction_new(OP_LOADS(1,2)), // message
     Instruction_new(OP_LOADI(2,1)), // argstart
     Instruction_new(OP_SEND(0,1,2)),
-    Instruction_new(OP_RET())
+    Instruction_new(OP_RET(0))
   };
 
   Object *result = test_run_instructions(instructions, 5);

@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
     OP_ADD(0, 1, 2),
     OP_MOVE(4, 0),
     OP_DUMP(),
-    OP_RET(),
+    OP_RET(0),
   };
 
   Instruction instructions[20];

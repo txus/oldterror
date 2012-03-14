@@ -180,9 +180,9 @@ Object* Machine_run(Machine *machine, Object *self) {
         break;
       }
       case RET: {
-        debug("RET");
+        debug("RET %i", ip->fields.a);
         Registers_cleanup(regs);
-        return regs[0];
+        return regs[ip->fields.a];
         break;
       }
       case DUMP: {
