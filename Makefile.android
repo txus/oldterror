@@ -1,0 +1,21 @@
+LINKPATH=$(ANDROID_NDK)/platforms/android-9/arch-arm/usr/lib
+INCLUDEPATH=$(ANDROID_NDK)/platforms/android-9/arch-arm/usr/include
+CFLAGS=-Wall -g -Wl,-rpath-link=$(LINKPATH) -L$(LINKPATH) -I$(INCLUDEPATH) -nostdlib $(LINKPATH)/crtbegin_dynamic.o -lc
+CC=arm-linux-androideabi-gcc
+LD=arm-linux-androideabi-ld
+AR=arm-linux-androideabi-ar
+
+all:
+	cd src; make -f Makefile.android
+
+test: test-compile
+	./test/test
+	./test/leaks vm && ./test/leaks test/test
+
+test-compile:
+	./test/clay.py test
+	$(CC) test/clay_main.c src/util.c src/machine.c src/instruction.c src/object.c src/gc.c src/slot.c src/vmmethod.c src/registers.c src/runtime.c test/*_test.c -o test/test $(CFLAGS)
+
+clean:
+	rm -f test/clay.h test/clay_main.c test/test
+	cd src; make -f Makefile.android clean

@@ -8,8 +8,8 @@ although it will implement a more advanced GC algorithm, probably Baker's
 treadmill.
 
 Eventually the VM will be optimized to be fast on ARM processors, but for now
-it compiles to both ARM and x86 architectures. It will also use LLVM for
-JIT-compiling code to native at runtime.
+it compiles to both ARM (tested on Android) and x86 architectures. It will also
+use LLVM for JIT-compiling code to native at runtime.
 
 Anyway, it's a work in progress! :)
 
@@ -30,6 +30,12 @@ To run the tests:
 And to clean the mess:
 
     $ make clean
+
+## Building for Android
+
+TerrorVM can also be built for Android devices:
+
+    $ make -f Makefile.android
 
 ## Bytecode format
 
