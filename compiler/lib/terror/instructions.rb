@@ -121,7 +121,7 @@ module Terror
     op :setlocal,  0x51, 2
 
     op :send,      0x80, 3
-    op :ret,       0x90, 0
+    op :ret,       0x90, 1
     op :dump,      0x91, 0
 
     # Public: Returns the Array of emitted instructions.

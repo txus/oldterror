@@ -8,7 +8,7 @@ module Terror
     def visit(code)
       ast = Rubinius::Melbourne19.parse_string(code)
       visitor = Visitor.new
-      ast.lazy_visit(visitor, ast, true)
+      ast.lazy_visit(visitor, ast)
       visitor.generator
     end
 
