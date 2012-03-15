@@ -42,7 +42,7 @@ int main(int argc, char const *argv[])
     OP_MOVE(4, 0),
     OP_SETLOCAL(4, 0),
     OP_LOADNIL(4),
-    OP_LOADI(2, 0),
+    OP_LOADI(0, 0),
     OP_LOADS(1, 3),
     OP_SEND(0, 1, 2),
     OP_LOADLOCAL(7, 0),

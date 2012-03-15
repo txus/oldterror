@@ -29,10 +29,8 @@ Object *Object_new() {
 }
 
 void Object_destroy(Object *object) {
-  if (object->immortal) {
-    // Immortal objects cannot be garbage collected
-    return;
-  }
+  // Immortal objects cannot be garbage collected
+  if (object->immortal) return;
 
   int i = 0;
   for(i = 0; i < 10; i++) {
