@@ -8,7 +8,8 @@ void test_runtime_test__call(void)
   Object *receiver = Integer_new(50);
   int argc = 1;
   Object *argv[argc];
-  argv[0] = Integer_new(100);
+  Object *integer = Integer_new(100);
+  argv[0] = integer;
 
   Object *result = call(receiver, "add", argv, argc);
 

@@ -12,7 +12,7 @@ Slot* Slot_new(const char *name) {
 }
 
 void Slot_destroy(Slot *slot) {
-  free(slot->name);
+  if (slot->name) free(slot->name);
   if (slot->value.method) {
     VMMethod_destroy(slot->value.method);
   }
