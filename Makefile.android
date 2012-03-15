@@ -14,7 +14,7 @@ test: test-compile
 
 test-compile:
 	./test/clay.py test
-	$(CC) test/clay_main.c src/util.c src/machine.c src/instruction.c src/object.c src/gc.c src/slot.c src/vmmethod.c src/registers.c src/runtime.c test/*_test.c -o test/test $(CFLAGS)
+	$(CC) test/clay_main.c src/util.c src/machine.c src/instruction.c src/object.c src/primitives.c src/gc.c src/slot.c src/vmmethod.c src/registers.c src/runtime.c test/*_test.c -o test/test $(CFLAGS)
 
 clean:
 	rm -f test/clay.h test/clay_main.c test/test
