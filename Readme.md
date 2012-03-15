@@ -33,7 +33,8 @@ And to clean the mess:
 
 ## Building for Android
 
-TerrorVM can also be built for Android devices:
+TerrorVM can also be built for Android devices. You'll need to install
+the Android NDK 5c (latest 7 doesn't work).
 
     $ make -f Makefile.android
 
