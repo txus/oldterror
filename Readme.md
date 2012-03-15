@@ -34,7 +34,8 @@ And to clean the mess:
 ## Building for Android
 
 TerrorVM can also be built for Android devices. You'll need to install
-the Android NDK 5c (latest 7 doesn't work).
+the Android NDK 5c (latest 7 doesn't work), and export the environment variable
+`ANDROID_NDK` to where you installed it.
 
     $ make -f Makefile.android
 
