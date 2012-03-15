@@ -25,8 +25,7 @@ void test_registers_test__print(void)
 
 void test_registers_test__cleanup(void)
 {
-  Object *nil = Nil_new();
-  Object **registers = { nil };
+  Object **registers;
 
   REGISTER(registers[0], Integer_new(30));
   REGISTER(registers[1], String_new("foo"));

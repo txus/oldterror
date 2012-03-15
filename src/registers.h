@@ -1,6 +1,5 @@
 #ifndef __registers_h__
 #define __registers_h__
-#include <assert.h>
 #include "object.h"
 
 #define NUM_REGISTERS 10

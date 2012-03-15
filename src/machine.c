@@ -43,19 +43,20 @@ Object* Machine_run(Machine *machine, Object *self) {
       case LOADI: {
         debug("LOADI %i %i", ip->fields.a, ip->fields.b);
 
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
+        //Object_print(regs[ip->fields.a]);
         REGISTER(regs[ip->fields.a], Integer_new((int)literals[ip->fields.b]));
         break;
       }
       case LOADS: {
         debug("LOADS %i %i", ip->fields.a, ip->fields.b);
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
         REGISTER(regs[ip->fields.a], String_new((const char *)literals[ip->fields.b]));
         break;
       }
       case LOADBOOL: {
         debug("LOADBOOL %i %i", ip->fields.a, ip->fields.b);
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
         if (ip->fields.b == 0)
         {
           REGISTER(regs[ip->fields.a], FalseObject);
@@ -66,13 +67,13 @@ Object* Machine_run(Machine *machine, Object *self) {
       }
       case LOADNIL: {
         debug("LOADNIL %i", ip->fields.a);
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
         REGISTER(regs[ip->fields.a], NilObject);
         break;
       }
       case ADD: {
         debug("ADD %i %i %i", ip->fields.a, ip->fields.b, ip->fields.c);
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
 
         Object *left  = regs[ip->fields.b];
         Object *right = regs[ip->fields.c];
@@ -95,7 +96,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       case SUB: {
         debug("SUB %i %i %i", ip->fields.a, ip->fields.b, ip->fields.c);
 
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
 
         Object *left  = regs[ip->fields.b];
         Object *right = regs[ip->fields.c];
@@ -118,7 +119,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       case MUL: {
         debug("MUL %i %i %i", ip->fields.a, ip->fields.b, ip->fields.c);
 
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
 
         Object *left  = regs[ip->fields.b];
         Object *right = regs[ip->fields.c];
@@ -141,7 +142,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       case DIV: {
         debug("DIV %i %i %i", ip->fields.a, ip->fields.b, ip->fields.c);
 
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
 
         Object *left  = regs[ip->fields.b];
         Object *right = regs[ip->fields.c];
@@ -163,13 +164,13 @@ Object* Machine_run(Machine *machine, Object *self) {
       }
       case LOADSELF: {
         debug("LOADSELF %i", ip->fields.a);
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
         REGISTER(regs[ip->fields.a], self);
         break;
       }
       case LOADLOCAL: {
         debug("LOADLOCAL %i %i", ip->fields.a, ip->fields.b);
-        CLEAN_REGISTER(regs[ip->fields.a]);
+        //CLEAN_REGISTER(regs[ip->fields.a]);
         REGISTER(regs[ip->fields.a], locals[ip->fields.b]);
         break;
       }

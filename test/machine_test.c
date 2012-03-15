@@ -71,6 +71,7 @@ void test_machine_test__run_load_int(void)
 
   cl_assert(result);
   cl_assert(result->type == tInteger);
+  printf("\n\nValue is %i.\n\n", result->value.integer);
   cl_assert(result->value.integer == 30);
 
   Object_destroy(result);
