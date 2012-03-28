@@ -37,16 +37,31 @@ module Terror
       slot
     end
 
-    def loadnil(a)
-      _loadnil a
+    def loadnil
+      slot = a.allocate :nil
+      _loadnil slot
+      slot
     end
 
-    def move(a, b)
-      _move a, b
-      a
+    def loadbool(which)
+      slot = a.allocate [:false, :true][which]
+      _loadbool slot, which
+      slot
+    end
+
+    def move(b)
+      register_error b unless registers[b]
+
+      slot = a.allocate registers[b].value
+      _move slot, b
+      slot
     end
 
     private
+
+    def register_error(num)
+      raise "There's nothing on register #{num}"
+    end
 
     def literal value
       @literals.index(value) or begin

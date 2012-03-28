@@ -25,14 +25,29 @@ module Terror
     end
 
     describe '#loadnil' do
-      it 'loads nil into  a particular register' do
-        @g.loadnil(1).must_equal 1
+      it 'loads nil' do
+        @g.loadnil.must_equal 0
+        @g.registers[0].value.must_equal :nil
+      end
+    end
+
+    describe '#loadbool' do
+      it 'loads a false boolean' do
+        @g.loadbool(0).must_equal 0
+        @g.registers[0].value.must_equal :false
+      end
+
+      it 'loads a true boolean' do
+        @g.loadbool(1).must_equal 0
+        @g.registers[0].value.must_equal :true
       end
     end
 
     describe '#move' do
       it 'moves a value between registers' do
-        @g.move(1, 0).must_equal 1
+        @g.loadi 42
+        @g.move(0).must_equal 1
+        @g.registers[1].value.must_equal 0
       end
     end
   end
