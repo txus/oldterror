@@ -24,6 +24,12 @@ module Terror
       end
     end
 
+    describe '#loadnil' do
+      it 'loads nil into  a particular register' do
+        @g.loadnil(1).must_equal 1
+      end
+    end
+
     describe '#move' do
       it 'moves a value between registers' do
         @g.move(1, 0).must_equal 1

@@ -37,6 +37,10 @@ module Terror
       slot
     end
 
+    def loadnil(a)
+      _loadnil a
+    end
+
     def move(a, b)
       _move a, b
       a
