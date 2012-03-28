@@ -30,6 +30,13 @@ module Terror
       slot
     end
 
+    def loads(value)
+      lit = literal(value)
+      slot = a.allocate lit
+      _loads slot, lit
+      slot
+    end
+
     def move(a, b)
       _move a, b
       a

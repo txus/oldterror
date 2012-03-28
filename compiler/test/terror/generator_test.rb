@@ -16,6 +16,14 @@ module Terror
       end
     end
 
+    describe '#loads' do
+      it 'loads a string literal into the first free register' do
+        @g.loads("hello").must_equal 0
+        @g.literals.must_equal ["hello"]
+        @g.registers[0].value.must_equal 0
+      end
+    end
+
     describe '#move' do
       it 'moves a value between registers' do
         @g.move(1, 0).must_equal 1
