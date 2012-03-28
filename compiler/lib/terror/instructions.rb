@@ -80,7 +80,7 @@ module Terror
       end
       klass.value = value
 
-      Instructions.const_set name.capitalize, klass
+      Instructions.const_set name.to_s.capitalize, klass
 
       define_method(:"_#{name}") do |*args|
         instruction = Instructions.const_get(name.capitalize)
