@@ -43,7 +43,7 @@ module Terror
     end
 
     describe 'instructions with 1 operand' do
-      %w(loadnil loadself).each do |instruction|
+      %w(ret loadnil loadself).each do |instruction|
         describe instruction do
           it "#{instruction} is encoded correctly" do
             inst = @g.__send__ "_#{instruction}", 2
@@ -57,7 +57,7 @@ module Terror
     end
 
     describe 'instructions with no operands' do
-      %w(ret dump).each do |instruction|
+      %w(dump).each do |instruction|
         describe instruction do
           it "#{instruction} is encoded correctly" do
             inst = @g.__send__ :"_#{instruction}"

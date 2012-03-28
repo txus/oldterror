@@ -1,6 +1,8 @@
 class Allocator
+  attr_reader :registers
+
   def initialize
-    @registers = Array.new(10) { Register.new }
+    @registers = []
   end
 
   def size
@@ -36,6 +38,10 @@ class Allocator
 
     def free?
       @free || !@value
+    end
+
+    def inspect
+      @value.inspect
     end
   end
 end

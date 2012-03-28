@@ -22,8 +22,9 @@ module Terror
       #
       # Returns a readable String representing the instruction and its operands.
       def to_s
+        name = self.class.name.split('::').last
         output = [
-          self.class.name.upcase,
+          name.upcase,
           self.class.value
         ] + operands
 
