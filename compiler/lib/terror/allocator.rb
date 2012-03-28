@@ -40,7 +40,7 @@ class Allocator
       @free || !@value
     end
 
-    def inspect
+    def to_s
       @value.inspect
     end
   end

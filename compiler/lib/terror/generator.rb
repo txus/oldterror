@@ -57,6 +57,15 @@ module Terror
       slot
     end
 
+    def add(b, c)
+      register_error b unless registers[b]
+      register_error c unless registers[c]
+
+      slot = a.allocate :+
+      _add slot, b, c
+      slot
+    end
+
     private
 
     def register_error(num)

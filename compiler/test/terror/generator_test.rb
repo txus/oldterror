@@ -50,5 +50,14 @@ module Terror
         @g.registers[1].value.must_equal 0
       end
     end
+
+    describe '#add' do
+      it 'adds' do
+        @g.loadi 1
+        @g.loadi 2
+        @g.add 0, 1
+        @g.registers[2].value.must_equal :+
+      end
+    end
   end
 end
