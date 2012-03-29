@@ -57,13 +57,15 @@ module Terror
       slot
     end
 
-    def add(b, c)
-      register_error b unless registers[b]
-      register_error c unless registers[c]
+    %w(add sub mul div).each do |op|
+      define_method(op) do |b, c|
+        register_error b unless registers[b]
+        register_error c unless registers[c]
 
-      slot = a.allocate :+
-      _add slot, b, c
-      slot
+        slot = a.allocate op.to_sym
+        send :"_#{op}", b, c
+        slot
+      end
     end
 
     private
