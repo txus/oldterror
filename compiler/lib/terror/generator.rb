@@ -87,6 +87,16 @@ module Terror
       a
     end
 
+    def send_message(a, b, c)
+      _send a, b, c
+      a
+    end
+
+    def ret(a)
+      _ret a
+      a
+    end
+
     private
 
     def register_error(num)

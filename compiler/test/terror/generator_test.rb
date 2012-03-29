@@ -84,5 +84,17 @@ module Terror
         @g.locals[3].must_equal 0
       end
     end
+
+    describe '#send' do
+      it 'sends a message to an object' do
+        @g.send_message(0, 1, 2).must_equal 0
+      end
+    end
+
+    describe '#ret' do
+      it 'returns from the active call frame' do
+        @g.ret(0).must_equal 0
+      end
+    end
   end
 end
