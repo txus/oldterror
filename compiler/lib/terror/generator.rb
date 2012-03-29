@@ -68,6 +68,12 @@ module Terror
       end
     end
 
+    def loadself
+      slot = a.allocate :self
+      _loadself slot
+      slot
+    end
+
     private
 
     def register_error(num)

@@ -61,5 +61,12 @@ module Terror
         end
       end
     end
+
+    describe '#loadself' do
+      it 'loads self' do
+        @g.loadself.must_equal 0
+        @g.registers[0].value.must_equal :self
+      end
+    end
   end
 end
