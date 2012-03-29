@@ -68,5 +68,21 @@ module Terror
         @g.registers[0].value.must_equal :self
       end
     end
+
+    describe '#loadlocal' do
+      it 'loads a local variable' do
+        @g.locals.push :foo
+        @g.loadlocal 0.must_equal 0
+        @g.registers[0].value.must_equal :local
+      end
+    end
+
+    describe '#setlocal' do
+      it 'sets a local variable' do
+        @g.loadi 42
+        @g.setlocal 3, 0
+        @g.locals[3].must_equal 0
+      end
+    end
   end
 end

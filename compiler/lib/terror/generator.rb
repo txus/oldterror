@@ -4,9 +4,10 @@ require 'terror/allocator'
 module Terror
   class Generator
     include Instructions
-    attr_reader :literals
+    attr_reader :literals, :locals
 
     def initialize
+      @locals    = []
       @literals  = []
       @allocator = Allocator.new
     end
@@ -72,6 +73,18 @@ module Terror
       slot = a.allocate :self
       _loadself slot
       slot
+    end
+
+    def loadlocal(b)
+      slot = a.allocate :local
+      _loadlocal slot, b
+      slot
+    end
+
+    def setlocal(a, b)
+      @locals[a] = b
+      _setlocal a, b
+      a
     end
 
     private
