@@ -6,17 +6,23 @@ module Terror
 
     def initialize(g=Generator.new)
       @generator = g
-      @registers = []
     end
     alias_method :g, :generator
 
-    def method_missing(m, *args, &block)
-      puts "VISITOR: ignored #{m}"
-    end
-
     def fixnum_literal(node, parent)
       g.loadi node.value
-      emit node.value.to_s
+    end
+
+    def local_variable_assignment(node, parent)
+      register = node.value.lazy_visit self, node
+      g.setlocal node.name, register
+      register
+    end
+
+    def block(node, parent)
+      node.array.each do |expression|
+        expression.lazy_visit self, node
+      end
     end
 
     def finalize

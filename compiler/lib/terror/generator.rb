@@ -6,6 +6,8 @@ module Terror
     include Instructions
     attr_reader :literals, :locals
 
+    Local = Struct.new(:name, :value)
+
     def initialize
       @locals    = []
       @literals  = []
@@ -81,10 +83,11 @@ module Terror
       slot
     end
 
-    def setlocal(a, b)
-      @locals[a] = b
-      _setlocal a, b
-      a
+    def setlocal(name, b)
+      idx = local(name, b)
+      @locals[idx].value = b
+      _setlocal b, idx
+      idx
     end
 
     def send_message(a, b, c)
@@ -101,6 +104,13 @@ module Terror
 
     def register_error(num)
       raise "There's nothing on register #{num}"
+    end
+
+    def local name, value
+      @locals.index { |l| l.name == name } or begin
+        @locals.push Local.new name, value
+        @locals.size - 1
+      end
     end
 
     def literal value
