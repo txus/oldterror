@@ -80,8 +80,10 @@ module Terror
     describe '#setlocal' do
       it 'sets a local variable' do
         @g.loadi 42
-        @g.setlocal 0
-        @g.locals[0].must_equal 0
+        @g.setlocal :foo, 0
+        local = @g.locals[0]
+        local.name.must_equal :foo
+        local.value.must_equal 0
       end
     end
 
