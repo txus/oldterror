@@ -25,6 +25,18 @@ module Terror
       end
     end
 
+    def nil_literal(node, parent)
+      g.loadnil
+    end
+
+    def true_literal(node, parent)
+      g.loadbool 1
+    end
+
+    def false_literal(node, parent)
+      g.loadbool 0
+    end
+
     def finalize
       g.disassemble
     end

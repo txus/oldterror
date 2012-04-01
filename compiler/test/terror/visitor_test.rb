@@ -46,5 +46,19 @@ module Terror
         _setlocal 0, 1
       end
     end
+
+    it 'compiles boolean literals' do
+      compiles("true") do
+        _loadbool 0, 1
+      end
+
+      compiles("false") do
+        _loadbool 0, 0
+      end
+
+      compiles("nil") do
+        _loadnil 0
+      end
+    end
   end
 end
