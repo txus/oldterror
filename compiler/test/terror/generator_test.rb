@@ -8,6 +8,20 @@ module Terror
       @g = Generator.new
     end
 
+    describe 'branching labels' do
+      it 'works' do
+        @g.loadi(3)
+        label = @g.new_label
+        @g.loadi(3)
+        @g.jmp label
+        @g.loadi(3)
+        @g.loadi(3)
+        label.set!
+
+        label.offset.must_equal 3
+      end
+    end
+
     describe '#loadi' do
       it 'loads an integer into the first free register' do
         @g.loadi(3).must_equal 0
@@ -64,19 +78,19 @@ module Terror
 
     describe '#jmp' do
       it 'performs an inconditional jump' do
-        @g.jmp(2)
+        @g.jmp(@g.new_label)
       end
     end
 
     describe '#jmp' do
       it 'jumps a instructions if b is falsy' do
-        @g.jif(2, 0)
+        @g.jif(@g.new_label, 0)
       end
     end
 
     describe '#jit' do
-      it 'jumps a instructions if b is truthy' do
-        @g.jit(2, 0)
+      it 'jumps to a label if b is truthy' do
+        @g.jit(@g.new_label, 0)
       end
     end
 

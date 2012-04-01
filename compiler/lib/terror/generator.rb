@@ -1,16 +1,19 @@
 require 'terror/instructions'
+require 'terror/branching'
 require 'terror/allocator'
 
 module Terror
   class Generator
     include Instructions
-    attr_reader :literals, :locals
+    include Branching
+    attr_reader :literals, :locals, :ip
 
     Local = Struct.new(:name, :value)
 
     def initialize
       @locals    = []
       @literals  = []
+      @ip        = 0
       @allocator = Allocator.new
     end
 
@@ -27,6 +30,8 @@ module Terror
     end
 
     def loadi(value)
+      @ip += 1
+
       lit = literal(value)
       slot = a.allocate lit
       _loadi slot, lit
@@ -34,6 +39,8 @@ module Terror
     end
 
     def loads(value)
+      @ip += 1
+
       lit = literal(value)
       slot = a.allocate lit
       _loads slot, lit
@@ -41,18 +48,24 @@ module Terror
     end
 
     def loadnil
+      @ip += 1
+
       slot = a.allocate :nil
       _loadnil slot
       slot
     end
 
     def loadbool(which)
+      @ip += 1
+
       slot = a.allocate [:false, :true][which]
       _loadbool slot, which
       slot
     end
 
     def move(b)
+      @ip += 1
+
       register_error b unless registers[b]
 
       slot = a.allocate registers[b].value
@@ -62,6 +75,8 @@ module Terror
 
     %w(add sub mul div).each do |op|
       define_method(op) do |b, c|
+        @ip += 1
+
         register_error b unless registers[b]
         register_error c unless registers[c]
 
@@ -71,31 +86,40 @@ module Terror
       end
     end
 
-    def jmp(a)
-      _jmp a
+    def jmp(label)
+      label.start!
+      @ip += 1
+      _jmp label
     end
 
-    def jif(a, b)
-      _jif a, b
+    def jif(label, b)
+      label.start!
+      @ip += 1
+      _jif label, b
     end
 
-    def jit(a, b)
-      _jit a, b
+    def jit(label, b)
+      label.start!
+      @ip += 1
+      _jit label, b
     end
 
     def loadself
+      @ip += 1
       slot = a.allocate :self
       _loadself slot
       slot
     end
 
     def loadlocal(name)
+      @ip += 1
       slot = a.allocate :local
       _loadlocal slot, local(name)
       slot
     end
 
     def setlocal(name, b)
+      @ip += 1
       idx = local(name, b)
       @locals[idx].value = b
       _setlocal b, idx
@@ -103,11 +127,13 @@ module Terror
     end
 
     def send_message(a, b, c)
+      @ip += 1
       _send a, b, c
       a
     end
 
     def ret(a)
+      @ip += 1
       _ret a
       a
     end

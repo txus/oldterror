@@ -75,6 +75,27 @@ module Terror
       g.loadself
     end
 
+    def if(node, parent)
+      condition = node.condition.lazy_visit(self, parent)
+
+      body_val = else_val = nil
+
+      done = g.new_label
+      else_label = g.new_label
+
+      g.jif else_label, condition
+
+      body_val = node.body.lazy_visit(self, parent)
+      g.jmp done
+
+      else_label.set!
+
+      else_val = node.else.lazy_visit(self, parent)
+
+      done.set!
+      else_val || body_val
+    end
+
     def finalize
       g.disassemble
     end

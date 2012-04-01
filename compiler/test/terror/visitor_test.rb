@@ -93,5 +93,27 @@ module Terror
         _send 0, 1, 2
       end
     end
+
+    describe 'branching' do
+      it 'compiles if' do
+        compiles("if 1 then 3; end") do
+          _loadi 0, 0
+          _jif 3, 0
+          _loadi 1, 1
+          _jmp 2
+          _loadnil 2
+        end
+      end
+
+      it 'compiles if-else' do
+        compiles("if 1 then 3 else 4 end") do
+          _loadi 0, 0 # condition
+          _jif 3, 0
+          _loadi 1, 1 # body
+          _jmp 2
+          _loadi 2, 2 # else body
+        end
+      end
+    end
   end
 end

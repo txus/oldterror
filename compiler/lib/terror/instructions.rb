@@ -31,14 +31,24 @@ module Terror
         output.join " "
       end
 
+      # Public: Checks for equality between instructions.
+      #
+      # Returns whether or not the two instructions are equal.
+      def ==(other)
+        self.class.value == other.class.value &&
+          a == other.a &&
+          b == other.b &&
+          c == other.c
+      end
+
       # Internal: Returns operand a or zero.
-      def a; @a || 0x0; end
+      def a; @a.to_i || 0x0; end
 
       # Internal: Returns operand b or zero.
-      def b; @b || 0x0; end
+      def b; @b.to_i || 0x0; end
 
       # Internal: Returns operand c or zero.
-      def c; @c || 0x0; end
+      def c; @c.to_i || 0x0; end
 
       # Internal: Returns the operands of the instruction.
       def operands
