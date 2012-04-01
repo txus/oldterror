@@ -1,6 +1,6 @@
 # TerrorVM
 
-![TerrorVM](assets/tvm_large.png)
+![TerrorVM](https://github.com/txus/terrorvm/raw/master/assets/tvm_large.png)
 
 A register-based, garbage-collected, stackless, lightweight Virtual Machine
 for object-oriented programming languages.
