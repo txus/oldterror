@@ -192,6 +192,77 @@ void test_machine_test__run_jmp(void)
   Object_destroy(result);
 }
 
+void test_machine_test__run_jif_when_its_truthy_does_nothing(void)
+{
+  Instruction instructions[] = {
+    Instruction_new(OP_LOADI(0, 1)),
+    Instruction_new(OP_JIF(2, 0)),
+    Instruction_new(OP_LOADSELF(0)),
+    Instruction_new(OP_RET(0)),
+  };
+
+  Object *result = test_run_instructions(instructions, 4);
+
+  cl_assert(result);
+  cl_assert(result->type == tObject);
+
+  Object_destroy(result);
+}
+
+void test_machine_test__run_jif_when_its_falsy_jumps(void)
+{
+  Instruction instructions[] = {
+    Instruction_new(OP_LOADBOOL(0, 0)),
+    Instruction_new(OP_JIF(2, 0)),
+    Instruction_new(OP_LOADSELF(0)),
+    Instruction_new(OP_RET(0)),
+  };
+
+  init_runtime(); //needed for FalseObject and TrueObject
+  Object *result = test_run_instructions(instructions, 4);
+
+  cl_assert(result);
+  cl_assert(result->type == tFalse);
+
+  Object_destroy(result);
+}
+
+void test_machine_test__run_jit_when_its_truthy_jumps(void)
+{
+  Instruction instructions[] = {
+    Instruction_new(OP_LOADI(0, 1)),
+    Instruction_new(OP_JIT(2, 0)),
+    Instruction_new(OP_LOADSELF(0)),
+    Instruction_new(OP_RET(0)),
+  };
+
+  Object *result = test_run_instructions(instructions, 4);
+
+  cl_assert(result);
+  cl_assert(result->type == tInteger);
+  cl_assert(result->value.integer == 30);
+
+  Object_destroy(result);
+}
+
+void test_machine_test__run_jit_when_its_falsy_does_nothing(void)
+{
+  Instruction instructions[] = {
+    Instruction_new(OP_LOADBOOL(0, 0)),
+    Instruction_new(OP_JIT(2, 0)),
+    Instruction_new(OP_LOADSELF(0)),
+    Instruction_new(OP_RET(0)),
+  };
+
+  init_runtime(); //needed for FalseObject and TrueObject
+  Object *result = test_run_instructions(instructions, 4);
+
+  cl_assert(result);
+  cl_assert(result->type == tObject);
+
+  Object_destroy(result);
+}
+
 void test_machine_test__run_loadself(void)
 {
   Instruction instructions[] = {

@@ -59,16 +59,16 @@ Object* Machine_run(Machine *machine, Object *self) {
         //CLEAN_REGISTER(regs[ip->fields.a]);
         if (ip->fields.b == 0)
         {
-          REGISTER(regs[ip->fields.a], FalseObject);
+          regs[ip->fields.a] = FalseObject;
         } else {
-          REGISTER(regs[ip->fields.a], TrueObject);
+          regs[ip->fields.a] = TrueObject;
         }
         break;
       }
       case LOADNIL: {
         debug("LOADNIL %i", ip->fields.a);
         //CLEAN_REGISTER(regs[ip->fields.a]);
-        REGISTER(regs[ip->fields.a], NilObject);
+        regs[ip->fields.a] = NilObject;
         break;
       }
       case ADD: {
@@ -165,6 +165,26 @@ Object* Machine_run(Machine *machine, Object *self) {
       case JMP: {
         debug("JMP %i", ip->fields.a);
         ip = ip + (ip->fields.a - 1); // Jump N instructions
+        break;
+      }
+      case JIF: {
+        debug("JIF %i %i", ip->fields.a, ip->fields.b);
+
+        Object *value = regs[ip->fields.b];
+        if (value == FalseObject || value == NilObject) {
+          ip = ip + (ip->fields.a - 1); // Jump N instructions
+        }
+
+        break;
+      }
+      case JIT: {
+        debug("JIT %i %i", ip->fields.a, ip->fields.b);
+
+        Object *value = regs[ip->fields.b];
+        if (value != FalseObject && value != NilObject) {
+          ip = ip + (ip->fields.a - 1); // Jump N instructions
+        }
+
         break;
       }
       case LOADSELF: {
