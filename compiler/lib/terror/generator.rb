@@ -77,9 +77,9 @@ module Terror
       slot
     end
 
-    def loadlocal(b)
+    def loadlocal(name)
       slot = a.allocate :local
-      _loadlocal slot, b
+      _loadlocal slot, local(name)
       slot
     end
 
@@ -106,7 +106,7 @@ module Terror
       raise "There's nothing on register #{num}"
     end
 
-    def local name, value
+    def local name, value=nil
       @locals.index { |l| l.name == name } or begin
         @locals.push Local.new name, value
         @locals.size - 1

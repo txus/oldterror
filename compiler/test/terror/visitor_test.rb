@@ -47,6 +47,14 @@ module Terror
       end
     end
 
+    it 'compiles local variable access' do
+      compiles("a = 3; a") do
+        _loadi 0, 0
+        _setlocal 0, 0
+        _loadlocal 1, 0
+      end
+    end
+
     it 'compiles boolean literals' do
       compiles("true") do
         _loadbool 0, 1

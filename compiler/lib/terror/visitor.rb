@@ -19,6 +19,10 @@ module Terror
       register
     end
 
+    def local_variable_access(node, parent)
+      g.loadlocal node.name
+    end
+
     def block(node, parent)
       node.array.each do |expression|
         expression.lazy_visit self, node
