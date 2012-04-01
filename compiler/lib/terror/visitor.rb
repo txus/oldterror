@@ -97,7 +97,7 @@ module Terror
     end
 
     def finalize
-      g.disassemble
+      g.encode
     end
   end
 end

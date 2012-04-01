@@ -29,6 +29,17 @@ module Terror
       instructions.map(&:to_s).join "\n"
     end
 
+    def encode
+      output = "_main_\n"
+      output << ":%i:%i:%i:%s\n" % [
+        registers.size,
+        @locals.size,
+        @literals.size, @literals.join(',')
+      ]
+      output << instructions.map(&:encode).join("\n")
+      output
+    end
+
     def loadi(value)
       @ip += 1
 

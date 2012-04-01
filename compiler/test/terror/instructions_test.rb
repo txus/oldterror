@@ -16,7 +16,7 @@ module Terror
             value = '%0x' % inst.class.value
 
             inst.operands.must_equal [2, 3, 4]
-            inst.encode.must_equal "#{value}020304"
+            inst.encode.must_equal "0x#{value}020304"
           end
         end
       end
@@ -36,7 +36,7 @@ module Terror
             end
 
             inst.operands.must_equal [2, 3]
-            inst.encode.must_equal "#{value}20300"
+            inst.encode.must_equal "0x#{value}20300"
           end
         end
       end
@@ -50,7 +50,7 @@ module Terror
             value = '%0x' % inst.class.value
 
             inst.operands.must_equal [2]
-            inst.encode.must_equal "#{value}020000"
+            inst.encode.must_equal "0x#{value}020000"
           end
         end
       end
@@ -64,7 +64,7 @@ module Terror
             value = '%0x' % inst.class.value
 
             inst.operands.must_equal []
-            inst.encode.must_equal "#{value}000000"
+            inst.encode.must_equal "0x#{value}000000"
           end
         end
       end

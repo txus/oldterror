@@ -10,7 +10,7 @@ module Terror
       #
       # Returns a String encoded in hexadecimal format.
       def encode
-        "%0x" % (
+        "0x%0x" % (
           (self.class.value << 24) +
           (a << 16) +
           (b << 8) +
