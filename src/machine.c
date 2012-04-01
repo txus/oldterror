@@ -162,6 +162,11 @@ Object* Machine_run(Machine *machine, Object *self) {
         REGISTER(regs[ip->fields.a], Integer_new(result));
         break;
       }
+      case JMP: {
+        debug("JMP %i", ip->fields.a);
+        ip = ip + (ip->fields.a - 1); // Jump N instructions
+        break;
+      }
       case LOADSELF: {
         debug("LOADSELF %i", ip->fields.a);
         //CLEAN_REGISTER(regs[ip->fields.a]);

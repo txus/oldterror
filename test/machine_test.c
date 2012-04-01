@@ -173,6 +173,24 @@ void test_machine_test__run_setlocal(void)
   Object_destroy(result);
 }
 
+void test_machine_test__run_jmp(void)
+{
+  Instruction instructions[] = {
+    Instruction_new(OP_LOADI(0, 1)),
+    Instruction_new(OP_JMP(3)),
+    Instruction_new(OP_LOADSELF(0)),
+    Instruction_new(OP_LOADSELF(0)),
+    Instruction_new(OP_RET(0)),
+  };
+
+  Object *result = test_run_instructions(instructions, 5);
+
+  cl_assert(result);
+  cl_assert(result->type == tInteger);
+  cl_assert(result->value.integer == 30);
+
+  Object_destroy(result);
+}
 
 void test_machine_test__run_loadself(void)
 {

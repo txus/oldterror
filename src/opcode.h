@@ -16,6 +16,11 @@ typedef enum {
   MUL,
   DIV,
 
+  // Branching
+  JMP = 0x20,
+  JIF, // Jump if false
+  JIT, // Jimp if true
+
   // Object operations
   LOADSELF = 0x30,
 
@@ -43,6 +48,10 @@ typedef enum {
 #define OP_SUB(A,B,C)     __OP__(SUB, A, B, C)
 #define OP_MUL(A,B,C)     __OP__(MUL, A, B, C)
 #define OP_DIV(A,B,C)     __OP__(DIV, A, B, C)
+
+#define OP_JMP(A)         __OP__(JMP, A, 0, 0)
+#define OP_JIF(A,B)       __OP__(JIF, A, B, 0)
+#define OP_JIT(A,B)       __OP__(JIT, A, B, 0)
 
 #define OP_LOADSELF(A)    __OP__(LOADSELF, A, 0, 0)
 
