@@ -62,6 +62,24 @@ module Terror
       end
     end
 
+    describe '#jmp' do
+      it 'performs an inconditional jump' do
+        @g.jmp(2)
+      end
+    end
+
+    describe '#jmp' do
+      it 'jumps a instructions if b is falsy' do
+        @g.jif(2, 0)
+      end
+    end
+
+    describe '#jit' do
+      it 'jumps a instructions if b is truthy' do
+        @g.jit(2, 0)
+      end
+    end
+
     describe '#loadself' do
       it 'loads self' do
         @g.loadself.must_equal 0
@@ -71,7 +89,7 @@ module Terror
 
     describe '#loadlocal' do
       it 'loads a local variable' do
-        @g.locals.push :foo
+        @g.locals.push Generator::Local.new(:foo, 3)
         @g.loadlocal 0.must_equal 0
         @g.registers[0].value.must_equal :local
       end

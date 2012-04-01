@@ -116,6 +116,10 @@ module Terror
     op :mul,       0x12, 3
     op :div,       0x13, 3
 
+    op :jmp,       0x20, 1
+    op :jif,       0x21, 2
+    op :jit,       0x22, 2
+
     op :loadself,  0x30, 1
 
     op :loadlocal, 0x50, 2

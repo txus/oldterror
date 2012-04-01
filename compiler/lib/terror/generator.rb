@@ -71,6 +71,18 @@ module Terror
       end
     end
 
+    def jmp(a)
+      _jmp a
+    end
+
+    def jif(a, b)
+      _jif a, b
+    end
+
+    def jit(a, b)
+      _jit a, b
+    end
+
     def loadself
       slot = a.allocate :self
       _loadself slot

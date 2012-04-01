@@ -23,7 +23,7 @@ module Terror
     end
 
     describe 'instructions with 2 operands' do
-      %w(move loadi loads loadbool loadlocal setlocal).each do |instruction|
+      %w(move loadi loads loadbool loadlocal setlocal jif jit).each do |instruction|
         describe instruction do
           it "#{instruction} is encoded correctly" do
             inst = @g.__send__ :"_#{instruction}", 2, 3
@@ -43,7 +43,7 @@ module Terror
     end
 
     describe 'instructions with 1 operand' do
-      %w(ret loadnil loadself).each do |instruction|
+      %w(ret loadnil loadself jmp).each do |instruction|
         describe instruction do
           it "#{instruction} is encoded correctly" do
             inst = @g.__send__ "_#{instruction}", 2
