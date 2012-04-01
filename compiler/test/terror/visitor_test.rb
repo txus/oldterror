@@ -74,5 +74,24 @@ module Terror
         _loads 0, 0
       end
     end
+
+    it 'compiles messages without arguments' do
+      compiles("a") do
+        _loadself 0
+        _loads 1, 0
+        _send 0, 1, 2
+      end
+    end
+
+    it 'compiles messages with arguments' do
+      compiles("puts 1, 2, 3") do
+        _loadself 0
+        _loads 1, 0
+        _loadi 2, 1
+        _loadi 3, 2
+        _loadi 4, 3
+        _send 0, 1, 2
+      end
+    end
   end
 end

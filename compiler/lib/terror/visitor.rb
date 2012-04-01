@@ -45,6 +45,36 @@ module Terror
       g.loads node.string
     end
 
+    def send(node, parent)
+      rcv  = node.receiver.lazy_visit self, node
+      meth = g.loads node.name
+      args = meth + 1
+
+      g.send_message rcv, meth, args
+    end
+
+    def send_with_arguments(node, parent)
+      rcv  = node.receiver.lazy_visit self, node
+      meth = g.loads node.name
+
+      args = node.arguments.lazy_visit self
+
+      g.send_message rcv, meth, args.first
+    end
+
+    def actual_arguments(node, parent)
+      slots = []
+      body = node.array
+      body.each_with_index do |argument, index|
+        slots << argument.lazy_visit(self, parent)
+      end
+      slots
+    end
+
+    def self(node, parent)
+      g.loadself
+    end
+
     def finalize
       g.disassemble
     end
