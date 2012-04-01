@@ -44,7 +44,6 @@ Object* Machine_run(Machine *machine, Object *self) {
         debug("LOADI %i %i", ip->fields.a, ip->fields.b);
 
         //CLEAN_REGISTER(regs[ip->fields.a]);
-        //Object_print(regs[ip->fields.a]);
         REGISTER(regs[ip->fields.a], Integer_new((int)literals[ip->fields.b]));
         break;
       }
