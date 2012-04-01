@@ -37,6 +37,10 @@ module Terror
       g.loadbool 0
     end
 
+    def string_literal(node, parent)
+      g.loads node.string
+    end
+
     def finalize
       g.disassemble
     end

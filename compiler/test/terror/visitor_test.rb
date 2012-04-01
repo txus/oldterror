@@ -60,5 +60,11 @@ module Terror
         _loadnil 0
       end
     end
+
+    it 'compiles string literals' do
+      compiles("'hey'") do
+        _loads 0, 0
+      end
+    end
   end
 end
