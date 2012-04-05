@@ -194,5 +194,12 @@ VMMethod* Object_lookup_method(Object *object, const char *name) {
       }
     }
   }
+
+  if (object == MainObject) {
+    VMMethod *kernel_method = malloc(sizeof(VMMethod));
+    kernel_method->arity = 1;
+    return kernel_method;
+  }
+
   return NULL;
 }

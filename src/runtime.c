@@ -25,21 +25,22 @@ void destroy_runtime() {
 }
 
 Object* call(Object *receiver, const char *method, Object **argv, int argc) {
-  VMMethod *vmmethod = Object_lookup_method(receiver, method);
-
   debug("Entering #%s", method);
+
+  if (receiver == MainObject) {
+    debug("Receiver is main object");
+    Object *result = call_kernel_method(method, argv, argc);
+    return result;
+  }
+
+  VMMethod *vmmethod = Object_lookup_method(receiver, method);
 
   if (!vmmethod) {
     // Native global methods
-    if (receiver == MainObject) {
-      Object *result = call_kernel_method(method, argv, argc);
-      return result;
-    } else {
-      printf("Could not find method %s on ", method);
-      Object_print(receiver);
-      printf("\n");
-      exit(1);
-    }
+    printf("Could not find method %s on ", method);
+    Object_print(receiver);
+    printf("\n");
+    exit(1);
   }
 
   Object *result = VMMethod_execute(vmmethod, argv, receiver);
@@ -55,6 +56,7 @@ Object* call_kernel_method(const char *method, Object **argv, int argc) {
    */
 
   if (strcmp(method, "print")==0) {
+    debug("PRINTING!!!!!");
     if (!argv[0]) {
       printf("[#print] Wrong number of arguments: 0 for 1\n");
       exit(1);

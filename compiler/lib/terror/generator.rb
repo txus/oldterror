@@ -30,6 +30,10 @@ module Terror
     end
 
     def encode
+      # Always return nil at the end of a script
+      reg = loadnil
+      ret reg
+
       output = "_main\n"
       output << ":%i:%i:%i:%i\n" % [
         registers.size,
@@ -55,7 +59,7 @@ module Terror
     def loads(value)
       @ip += 1
 
-      lit = literal(value)
+      lit = literal("\"#{value}")
       slot = a.allocate lit
       _loads slot, lit
       slot
