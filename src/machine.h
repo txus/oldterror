@@ -6,12 +6,12 @@
 #include "object.h"
 
 typedef struct {
-  Instruction *ip;
+  Instruction **instructions;
   long *literals;
   Object **locals;
 } Machine;
 
-Machine* Machine_new(Instruction *ip, long *literals, Object **locals);
+Machine* Machine_new(Instruction **instructions, long *literals, Object **locals);
 void Machine_destroy(Machine *machine);
 Object* Machine_run(Machine *machine, Object *self);
 

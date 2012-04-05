@@ -30,12 +30,15 @@ module Terror
     end
 
     def encode
-      output = "_main_\n"
-      output << ":%i:%i:%i:%s\n" % [
+      output = "_main\n"
+      output << ":%i:%i:%i:%i\n" % [
         registers.size,
         @locals.size,
-        @literals.size, @literals.join(',')
+        @literals.size,
+        @ip
       ]
+      output << @literals.join("\n")
+      output << "\n"
       output << instructions.map(&:encode).join("\n")
       output
     end

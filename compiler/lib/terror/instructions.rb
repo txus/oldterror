@@ -25,7 +25,7 @@ module Terror
         name = self.class.name.split('::').last
         output = [
           name.upcase,
-          self.class.value
+          # self.class.value
         ] + operands
 
         output.join " "

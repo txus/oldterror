@@ -3,7 +3,7 @@ CFLAGS=-Wall -g
 all: vm
 	cp vm ../vm
 
-vm: object.o primitives.o instruction.o registers.o runtime.o vmmethod.o machine.o slot.o gc.o util.o
+vm: input_reader.o object.o primitives.o instruction.o registers.o runtime.o vmmethod.o machine.o slot.o gc.o util.o
 
 clean:
 	rm -f ../vm vm

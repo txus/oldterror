@@ -12,6 +12,6 @@ typedef struct {
   } fields;
 } Instruction;
 
-Instruction Instruction_new(uint32_t);
+Instruction* Instruction_new(uint32_t);
 
 #endif

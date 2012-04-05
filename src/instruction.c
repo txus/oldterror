@@ -1,9 +1,13 @@
+#include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include "instruction.h"
 
-Instruction
+Instruction*
 Instruction_new(uint32_t encoded)
 {
+  Instruction *allocated = malloc(sizeof(Instruction));
+
   Instruction instruction = {
     .opcode = (encoded & 0xff000000) >> 24,
     .fields = {
@@ -13,5 +17,7 @@ Instruction_new(uint32_t encoded)
     }
   };
 
-  return instruction;
+  memcpy(allocated, &instruction, sizeof instruction);
+
+  return allocated;
 }

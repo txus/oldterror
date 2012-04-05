@@ -6,6 +6,7 @@
 #include "object.h"
 #include "runtime.h"
 #include "dbg.h"
+#include "util.h"
 #include "gc.h"
 
 Object *TrueObject;
@@ -13,9 +14,9 @@ Object *FalseObject;
 Object *NilObject;
 Object *MainObject;
 
-Machine* Machine_new(Instruction *ip, long *literals, Object **locals) {
+Machine* Machine_new(Instruction **instructions, long *literals, Object **locals) {
   Machine *machine = malloc(sizeof(Machine));
-  machine->ip           = ip;
+  machine->instructions = instructions;
   machine->literals     = literals;
   machine->locals       = locals;
   return machine;
@@ -26,7 +27,7 @@ void Machine_destroy(Machine *machine) {
 }
 
 Object* Machine_run(Machine *machine, Object *self) {
-  Instruction *ip = machine->ip;
+  Instruction *ip = machine->instructions[0];
   long *literals  = machine->literals;
   Object **locals = machine->locals;
 
@@ -171,7 +172,8 @@ Object* Machine_run(Machine *machine, Object *self) {
 
         Object *value = regs[ip->fields.b];
         if (value == FalseObject || value == NilObject) {
-          ip = ip + (ip->fields.a - 1); // Jump N instructions
+          //ip = ip + (ip->fields.a - 1); // Jump N instructions
+          ip += sizeof(Instruction) * (ip->fields.a - 1);
         }
 
         break;
@@ -181,7 +183,8 @@ Object* Machine_run(Machine *machine, Object *self) {
 
         Object *value = regs[ip->fields.b];
         if (value != FalseObject && value != NilObject) {
-          ip = ip + (ip->fields.a - 1); // Jump N instructions
+          //ip = ip + (ip->fields.a - 1); // Jump N instructions
+          ip += sizeof(Instruction) * (ip->fields.a - 1);
         }
 
         break;
@@ -207,6 +210,13 @@ Object* Machine_run(Machine *machine, Object *self) {
         Object   *receiver  = regs[ip->fields.a];
         const char *message = (const char *)(regs[ip->fields.b]->value.string);
         VMMethod *method    = Object_lookup_method(receiver, message);
+
+        if (!method) {
+          printf("Cannot find method %s on ", message);
+          Object_print(receiver);
+          printf("\n");
+          die("Method lookup error.");
+        }
 
         Object *argv[method->arity - 1];
         int i = 0;
@@ -236,6 +246,6 @@ Object* Machine_run(Machine *machine, Object *self) {
         break;
       }
     }
-    ip++;
+    ip += sizeof(Instruction);
   }
 }
