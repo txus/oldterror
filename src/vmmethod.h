@@ -6,12 +6,12 @@
 // #include "object.h"
 
 typedef struct {
-  Instruction *start_ip;
+  Instruction **instructions;
   long *literals;
   short arity;
 } VMMethod;
 
-VMMethod* VMMethod_new(Instruction *start_ip, long *literals, short arity);
+VMMethod* VMMethod_new(Instruction **instructions, long *literals, short arity);
 // Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
 void VMMethod_destroy(VMMethod *vmmethod);
 

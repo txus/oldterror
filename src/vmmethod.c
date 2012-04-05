@@ -8,46 +8,24 @@
 
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self);
 
-VMMethod* VMMethod_new(Instruction *start_ip, long *literals, short arity) {
+VMMethod* VMMethod_new(Instruction **instructions, long *literals, short arity) {
   VMMethod *method = malloc(sizeof(VMMethod));
   if (!method) die("Could not allocate VMMethod");
-  method->start_ip = start_ip;
+  method->instructions = instructions;
   method->literals = literals;
   method->arity    = arity;
   return method;
 }
 
 void VMMethod_destroy(VMMethod *method) {
-  free(method->start_ip);
+  free(method->instructions);
   free(method->literals);
   free(method);
 }
 
 Object* VMMethod_execute(VMMethod *method, Object **locals, Object *self) {
-  Machine *machine = Machine_new(method->start_ip, method->literals, locals);
+  Machine *machine = Machine_new(method->instructions, method->literals, locals);
   Object *result = Machine_run(machine, self);
   Machine_destroy(machine);
   return result;
-}
-
-Instruction* allocate_instructions(Instruction *instructions, int count) {
-  Instruction *allocated_instructions = malloc(sizeof(Instruction) * count);
-
-  int i = 0;
-  for(i = 0; i < count; i++) {
-    allocated_instructions[i] = instructions[i];
-  }
-
-  return allocated_instructions;
-}
-
-long* allocate_literals(long literals[], int count) {
-  long *allocated_literals = malloc(sizeof(long) * count);
-
-  int i = 0;
-  for(i = 0; i < count; i++) {
-    allocated_literals[i] = literals[i];
-  }
-
-  return allocated_literals;
 }

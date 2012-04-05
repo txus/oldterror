@@ -58,22 +58,21 @@ Object *Integer_new(int value) {
 
   // DEFINE #add method for integers
 
-  Instruction add_instructions[] = {
+  Instruction *add_instructions[] = {
     Instruction_new(OP_LOADSELF(1)), // LOADSELF 1
     Instruction_new(OP_LOADLOCAL(2,0)), // LOAD_LOCAL 2 0
     Instruction_new(OP_ADD(0,1,2)), // ADD 0 1 2
     Instruction_new(OP_RET(0)), // RET
   };
 
-  Instruction *instructions = allocate_instructions(add_instructions, 4);
   short arity = 1;
 
-  Object_define_method(integer, 0, "add", instructions, arity);
+  Object_define_method(integer, 0, "add", add_instructions, arity);
 
   return integer;
 }
 
-void Object_define_method(Object *object, int idx, const char *name, Instruction *instructions, short arity) {
+void Object_define_method(Object *object, int idx, const char *name, Instruction **instructions, short arity) {
   long *literals = malloc(sizeof(long) * 10);
   VMMethod *method = VMMethod_new(instructions, literals, arity);
 
