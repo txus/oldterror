@@ -54,8 +54,39 @@ the Android NDK 5c (latest 7 doesn't work), and export the environment variable
 
 ## Bytecode format
 
+TerrorVM files are encoded with a header containing `_main` (the method
+that will be the entry point), some info about number of registers, local
+variables, literals and instructions used by the method, followed by all the
+literals, and then all the instructions. It starts like this:
+
+    _main
+
+Then info encoded in the format
+`:num_registers:num_locals:num_literals:num_instructions`:
+
+    :10:2:4:17
+
+Then all the literals, each one in a line (the ones starting with `"` are
+string literals):
+
+    123
+    "print
+    "Goodbye world!
+    "Hello world!
+
+And then all the instructions:
+
+    0x1000000
+    0x51000000
+    0x9010000
+    0x51010100
+    ...
+
 Instructions have a compact 3-operand representation, 8-bit each, for a total
 of 32-bit per instruction.
+
+Take a look at `examples/hello_world.tvm` for an example of a program, whose
+Ruby source code is at `compiler/examples/hello_world.rb`.
 
 ### Instruction set
 
