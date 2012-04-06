@@ -37,9 +37,9 @@ TerrorVM runs `.tvm` bytecode files such as the `hello_world.tvm` under the
     $ ./vm examples/hello_world.tvm
 
 It ships with a simple compiler written in Ruby (Rubinius) that compiles a
-tiny subset of Ruby to `.tvm` files. Check out the `compiler` directory and
-the `compiler/examples` where we have the `hello_world.rb` file used to
-produce the `hello_world.tvm`.
+tiny subset of Ruby to `.tvm` files. Check out the `compiler` directory, which
+has its own Readme, and the `compiler/examples` where we have the
+`hello_world.rb` file used to produce the `hello_world.tvm`.
 
 TerrorVM doesn't need Ruby to run; even the example compiler is a proof of
 concept and could be written in any language (even in C obviously).
