@@ -8,3 +8,8 @@ register allocation is rather naive and non-efficient. Basically, reusability
 of registers is close to zero. If you have a suggestion about this (some book
 or article regarding this topic) I'd be really happy if you pointed it out for
 me to read about this.
+
+## Usage
+
+    rvm use rbx-head
+    bin/terror examples/hello_world.rb > myprogram.tvm
