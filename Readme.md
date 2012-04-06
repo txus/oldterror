@@ -85,8 +85,8 @@ And then all the instructions:
 Instructions have a compact 3-operand representation, 8-bit each, for a total
 of 32-bit per instruction.
 
-Take a look at `examples/hello_world.tvm` for an example of a program, whose
-Ruby source code is at `compiler/examples/hello_world.rb`.
+Take a look at [examples/hello_world.tvm](https://github.com/txus/terrorvm/blob/master/examples/hello_world.tvm)
+for an example of a program, whose Ruby source code is at [compiler/examples/hello_world.rb](https://github.com/txus/terrorvm/blob/master/compiler/examples/hello_world.rb).
 
 ### Instruction set
 
