@@ -17,13 +17,9 @@ Anyway, it's a work in progress! :)
 
 ## Building the VM
 
-For now it comes with a default program whose instructions are hardcoded inside
-`vm.c`.
-
     $ git clone git://github.com/txus/terrorvm.git
     $ cd terrorvm
     $ make
-    $ ./vm
 
 To run the tests:
 
@@ -32,6 +28,21 @@ To run the tests:
 And to clean the mess:
 
     $ make clean
+
+## Running programs
+
+TerrorVM runs `.tvm` bytecode files such as the `hello_world.tvm` under the
+`examples` directory.
+
+    $ ./vm examples/hello_world.tvm
+
+It ships with a simple compiler written in Ruby (Rubinius) that compiles a
+tiny subset of Ruby to `.tvm` files. Check out the `compiler` directory and
+the `compiler/examples` where we have the `hello_world.rb` file used to
+produce the `hello_world.tvm`.
+
+TerrorVM doesn't need Ruby to run; even the example compiler is a proof of
+concept and could be written in any language (even in C obviously).
 
 ## Building for Android
 
@@ -45,6 +56,58 @@ the Android NDK 5c (latest 7 doesn't work), and export the environment variable
 
 Instructions have a compact 3-operand representation, 8-bit each, for a total
 of 32-bit per instruction.
+
+### Instruction set
+
+#### Loading values
+
+* **MOVE A, B**: copies the contents in register `B` to register `A`.
+* **LOADI A, B**: loads the integer (from the literal pool) at index `B` into
+  register `A`.
+* **LOADS A, B**: loads the string (from the literal pool) at index `B` into
+  register `A`.
+* **LOADNIL A**: loads the special value `nil` into register `A`.
+* **LOADBOOL A, B**: loads a boolean into register `A`, being true if `B` is
+  the number 1 or false if `B` is 0.
+* **LOADSELF A**: loads the current `self` into register `A`.
+
+#### Arithmetic operations (to be deprecated)
+
+* **ADD A, B, C**: adds the contents of the registers `B` and `C` and saves
+  the result into the register `A`.
+* **SUB A, B, C**: substracts the contents of the register `C` from the
+  contents in `B` and saves the result into the register `A`.
+* **MUL A, B, C**: multiplies the contents of the registers `B` and `C` and saves
+  the result into the register `A`.
+* **DIV A, B, C**: divides the contents of the registers `B` and `C` and saves
+  the result into the register `A`.
+
+#### Branching
+
+* **JMP A**: unconditionally jumps `A` instructions.
+* **JIF A, B**: jumps `A` instructions if the contents of the register `B` are
+  either `false` or `nil`.
+* **JIT A, B**: jumps `A` instructions if the contents of the register `B` are
+  neither `false` nor `nil`.
+
+#### Local variables
+
+* **LOADLOCAL A, B**: loads the value in the locals table at index `B` into
+  the register `A`.
+* **SETLOCAL A, B**: stores the contents of the register `A` in the locals
+  table at index `B`.
+
+#### Message sending and call frames
+
+* **SEND A, B, C**: send a message specified by the string in the literals
+  table at index `B` to the receiver `A`, with N arguments depending on the
+  arity of the method, the first argument being in the register `C`.
+* **RET A**: return from the current call frame to the caller with the value
+  in the register `A`.
+
+#### Debugging
+
+* **DUMP**: Print the contents of all the registers to the standard output.
 
 ## Who's this
 

@@ -28,7 +28,6 @@ Object* call(Object *receiver, const char *method, Object **argv, int argc) {
   debug("Entering #%s", method);
 
   if (receiver == MainObject) {
-    debug("Receiver is main object");
     Object *result = call_kernel_method(method, argv, argc);
     return result;
   }
@@ -56,7 +55,6 @@ Object* call_kernel_method(const char *method, Object **argv, int argc) {
    */
 
   if (strcmp(method, "print")==0) {
-    debug("PRINTING!!!!!");
     if (!argv[0]) {
       printf("[#print] Wrong number of arguments: 0 for 1\n");
       exit(1);

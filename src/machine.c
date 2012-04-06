@@ -164,7 +164,7 @@ Object* Machine_run(Machine *machine, Object *self) {
       }
       case JMP: {
         debug("JMP %i", ip->fields.a);
-        ip = ip + (ip->fields.a - 1); // Jump N instructions
+        ip += sizeof(Instruction) * (ip->fields.a - 1);
         break;
       }
       case JIF: {
@@ -207,6 +207,8 @@ Object* Machine_run(Machine *machine, Object *self) {
         break;
       }
       case SEND: {
+        debug("SEND %i %i %i", ip->fields.a, ip->fields.b, ip->fields.c);
+
         Object   *receiver  = regs[ip->fields.a];
         const char *message = (const char *)(regs[ip->fields.b]->value.string);
         VMMethod *method    = Object_lookup_method(receiver, message);
