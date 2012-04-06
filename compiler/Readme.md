@@ -11,5 +11,5 @@ me to read about this.
 
 ## Usage
 
-    rvm use rbx-head
-    bin/terror examples/hello_world.rb > myprogram.tvm
+    $ rvm use rbx-head
+    $ bin/terror examples/hello_world.rb > myprogram.tvm
