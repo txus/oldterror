@@ -16,6 +16,5 @@ VMMethod* VMMethod_new(Instruction **instructions, long *literals, short arity);
 void VMMethod_destroy(VMMethod *vmmethod);
 
 Instruction* allocate_instructions(Instruction *instructions, int count);
-long* allocate_literals(long *literals, int count);
 
 #endif

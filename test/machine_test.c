@@ -4,7 +4,7 @@
 #include "../src/machine.h"
 #include "../src/runtime.h"
 
-static VMMethod* test_create_method(Instruction instructions[], int count)
+static VMMethod* test_create_method(Instruction *instructions[], int count)
 {
   long literals[] = {
     (long) "foo",
@@ -12,27 +12,23 @@ static VMMethod* test_create_method(Instruction instructions[], int count)
     (long) "add",
   };
 
-  int literals_count = sizeof(literals) / sizeof(long);
-  long *allocated_literals     = allocate_literals(literals, literals_count);
-  Instruction *allocated_instructions = allocate_instructions(instructions, count);
-
-  VMMethod *method = VMMethod_new(allocated_instructions, allocated_literals, 0);
+  VMMethod *method = VMMethod_new(instructions, literals, 0);
   return method;
 }
 
-static Machine* test_create_machine(Instruction instructions[], int count)
+static Machine* test_create_machine(Instruction *instructions[], int count)
 {
   VMMethod *method = test_create_method(instructions, count);
 
   Object **locals = malloc(sizeof(Object) * 1);
   locals[0] = Integer_new(123); // Set a local variable
 
-  Machine *machine = Machine_new(method->start_ip, method->literals, locals);
+  Machine *machine = Machine_new(method->instructions, method->literals, locals);
 
   return machine;
 }
 
-static Object* test_run_instructions(Instruction instructions[], int count)
+static Object* test_run_instructions(Instruction *instructions[], int count)
 {
   Machine *machine = test_create_machine(instructions, count);
   Object *self = Object_new();
@@ -45,13 +41,13 @@ static Object* test_run_instructions(Instruction instructions[], int count)
 
 void test_machine_test__new(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(0,1)),
     Instruction_new(OP_RET(0)),
   };
 
   Machine *machine = test_create_machine(instructions, 2);
-  cl_assert(machine->ip->opcode == LOADI);
+  cl_assert(machine->instructions[0]->opcode == LOADI);
 
   Machine_destroy(machine);
 }
@@ -62,7 +58,7 @@ void test_machine_test__new(void)
 
 void test_machine_test__run_load_int(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(0,1)),
     Instruction_new(OP_RET(0)),
   };
@@ -79,7 +75,7 @@ void test_machine_test__run_load_int(void)
 
 void test_machine_test__run_load_string(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADS(0,0)),
     Instruction_new(OP_RET(0)),
   };
@@ -93,7 +89,7 @@ void test_machine_test__run_load_string(void)
 
 void test_machine_test__run_load_false(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADBOOL(0,0)),
     Instruction_new(OP_RET(0)),
   };
@@ -109,7 +105,7 @@ void test_machine_test__run_load_false(void)
 
 void test_machine_test__run_load_true(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADBOOL(0,1)),
     Instruction_new(OP_RET(0)),
   };
@@ -125,7 +121,7 @@ void test_machine_test__run_load_true(void)
 
 void test_machine_test__run_load_nil(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADNIL(0)),
     Instruction_new(OP_RET(0)),
   };
@@ -141,7 +137,7 @@ void test_machine_test__run_load_nil(void)
 
 void test_machine_test__run_loadlocal(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADLOCAL(0,0)),
     Instruction_new(OP_RET(0)),
   };
@@ -157,7 +153,7 @@ void test_machine_test__run_loadlocal(void)
 
 void test_machine_test__run_setlocal(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_SETLOCAL(1,1)),
     Instruction_new(OP_LOADLOCAL(0,1)),
@@ -175,7 +171,7 @@ void test_machine_test__run_setlocal(void)
 
 void test_machine_test__run_jmp(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(0, 1)),
     Instruction_new(OP_JMP(3)),
     Instruction_new(OP_LOADSELF(0)),
@@ -194,7 +190,7 @@ void test_machine_test__run_jmp(void)
 
 void test_machine_test__run_jif_when_its_truthy_does_nothing(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(0, 1)),
     Instruction_new(OP_JIF(2, 0)),
     Instruction_new(OP_LOADSELF(0)),
@@ -211,7 +207,7 @@ void test_machine_test__run_jif_when_its_truthy_does_nothing(void)
 
 void test_machine_test__run_jif_when_its_falsy_jumps(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADBOOL(0, 0)),
     Instruction_new(OP_JIF(2, 0)),
     Instruction_new(OP_LOADSELF(0)),
@@ -229,7 +225,7 @@ void test_machine_test__run_jif_when_its_falsy_jumps(void)
 
 void test_machine_test__run_jit_when_its_truthy_jumps(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(0, 1)),
     Instruction_new(OP_JIT(2, 0)),
     Instruction_new(OP_LOADSELF(0)),
@@ -247,7 +243,7 @@ void test_machine_test__run_jit_when_its_truthy_jumps(void)
 
 void test_machine_test__run_jit_when_its_falsy_does_nothing(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADBOOL(0, 0)),
     Instruction_new(OP_JIT(2, 0)),
     Instruction_new(OP_LOADSELF(0)),
@@ -265,7 +261,7 @@ void test_machine_test__run_jit_when_its_falsy_does_nothing(void)
 
 void test_machine_test__run_loadself(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADSELF(0)),
     Instruction_new(OP_RET(0)),
   };
@@ -280,7 +276,7 @@ void test_machine_test__run_loadself(void)
 
 void test_machine_test__run_add(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_LOADI(2,1)),
     Instruction_new(OP_ADD(0,1,2)),
@@ -298,7 +294,7 @@ void test_machine_test__run_add(void)
 
 void test_machine_test__run_sub(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_LOADI(2,1)),
     Instruction_new(OP_SUB(0,1,2)),
@@ -316,7 +312,7 @@ void test_machine_test__run_sub(void)
 
 void test_machine_test__run_mul(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_LOADI(2,1)),
     Instruction_new(OP_MUL(0,1,2)),
@@ -334,7 +330,7 @@ void test_machine_test__run_mul(void)
 
 void test_machine_test__run_div(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(1,1)),
     Instruction_new(OP_LOADI(2,1)),
     Instruction_new(OP_DIV(0,1,2)),
@@ -388,7 +384,7 @@ void test_machine_test__run_div(void)
 
 void test_machine_test__send(void)
 {
-  Instruction instructions[] = {
+  Instruction *instructions[] = {
     Instruction_new(OP_LOADI(0,1)), // receiver
     Instruction_new(OP_LOADS(1,2)), // message
     Instruction_new(OP_LOADI(2,1)), // argstart

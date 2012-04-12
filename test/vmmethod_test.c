@@ -15,16 +15,14 @@ static VMMethod *test_create_method()
 
   short arity = 0;
 
-  Instruction instructions[] = {
-    Instruction_new(0x02020000), // LOADS 2 0
-    Instruction_new(0x30010000), // LOADSELF 1
-    Instruction_new(0x01000100), // LOADI 0 1
-    Instruction_new(0x90000000), // RET
+  Instruction *instructions[] = {
+    Instruction_new(OP_LOADS(2,0)), // LOADS 2 0
+    Instruction_new(OP_LOADSELF(1)), // LOADSELF 1
+    Instruction_new(OP_LOADI(0,1)), // LOADI 0 1
+    Instruction_new(OP_RET(0)), // RET
   };
 
-  Instruction *allocated_instructions = allocate_instructions(instructions, 4);
-
-  VMMethod *method = VMMethod_new(allocated_instructions, allocate_literals(literals, 2), arity);
+  VMMethod *method = VMMethod_new(instructions, literals, arity);
   return method;
 }
 
@@ -32,7 +30,7 @@ void test_vmmethod_test__new(void)
 {
   VMMethod *method = test_create_method();
 
-  uint8_t opcode = method->start_ip->opcode;
+  uint8_t opcode = method->instructions[0]->opcode;
   long first_literal = method->literals[0];
 
   cl_must_pass(method);
