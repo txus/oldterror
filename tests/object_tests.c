@@ -12,10 +12,18 @@ char *test_create()
   return NULL;
 }
 
+char *test_destroy()
+{
+  Object_destroy(object);
+
+  return NULL;
+}
+
 char *all_tests() {
   mu_suite_start();
 
   mu_run_test(test_create);
+  mu_run_test(test_destroy);
 
   return NULL;
 }
