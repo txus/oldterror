@@ -16,8 +16,8 @@ typedef struct {
   unsigned char type;
   unsigned char immortal;
   union {
-    struct tagbstring *string;
     int integer;
+    bstring string;
   } value;
   int refcount;
 } Object;

@@ -20,7 +20,10 @@ void Object_destroy(Object *object)
   if(object != NULL) {
     if(object->immortal == 1) return;
 
-    if(object->value.string != NULL) bdestroy(object->value.string);
+    if(object->type == tString) {
+      bdestroy(object->value.string);
+    }
+
     free(object);
   }
 }
