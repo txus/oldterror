@@ -1,6 +1,8 @@
 #ifndef _terror__object_h_
 #define _terror__object_h_
 
+#include <terror/bstrlib.h>
+
 enum {
   tObject,
   tInteger,
@@ -11,10 +13,10 @@ enum {
 };
 
 typedef struct {
-  char type;
-  char immortal;
+  unsigned char type;
+  unsigned char immortal;
   union {
-    char *string;
+    struct tagbstring *string;
     int integer;
   } value;
   int refcount;
