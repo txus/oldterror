@@ -24,6 +24,7 @@ typedef struct {
 
 Object *Object_new();
 void Object_destroy(Object *object);
+void Object_print(Object *object);
 
 Object *Integer_new(int value);
 Object *String_new(const char *value);

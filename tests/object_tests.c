@@ -75,6 +75,35 @@ char *test_special()
   return NULL;
 }
 
+char *test_print()
+{
+  object = Object_new();
+  Object_print(object);
+  Object_destroy(object);
+
+  object = True_new();
+  Object_print(object);
+  free(object);
+
+  object = False_new();
+  Object_print(object);
+  free(object);
+
+  object = Nil_new();
+  Object_print(object);
+  free(object);
+
+  object = Integer_new(123);
+  Object_print(object);
+  Object_destroy(object);
+
+  object = String_new("hello");
+  Object_print(object);
+  Object_destroy(object);
+
+  return NULL;
+}
+
 char *all_tests() {
   mu_suite_start();
 
@@ -85,6 +114,7 @@ char *all_tests() {
   mu_run_test(test_strings);
 
   mu_run_test(test_special);
+  mu_run_test(test_print);
 
   return NULL;
 }

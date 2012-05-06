@@ -1,6 +1,8 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <terror/dbg.h>
 #include <terror/object.h>
+#include <assert.h>
 
 Object *Object_new()
 {
@@ -112,4 +114,29 @@ Object *Main_new()
 
 error:
   return NULL;
+}
+
+void Object_print(Object* object) {
+  assert(object != NULL && "Cannot print null object");
+
+  switch(object->type) {
+    case tInteger:
+      printf("#<tInteger:%p @value=%i>", object, object->value.integer);
+      break;
+    case tString:
+      printf("#<tString:%p @value=\"%s\">", object, bdata(object->value.string));
+      break;
+    case tTrue:
+      printf("#<tTrue:%p>", object);
+      break;
+    case tFalse:
+      printf("#<tFalse:%p>", object);
+      break;
+    case tNil:
+      printf("#<tNil:%p>", object);
+      break;
+    case tObject:
+      printf("#<tObject:%p>", object);
+      break;
+  }
 }
