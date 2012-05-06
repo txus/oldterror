@@ -16,7 +16,14 @@ void Runtime_init() {
 
 void Runtime_destroy() {
   free(TrueObject);
+  TrueObject = NULL;
+
   free(FalseObject);
+  FalseObject = NULL;
+
   free(NilObject);
+  NilObject = NULL;
+
   free(MainObject);
+  MainObject = NULL;
 }
