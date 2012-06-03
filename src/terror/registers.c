@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <terror/registers.h>
 
 void Registers_print(Object **registers, int len)

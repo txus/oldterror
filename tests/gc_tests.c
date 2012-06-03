@@ -22,7 +22,7 @@ char *test_release()
   mu_assert(object->refcount == 1, "GC release didn't decrement refcount");
 
   release(object);
-  mu_assert(object->type == NULL, "GC release didn't destroy object");
+  mu_assert(!object->type, "GC release didn't destroy object");
 
   return NULL;
 }
