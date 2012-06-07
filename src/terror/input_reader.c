@@ -59,3 +59,10 @@ BytecodeFile *BytecodeFile_new(const char *filename)
 error:
   return NULL;
 }
+
+void
+BytecodeFile_destroy(BytecodeFile *file)
+{
+  if(file->filename) free(file->filename);
+  free(file);
+}

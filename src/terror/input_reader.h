@@ -18,5 +18,6 @@ typedef struct {
 } BytecodeFile;
 
 BytecodeFile *BytecodeFile_new(const char *filename);
+void BytecodeFile_destroy(BytecodeFile *file);
 
 #endif
