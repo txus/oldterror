@@ -2,10 +2,11 @@
 #define __input_reader_h__
 
 #include <terror/instruction.h>
+#include <terror/bstrlib.h>
 
 typedef struct {
-  char        *filename;
-  char        *method;
+  bstring     filename;
+  bstring     method;
 
   int         locals_count;
   int         registers_count;
@@ -17,7 +18,7 @@ typedef struct {
   Instruction **instructions;
 } BytecodeFile;
 
-BytecodeFile *BytecodeFile_new(const char *filename);
+BytecodeFile *BytecodeFile_new(bstring filename);
 void BytecodeFile_destroy(BytecodeFile *file);
 
 #endif
