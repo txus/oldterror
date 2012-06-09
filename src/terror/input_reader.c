@@ -77,6 +77,8 @@ parse_string(bstring buf, BytecodeFile *file)
   for(i=0; i < num_literals; i++) {
     if (bdata(*line)[0] == '"') {
       bstring strData = bmidstr(*line, 1, (*line)->mlen);
+      // FIXME: This leaks all the strings because the original char* that we
+      // duplicate is never freed.
       file->literals[i] = (long)strdup(bdata(strData));
       bdestroy(strData);
     } else {
