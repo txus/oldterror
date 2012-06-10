@@ -1,6 +1,7 @@
 #ifndef _terror__gc_h_
 #define _terror__gc_h_
 
+#include <terror/slot.h>
 #include <terror/object.h>
 
 Object* retain(Object *self);

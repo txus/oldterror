@@ -2,6 +2,7 @@
 #define _terror__opcode_h_
 
 typedef enum {
+  NOOP,
   MOVE,
   LOADI,
   LOADS,
@@ -37,6 +38,7 @@ typedef enum {
 
 #define __OP__(O, A, B, C) 0x0 + (O << 24) + (A << 16) + (B << 8) + C
 
+#define OP_NOOP()         __OP__(NOOP, 0, 0, 0)
 #define OP_MOVE(A,B)      __OP__(MOVE, A, B, 0)
 #define OP_LOADI(A,B)     __OP__(LOADI, A, B, 0)
 #define OP_LOADS(A,B)     __OP__(LOADS, A, B, 0)

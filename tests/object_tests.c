@@ -42,9 +42,10 @@ char *test_integers()
 
 char *test_strings()
 {
-  object = String_new("123");
+  bstring bstr = bfromcstr("123");
+  object = String_new(bstr);
   mu_assert(object->type == tString, "String has the wrong type");
-  mu_assert(biseqcstr(object->value.string, "123") == 1, "String value wasn't set correctly");
+  mu_assert(bstrcmp(object->value.string, bstr) == 0, "String value wasn't set correctly");
 
   Object_destroy(object);
   return NULL;
@@ -97,7 +98,8 @@ char *test_print()
   Object_print(object);
   Object_destroy(object);
 
-  object = String_new("hello");
+  bstring hello = bfromcstr("hello");
+  object = String_new(hello);
   Object_print(object);
   Object_destroy(object);
 

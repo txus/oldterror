@@ -11,4 +11,6 @@ extern Object *MainObject;
 void Runtime_init();
 void Runtime_destroy();
 
+Object* call_method(Object *receiver, bstring method, Object **argv, int argc, int registers_count);
+
 #endif

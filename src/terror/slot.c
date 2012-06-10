@@ -9,7 +9,6 @@ Slot* Slot_new(bstring name) {
 
   slot->name = name;
   slot->value.method = NULL;
-  slot->value.object = NULL;
   return slot;
 
 error:

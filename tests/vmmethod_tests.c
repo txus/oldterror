@@ -22,11 +22,13 @@ void setup()
 
 char *test_create()
 {
-  method = VMMethod_new(instructions, literals, 3);
+  method = VMMethod_new(instructions, 3, literals, 3, 3);
   mu_assert(method != NULL, "VMMethod wasn't created correctly.");
   mu_assert(method->literals == literals, "Literals weren't assigned correctly")
+  mu_assert(method->literals_count == 3, "Literals count wasn't assigned correctly")
 
   mu_assert(method->instructions == instructions, "Instructions weren't assigned correctly")
+  mu_assert(method->instructions_count == 3, "Instructions count wasn't assigned correctly")
   mu_assert(method->arity == 3, "Arity wasn't assigned correctly")
 
   return NULL;

@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <terror/dbg.h>
 #include <terror/object.h>
+#include <terror/runtime.h>
 #include <assert.h>
+
+Object *MainObject;
 
 Object *Object_new()
 {
@@ -10,6 +13,16 @@ Object *Object_new()
   check_mem(object);
 
   object->type = tObject;
+  object->refcount = 0;
+  object->immortal = 0;
+
+  object->slots = calloc(10, sizeof(Slot*));
+
+  // Initialize slots to NULL
+  int i = 0;
+  for(i = 0; i < 10; i++) {
+    object->slots[i] = NULL;
+  }
 
   return object;
 
@@ -30,29 +43,44 @@ void Object_destroy(Object *object)
   }
 }
 
+void Object_define_method(Object *object, int idx, bstring name, Instruction **instructions, int instructions_count, short arity) {
+  long *literals = calloc(10, sizeof(long));
+  VMMethod *method = VMMethod_new(instructions, instructions_count, literals, 10, arity);
+
+  Slot *slot = Slot_new(name);
+  slot->value.method = method;
+
+  debug("Defined method %s with arity %i\n", bdata(name), method->arity);
+
+  object->slots[idx] = slot;
+}
+
 Object *Integer_new(int value)
 {
-  Object *object = calloc(1, sizeof(Object));
-  check_mem(object);
+  Object *object = Object_new();
 
   object->type = tInteger;
   object->value.integer = value;
 
-  return object;
+  // Define #add
+  Instruction **instructions = calloc(4, sizeof(Instruction*));
+  instructions[0] = Instruction_new(OP_LOADSELF(1));
+  instructions[1] = Instruction_new(OP_LOADLOCAL(2, 0));
+  instructions[2] = Instruction_new(OP_ADD(0, 1, 2));
+  instructions[3] = Instruction_new(OP_RET(0));
+  Object_define_method(object, 0, bfromcstr("add"), instructions, 4, 1);
 
-error:
-  return NULL;
+  return object;
 }
 
-Object *String_new(const char *value)
+Object *String_new(bstring value)
 {
   check(value != NULL, "Cannot allocate string with empty value.");
 
-  Object *object = calloc(1, sizeof(Object));
-  check_mem(object);
+  Object *object = Object_new();
 
   object->type = tString;
-  object->value.string = bfromcstr(value);
+  object->value.string = value;
 
   return object;
 
@@ -139,4 +167,45 @@ void Object_print(Object* object) {
       printf("#<tObject:%p>", object);
       break;
   }
+}
+
+int Object_lookup_method_arity(Object *object, bstring name) {
+  int i = 0;
+
+  for (i = 0; i < 10; i++) {
+    if (object->slots[i]) {
+      if (bstrcmp(object->slots[i]->name, name) == 0) {
+        return object->slots[i]->value.method->arity;
+      }
+    }
+  }
+
+  if (object == MainObject) {
+    return 1;
+  }
+
+  return -2;
+}
+
+VMMethod* Object_lookup_method(Object *object, bstring name) {
+  int i = 0;
+  VMMethod *method = NULL;
+
+  for (i = 0; i < 10; i++) {
+    if (object->slots[i]) {
+      if (bstrcmp(object->slots[i]->name, name) == 0) {
+        method = object->slots[i]->value.method;
+        debug(" Returning legit method called %s with arity %i, and its id is %p\n ", bdata(object->slots[i]->name), method->arity, method);
+        return method;
+      }
+    }
+  }
+
+  if (object == MainObject) {
+    method = calloc(1, sizeof(VMMethod));
+    method->arity = 1;
+    return method;
+  }
+
+  return NULL;
 }

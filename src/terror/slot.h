@@ -8,7 +8,6 @@ typedef struct {
   bstring name;
   union {
     VMMethod *method;
-    Object *object;
   } value;
 } Slot;
 
