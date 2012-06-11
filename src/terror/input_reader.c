@@ -72,7 +72,7 @@ parse_string(bstring buf, BytecodeFile *file)
 
   // Parse the actual literals
 
-  file->literals = malloc(sizeof(long) * num_literals);
+  file->literals = calloc(num_literals, sizeof(long));
 
   for(i=0; i < num_literals; i++) {
     if (bdata(*line)[0] == '"') {
@@ -89,7 +89,7 @@ parse_string(bstring buf, BytecodeFile *file)
 
   // Parse the instructions
 
-  file->instructions = malloc(sizeof(Instruction*) * num_instructions);
+  file->instructions = calloc(num_instructions, sizeof(Instruction*));
 
   for(i=0; i < num_instructions; i++) {
     uint32_t num;
@@ -127,7 +127,7 @@ BytecodeFile_destroy(BytecodeFile *file)
 
   if(file->filename) bdestroy(file->filename);
   if(file->method) bdestroy(file->method);
-  if(file->literals_count > 0) free(file->literals);
+  if(file->literals) free(file->literals);
 
   for(i = 0; i < file->instructions_count; i++) {
     Instruction_destroy(file->instructions[i]);
