@@ -89,9 +89,11 @@ Object* call_method(Object *receiver, bstring method, Object **argv, int argc, i
     return result;
   }
 
-  VMMethod *vmmethod = Object_lookup_method(receiver, method);
-  debug("Ok, now trying to get its arity from outside: %p", vmmethod);
-  debug("Method has arity %i\n", vmmethod->arity);
+  VMMethod *vmmethod = NULL;
+  vmmethod = Object_lookup_method(receiver, method);
+
+  debug("Ok, now trying to get it from outside: %p", vmmethod);
+  /* debug("Method has arity %i\\n", vmmethod->arity); */
 
   if (!vmmethod) {
     // Native global methods

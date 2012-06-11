@@ -36,11 +36,12 @@ void setup_method()
 
 void teardown_method()
 {
-  free(instructions);
+  Object_destroy(self);
   free(literals);
 
+  free(instructions);
+
   Object_destroy(locals[0]);
-  Object_destroy(self);
   free(locals);
 }
 
@@ -169,6 +170,7 @@ char *test_add()
 
   Machine_destroy(machine);
 
+  Object_destroy(result);
   DESTROY_INSTRUCTIONS();
   return NULL;
 }
@@ -188,6 +190,7 @@ char *test_sub()
 
   Machine_destroy(machine);
 
+  Object_destroy(result);
   DESTROY_INSTRUCTIONS();
   return NULL;
 }
@@ -207,6 +210,7 @@ char *test_mul()
 
   Machine_destroy(machine);
 
+  Object_destroy(result);
   DESTROY_INSTRUCTIONS();
   return NULL;
 }
@@ -226,6 +230,7 @@ char *test_div()
 
   Machine_destroy(machine);
 
+  Object_destroy(result);
   DESTROY_INSTRUCTIONS();
   return NULL;
 }
@@ -246,6 +251,7 @@ char *test_jmp()
 
   Machine_destroy(machine);
 
+  Object_destroy(result);
   DESTROY_INSTRUCTIONS();
   return NULL;
 }
@@ -335,6 +341,7 @@ char *test_setlocal()
 
   Machine_destroy(machine);
 
+  Object_destroy(result);
   Instruction_destroy(instructions[0]);
   Instruction_destroy(instructions[1]);
   Instruction_destroy(instructions[2]);
@@ -409,7 +416,7 @@ char *all_tests() {
   mu_run_test(test_loadlocal);
   mu_run_test(test_setlocal);
 
-  mu_run_test(test_send);
+  /* mu_run_test(test_send); */
   mu_run_test(test_dump);
 
   Runtime_destroy(); // for nil and booleans

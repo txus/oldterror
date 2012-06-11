@@ -81,9 +81,12 @@ Machine_run(Machine *machine, Object *self)
         debug("ADD %i %i %i", i->fields.a, i->fields.b, i->fields.c);
         CLEAN_REGISTER(regs[i->fields.a]);
 
-        Object *left  = regs[i->fields.b];
-        Object *right = regs[i->fields.c];
+        Object *left   = regs[i->fields.b];
+        Object *right  = regs[i->fields.c];
         Object *result = Primitive_add(left, right);
+
+        debug("Left refcount: %i",  left->refcount);
+        debug("Right refcount: %i", right->refcount);
 
         REGISTER(regs[i->fields.a], result);
         break;

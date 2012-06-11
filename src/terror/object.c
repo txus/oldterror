@@ -39,6 +39,12 @@ void Object_destroy(Object *object)
       bdestroy(object->value.string);
     }
 
+    int i = 0;
+    for(i=0; i < 10; i++) {
+      if(object->slots[i]) Slot_destroy(object->slots[i]);
+    }
+    if(object->slots) free(object->slots);
+
     free(object);
   }
 }
@@ -62,13 +68,13 @@ Object *Integer_new(int value)
   object->type = tInteger;
   object->value.integer = value;
 
-  // Define #add
-  Instruction **instructions = calloc(4, sizeof(Instruction*));
-  instructions[0] = Instruction_new(OP_LOADSELF(1));
-  instructions[1] = Instruction_new(OP_LOADLOCAL(2, 0));
-  instructions[2] = Instruction_new(OP_ADD(0, 1, 2));
-  instructions[3] = Instruction_new(OP_RET(0));
-  Object_define_method(object, 0, bfromcstr("add"), instructions, 4, 1);
+  /* // Define #add */
+  /* Instruction **instructions = calloc(4, sizeof(Instruction*)); */
+  /* instructions[0] = Instruction_new(OP_LOADSELF(1)); */
+  /* instructions[1] = Instruction_new(OP_LOADLOCAL(2, 0)); */
+  /* instructions[2] = Instruction_new(OP_ADD(0, 1, 2)); */
+  /* instructions[3] = Instruction_new(OP_RET(0)); */
+  /* Object_define_method(object, 0, bfromcstr("add"), instructions, 4, 1); */
 
   return object;
 }

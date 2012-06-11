@@ -24,7 +24,15 @@ void VMMethod_destroy(VMMethod *method)
 {
   if (method != NULL)
   {
-    if (method->literals != NULL) free(method->literals);
+    if (method->instructions_count > 0) {
+      int i = 0;
+      for(i=0; i < method->instructions_count; i++) {
+        Instruction_destroy(method->instructions[i]);
+      }
+    }
+    if(method->instructions) free(method->instructions);
+
+    if (method->literals) free(method->literals);
 
     free(method);
   }
