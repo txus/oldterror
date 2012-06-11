@@ -76,7 +76,7 @@ string literals):
 
 And then all the instructions:
 
-    0x1000000
+    0x2000000
     0x51000000
     0x9010000
     0x51010100
@@ -89,6 +89,8 @@ Take a look at [examples/hello_world.tvm](https://github.com/txus/terrorvm/blob/
 for an example of a program, whose Ruby source code is at [compiler/examples/hello_world.rb](https://github.com/txus/terrorvm/blob/master/compiler/examples/hello_world.rb).
 
 ### Instruction set
+
+* **NOOP**: no operation -- does nothing.
 
 #### Loading values
 
