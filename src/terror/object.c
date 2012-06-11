@@ -191,21 +191,21 @@ VMMethod* Object_lookup_method(Object *object, bstring name) {
   int i = 0;
   VMMethod *method = NULL;
 
-  for (i = 0; i < 10; i++) {
-    if (object->slots[i]) {
-      if (bstrcmp(object->slots[i]->name, name) == 0) {
-        method = object->slots[i]->value.method;
-        debug(" Returning legit method called %s with arity %i, and its id is %p\n ", bdata(object->slots[i]->name), method->arity, method);
-        return method;
-      }
-    }
-  }
-
   if (object == MainObject) {
     method = calloc(1, sizeof(VMMethod));
     method->arity = 1;
     return method;
   }
 
-  return NULL;
+  for (i = 0; i < 10; i++) {
+    if (object->slots[i]) {
+      if (bstrcmp(object->slots[i]->name, name) == 0) {
+        method = object->slots[i]->value.method;
+        break;
+      }
+    }
+  }
+
+  debug(" Returning legit method with arity %i, and its id is %p\n ", method->arity, method);
+  return method;
 }
