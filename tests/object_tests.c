@@ -11,8 +11,7 @@ char *test_create()
   mu_assert(object != NULL, "Failed to create object.");
   mu_assert(object->type == tObject, "Object has an invalid type.");
 
-  immortal = Object_new();
-  immortal->immortal = 1;
+  immortal = True_new();
   mu_assert(object != NULL, "Failed to create immortal object.");
 
   return NULL;
