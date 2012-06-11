@@ -4,12 +4,14 @@
 #include <terror/vmmethod.h>
 #include <terror/bstrlib.h>
 
-typedef struct {
+struct slot_s {
   bstring name;
   union {
     VMMethod *method;
   } value;
-} Slot;
+};
+
+typedef struct slot_s Slot;
 
 Slot* Slot_new(bstring name);
 void Slot_destroy(Slot *slot);

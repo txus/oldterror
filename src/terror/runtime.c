@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <terror/runtime.h>
 #include <terror/object.h>
+#include <terror/vmmethod.h>
 #include <terror/dbg.h>
 
 Object *TrueObject = NULL;
@@ -92,7 +93,7 @@ Object* call_method(Object *receiver, bstring method, Object **argv, int argc, i
   VMMethod *vmmethod = NULL;
   vmmethod = Object_lookup_method(receiver, method);
 
-  debug("Ok, now trying to get it from outside: %p", vmmethod);
+  debug("Ok, now trying to get it, from outside: %p", vmmethod);
   /* debug("Method has arity %i\\n", vmmethod->arity); */
 
   if (!vmmethod) {
@@ -108,8 +109,5 @@ Object* call_method(Object *receiver, bstring method, Object **argv, int argc, i
   debug("Returning from #%s", bdata(method));
 
   return result;
-
-error:
-  return NULL;
 }
 

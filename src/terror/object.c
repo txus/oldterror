@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <terror/dbg.h>
 #include <terror/object.h>
+#include <terror/vmmethod.h>
+#include <terror/slot.h>
 #include <terror/runtime.h>
 #include <assert.h>
 
@@ -68,13 +70,13 @@ Object *Integer_new(int value)
   object->type = tInteger;
   object->value.integer = value;
 
-  /* // Define #add */
-  /* Instruction **instructions = calloc(4, sizeof(Instruction*)); */
-  /* instructions[0] = Instruction_new(OP_LOADSELF(1)); */
-  /* instructions[1] = Instruction_new(OP_LOADLOCAL(2, 0)); */
-  /* instructions[2] = Instruction_new(OP_ADD(0, 1, 2)); */
-  /* instructions[3] = Instruction_new(OP_RET(0)); */
-  /* Object_define_method(object, 0, bfromcstr("add"), instructions, 4, 1); */
+  // Define #add
+  Instruction **instructions = calloc(4, sizeof(Instruction*));
+  instructions[0] = Instruction_new(OP_LOADSELF(1));
+  instructions[1] = Instruction_new(OP_LOADLOCAL(2, 0));
+  instructions[2] = Instruction_new(OP_ADD(0, 1, 2));
+  instructions[3] = Instruction_new(OP_RET(0));
+  Object_define_method(object, 0, bfromcstr("add"), instructions, 4, 1);
 
   return object;
 }
@@ -212,6 +214,6 @@ VMMethod* Object_lookup_method(Object *object, bstring name) {
     }
   }
 
-  debug(" Returning legit method with arity %i, and its id is %p\n ", method->arity, method);
+  debug(" Returning legit method ptr (size %ld) with arity %i, and its id is %p\n ", sizeof(method), method->arity, method);
   return method;
 }

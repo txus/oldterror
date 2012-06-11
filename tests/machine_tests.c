@@ -378,7 +378,7 @@ char *test_dump()
   instructions[2] = Instruction_new(OP_RET(0));
 
   machine = MACHINE(3);
-  Object *result = Machine_run(machine, self);
+  Machine_run(machine, self);
 
   Machine_destroy(machine);
 
@@ -416,7 +416,7 @@ char *all_tests() {
   mu_run_test(test_loadlocal);
   mu_run_test(test_setlocal);
 
-  /* mu_run_test(test_send); */
+  mu_run_test(test_send);
   mu_run_test(test_dump);
 
   Runtime_destroy(); // for nil and booleans
