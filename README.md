@@ -23,7 +23,7 @@ Anyway, it's a work in progress! :)
 
 To run the tests:
 
-    $ make test
+    $ make dev
 
 And to clean the mess:
 
