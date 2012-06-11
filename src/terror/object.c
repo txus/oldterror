@@ -41,11 +41,31 @@ void Object_destroy(Object *object)
       bdestroy(object->value.string);
     }
 
-    int i = 0;
-    for(i=0; i < 10; i++) {
-      if(object->slots[i]) Slot_destroy(object->slots[i]);
+    if(object->slots) {
+      int i = 0;
+      for(i=0; i < 10; i++) {
+        if(object->slots[i]) Slot_destroy(object->slots[i]);
+      }
+      free(object->slots);
     }
-    if(object->slots) free(object->slots);
+
+    free(object);
+  }
+}
+
+void Object_destroy_immortal(Object *object) {
+  if(object != NULL) {
+    if(object->type == tString) {
+      bdestroy(object->value.string);
+    }
+
+    if(object->slots) {
+      int i = 0;
+      for(i=0; i < 10; i++) {
+        if(object->slots[i]) Slot_destroy(object->slots[i]);
+      }
+      free(object->slots);
+    }
 
     free(object);
   }
@@ -57,8 +77,6 @@ void Object_define_method(Object *object, int idx, bstring name, Instruction **i
 
   Slot *slot = Slot_new(name);
   slot->value.method = method;
-
-  debug("Defined method %s with arity %i\n", bdata(name), method->arity);
 
   object->slots[idx] = slot;
 }
@@ -146,6 +164,14 @@ Object *Main_new()
   object->type = tObject;
   object->immortal = 1;
 
+  object->slots = calloc(10, sizeof(Slot*));
+
+  // Initialize slots to NULL
+  int i = 0;
+  for(i = 0; i < 10; i++) {
+    object->slots[i] = NULL;
+  }
+
   return object;
 
 error:
@@ -214,6 +240,5 @@ VMMethod* Object_lookup_method(Object *object, bstring name) {
     }
   }
 
-  debug(" Returning legit method ptr (size %ld) with arity %i, and its id is %p\n ", sizeof(method), method->arity, method);
   return method;
 }

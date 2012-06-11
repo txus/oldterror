@@ -18,16 +18,16 @@ void Runtime_init() {
 }
 
 void Runtime_destroy() {
-  free(TrueObject);
+  Object_destroy_immortal(TrueObject);
   TrueObject = NULL;
 
-  free(FalseObject);
+  Object_destroy_immortal(FalseObject);
   FalseObject = NULL;
 
-  free(NilObject);
+  Object_destroy_immortal(NilObject);
   NilObject = NULL;
 
-  free(MainObject);
+  Object_destroy_immortal(MainObject);
   MainObject = NULL;
 }
 
@@ -90,11 +90,7 @@ Object* call_method(Object *receiver, bstring method, Object **argv, int argc, i
     return result;
   }
 
-  VMMethod *vmmethod = NULL;
-  vmmethod = Object_lookup_method(receiver, method);
-
-  debug("Ok, now trying to get it, from outside: %p", vmmethod);
-  /* debug("Method has arity %i\\n", vmmethod->arity); */
+  VMMethod *vmmethod = Object_lookup_method(receiver, method);
 
   if (!vmmethod) {
     // Native global methods

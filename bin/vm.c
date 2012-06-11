@@ -35,7 +35,7 @@ int main(int argc, char const *argv[])
 
   Object *result = Machine_run(machine, MainObject);
 
-#ifdef NDEBUG
+#ifdef DEBUG
   debug("---------- Return value");
   Object_print(result);
 #endif

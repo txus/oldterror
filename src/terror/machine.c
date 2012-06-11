@@ -85,9 +85,6 @@ Machine_run(Machine *machine, Object *self)
         Object *right  = regs[i->fields.c];
         Object *result = Primitive_add(left, right);
 
-        debug("Left refcount: %i",  left->refcount);
-        debug("Right refcount: %i", right->refcount);
-
         REGISTER(regs[i->fields.a], result);
         break;
       }
@@ -201,7 +198,7 @@ Machine_run(Machine *machine, Object *self)
         REGISTER(regs[i->fields.a],
             call_method(receiver, message, argv, arity, machine->registers_count));
 
-        /* release(receiver); */
+        release(receiver);
 
         break;
       }

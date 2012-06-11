@@ -7,7 +7,7 @@
 
 #define MAX_INSTRUCTIONS 10
 #define DESTROY_INSTRUCTIONS() { \
-  int i = 1; \
+  int i=1; \
   for(i=1; i < MAX_INSTRUCTIONS; i++) { \
     if (instructions[i]) Instruction_destroy(instructions[i]); \
   } \
@@ -124,7 +124,6 @@ char *test_loadnil()
 {
   instructions[0] = Instruction_new(OP_LOADNIL(0));
   instructions[1] = Instruction_new(OP_RET(0));
-  debug("Last instruction is %x", instructions[1]->opcode);
 
   machine = MACHINE(2);
 
@@ -362,6 +361,7 @@ char *test_send()
   mu_assert(result->value.integer == 246, "SEND failed.");
 
   Machine_destroy(machine);
+  Object_destroy(result);
 
   Instruction_destroy(instructions[0]);
   Instruction_destroy(instructions[1]);

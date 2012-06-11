@@ -29,6 +29,7 @@ typedef struct {
 
 Object *Object_new();
 void Object_destroy(Object *object);
+void Object_destroy_immortal(Object *object);
 void Object_print(Object *object);
 int Object_lookup_method_arity(Object *object, bstring name);
 struct vmmethod_s* Object_lookup_method(Object *object, bstring name);

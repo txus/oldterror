@@ -25,7 +25,7 @@ char *test_destroy()
   mu_assert(immortal->immortal == 1, "Immortal object was destroyed.");
 
   // Cleanup immortal object manually
-  free(immortal);
+  Object_destroy_immortal(immortal);
   return NULL;
 }
 
@@ -55,22 +55,22 @@ char *test_special()
   object = True_new();
   mu_assert(object->type == tTrue, "True has the wrong type");
   mu_assert(object->immortal == 1, "True is not immortal");
-  free(object);
+  Object_destroy_immortal(object);
 
   object = False_new();
   mu_assert(object->type == tFalse, "False has the wrong type");
   mu_assert(object->immortal == 1, "False is not immortal");
-  free(object);
+  Object_destroy_immortal(object);
 
   object = Nil_new();
   mu_assert(object->type == tNil, "Nil has the wrong type");
   mu_assert(object->immortal == 1, "Nil is not immortal");
-  free(object);
+  Object_destroy_immortal(object);
 
   object = Main_new();
   mu_assert(object->type == tObject, "Main has the wrong type");
   mu_assert(object->immortal == 1, "Main is not immortal");
-  free(object);
+  Object_destroy_immortal(object);
 
   return NULL;
 }
@@ -83,15 +83,15 @@ char *test_print()
 
   object = True_new();
   Object_print(object);
-  free(object);
+  Object_destroy_immortal(object);
 
   object = False_new();
   Object_print(object);
-  free(object);
+  Object_destroy_immortal(object);
 
   object = Nil_new();
   Object_print(object);
-  free(object);
+  Object_destroy_immortal(object);
 
   object = Integer_new(123);
   Object_print(object);
