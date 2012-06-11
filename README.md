@@ -34,7 +34,7 @@ And to clean the mess:
 TerrorVM runs `.tvm` bytecode files such as the `hello_world.tvm` under the
 `examples` directory.
 
-    $ ./terror examples/hello_world.tvm
+    $ ./bin/vm examples/hello_world.tvm
 
 It ships with a simple compiler written in Ruby (Rubinius) that compiles a
 tiny subset of Ruby to `.tvm` files. Check out the `compiler` directory, which
