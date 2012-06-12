@@ -115,5 +115,37 @@ module Terror
         end
       end
     end
+
+    describe 'slots' do
+      it 'compiles objects with setters' do
+        compiles("a = 3; a.foo = 9") do
+          _loadi 0, 0
+          _setlocal 0, 0
+          _loadlocal 1, 0
+          _loads 2, 1
+          _loadi 3, 2
+          _setslot 1, 2, 3
+        end
+      end
+
+      it 'compiles objects with getters and setters' do
+        compiles("a = 3; a.foo = 9; a.foo") do
+          # a = 3
+          _loadi 0, 0
+          _setlocal 0, 0
+
+          # a.foo = 9
+          _loadlocal 1, 0
+          _loads 2, 1
+          _loadi 3, 2
+          _setslot 1, 2, 3
+
+          # a.foo
+          _loadlocal 4, 0
+          _loads 5, 1
+          _loadslot 6, 4, 5
+        end
+      end
+    end
   end
 end

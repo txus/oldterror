@@ -144,6 +144,17 @@ module Terror
       idx
     end
 
+    def loadslot(receiver, name)
+      @ip += 1
+      slot = a.allocate name
+      _loadslot slot, receiver, name
+    end
+
+    def setslot(receiver, name, value)
+      @ip += 1
+      _setslot receiver, name, value
+    end
+
     def send_message(a, b, c)
       @ip += 1
       _send a, b, c

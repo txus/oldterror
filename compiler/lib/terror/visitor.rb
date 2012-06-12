@@ -6,6 +6,7 @@ module Terror
 
     def initialize(g=Generator.new)
       @generator = g
+      @slots = {}
     end
     alias_method :g, :generator
 
@@ -46,6 +47,10 @@ module Terror
     end
 
     def send(node, parent)
+      if node.receiver.respond_to?(:name) && @slots[node.receiver.name] && @slots[node.receiver.name].include?(node.name)
+        return slot_retrieval(node, parent)
+      end
+
       rcv  = node.receiver.lazy_visit self, node
       meth = g.loads node.name
       args = meth + 1
@@ -94,6 +99,24 @@ module Terror
 
       done.set!
       else_val || body_val
+    end
+
+    def slot_retrieval(node, parent)
+      receiver = node.receiver.lazy_visit self
+      name     = g.loads node.name
+      g.loadslot receiver, name
+    end
+
+    def attribute_assignment(node, parent)
+      receiver_name = node.receiver.name
+      attribute_name = node.name[0..-2].to_sym
+      @slots[receiver_name] ||= []
+      @slots[receiver_name] << attribute_name
+
+      receiver = node.receiver.lazy_visit self
+      name     = g.loads attribute_name
+      value    = node.arguments.array.first.lazy_visit self
+      g.setslot receiver, name, value
     end
 
     def finalize

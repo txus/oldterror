@@ -9,7 +9,7 @@ module Terror
     end
 
     describe 'instructions with 3 operands' do
-      %w(add sub mul div send).each do |instruction|
+      %w(add sub mul div send loadslot setslot).each do |instruction|
         describe instruction do
           it "#{instruction} is encoded correctly" do
             inst = @g.__send__ :"_#{instruction}", 2, 3, 4
