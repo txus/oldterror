@@ -132,7 +132,7 @@ for an example of a program, whose Ruby source code is at [compiler/examples/hel
 
 #### Slots
 
-* **GETSLOT A, B, C**: loads the slot named `C` from the object `B` to the
+* **LOADSLOT A, B, C**: loads the slot named `C` from the object `B` to the
   register `A`.
 * **SETSLOT A, B, C**: sets the slot named `B` from the object `A` to the
   value in the register `C`.

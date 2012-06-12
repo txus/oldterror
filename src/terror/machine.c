@@ -181,6 +181,17 @@ Machine_run(Machine *machine, Object *self)
         Object_register_slot(receiver, slot_name, value);
         break;
       }
+      case LOADSLOT: {
+        debug("LOADSLOT %i %i %i", i->fields.a, i->fields.b, i->fields.c);
+        Object *receiver  = regs[i->fields.b];
+        bstring slot_name = bstrcpy(regs[i->fields.c]->value.string);
+
+        Object *value = Object_get_slot(receiver, slot_name);
+
+        CLEAN_REGISTER(regs[i->fields.a]);
+        REGISTER(regs[i->fields.a], value);
+        break;
+      }
       case SEND: {
         debug("SEND %i %i %i", i->fields.a, i->fields.b, i->fields.c);
 

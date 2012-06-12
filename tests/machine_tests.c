@@ -348,11 +348,44 @@ char *test_setlocal()
   return NULL;
 }
 
+char *test_loadslot()
+{
+  instructions[0] = Instruction_new(OP_LOADSELF(0));
+  instructions[1] = Instruction_new(OP_LOADS(1, 3));
+  instructions[2] = Instruction_new(OP_LOADSLOT(2, 0, 1));
+  instructions[3] = Instruction_new(OP_RET(2));
+
+  bstring slotname = bfromcstr("price");
+
+  Object *value = Integer_new(literals[0]);
+
+  Object_register_slot(self, slotname, value);
+
+  machine = MACHINE(4);
+  Object *result = Machine_run(machine, self);
+
+  mu_assert(value == result, "LOADSLOT failed.");
+
+  Machine_destroy(machine);
+
+  Object_delete_slot(self, slotname);
+
+  bdestroy(slotname);
+
+  Object_destroy(value);
+
+  Instruction_destroy(instructions[0]);
+  Instruction_destroy(instructions[1]);
+  Instruction_destroy(instructions[2]);
+  Instruction_destroy(instructions[3]);
+  return NULL;
+}
+
 char *test_setslot()
 {
   instructions[0] = Instruction_new(OP_LOADSELF(0));
-  instructions[2] = Instruction_new(OP_LOADS(1, 3));
-  instructions[1] = Instruction_new(OP_LOADI(2, 0));
+  instructions[1] = Instruction_new(OP_LOADS(1, 3));
+  instructions[2] = Instruction_new(OP_LOADI(2, 0));
   instructions[3] = Instruction_new(OP_SETSLOT(0, 1, 2));
   instructions[4] = Instruction_new(OP_RET(0));
 
@@ -360,7 +393,7 @@ char *test_setslot()
 
   machine = MACHINE(5);
   Object *result = Machine_run(machine, self);
-  Object *slot_value = (Object*)Hashmap_get(result->slots, slotname);
+  Object *slot_value = Object_get_slot(result, slotname);
 
   mu_assert(slot_value->value.integer == 123, "SETSLOT failed.");
 
@@ -446,7 +479,8 @@ char *all_tests() {
   mu_run_test(test_loadlocal);
   mu_run_test(test_setlocal);
 
-  /* mu_run_test(test_setslot); */
+  mu_run_test(test_loadslot);
+  mu_run_test(test_setslot);
 
   mu_run_test(test_send);
   mu_run_test(test_dump);

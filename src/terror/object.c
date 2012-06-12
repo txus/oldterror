@@ -32,6 +32,7 @@ static int delete_node(HashmapNode *node) {
   if (node->type == tMethod) {
     VMMethod_destroy(node->data);
   } else {
+    debug("Not a method... destroying an object of type %i, with value %i", node->type, ((Object*)node->data)->value.integer);
     release((Object*)node->data);
   }
 
@@ -44,7 +45,10 @@ void Object_destroy(Object *object)
     if(object->immortal == 1) return;
 
     if(object->type == tString) {
+      debug("Destroying String %s", bdata(object->value.string));
       bdestroy(object->value.string);
+    } else {
+      debug("Destroying Integer %i", object->value.integer);
     }
 
     if(object->slots) {
@@ -222,4 +226,12 @@ int Object_register_slot(Object *receiver, bstring slot_name, Object *value) {
   int rc = Hashmap_set(receiver->slots, slot_name, value, value->type);
   assert(rc == 0 && "Could not register slot.");
   return rc;
+}
+
+void* Object_delete_slot(Object *receiver, bstring slot_name) {
+  return Hashmap_delete(receiver->slots, slot_name);
+}
+
+Object* Object_get_slot(Object *receiver, bstring slot_name) {
+  return Hashmap_get(receiver->slots, slot_name);
 }
