@@ -172,6 +172,15 @@ Machine_run(Machine *machine, Object *self)
         locals[i->fields.b] = regs[i->fields.a];
         break;
       }
+      case SETSLOT: {
+        debug("SETSLOT %i %i %i", i->fields.a, i->fields.b, i->fields.c);
+        Object *receiver  = regs[i->fields.a];
+        bstring slot_name = bstrcpy(regs[i->fields.b]->value.string);
+        Object *value     = retain(regs[i->fields.c]);
+
+        Object_register_slot(receiver, slot_name, value);
+        break;
+      }
       case SEND: {
         debug("SEND %i %i %i", i->fields.a, i->fields.b, i->fields.c);
 

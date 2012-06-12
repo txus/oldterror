@@ -4,6 +4,7 @@
 #include <terror/object.h>
 #include <terror/vmmethod.h>
 #include <terror/runtime.h>
+#include <terror/gc.h>
 #include <assert.h>
 
 Object *MainObject;
@@ -25,6 +26,18 @@ error:
   return NULL;
 }
 
+static int delete_node(HashmapNode *node) {
+  bdestroy((bstring)node->key);
+
+  if (node->type == tMethod) {
+    VMMethod_destroy(node->data);
+  } else {
+    release((Object*)node->data);
+  }
+
+  return 0;
+}
+
 void Object_destroy(Object *object)
 {
   if(object != NULL) {
@@ -34,7 +47,10 @@ void Object_destroy(Object *object)
       bdestroy(object->value.string);
     }
 
-    if(object->slots) Hashmap_destroy(object->slots);
+    if(object->slots) {
+      Hashmap_traverse(object->slots, delete_node);
+      Hashmap_destroy(object->slots);
+    }
 
     free(object);
   }
@@ -56,7 +72,7 @@ void Object_define_method(Object *object, bstring name, Instruction **instructio
   long *literals = calloc(10, sizeof(long));
   VMMethod *method = VMMethod_new(instructions, instructions_count, literals, 10, arity);
 
-  Hashmap_set(object->slots, name, method);
+  Hashmap_set(object->slots, name, method, tMethod);
 }
 
 Object *Integer_new(int value)
@@ -200,4 +216,10 @@ VMMethod* Object_lookup_method(Object *object, bstring name) {
   }
 
   return method;
+}
+
+int Object_register_slot(Object *receiver, bstring slot_name, Object *value) {
+  int rc = Hashmap_set(receiver->slots, slot_name, value, value->type);
+  assert(rc == 0 && "Could not register slot.");
+  return rc;
 }

@@ -13,7 +13,8 @@ enum {
   tString,
   tTrue,
   tFalse,
-  tNil
+  tNil,
+  tMethod
 };
 
 typedef struct {
@@ -34,6 +35,7 @@ void Object_print(Object *object);
 int Object_lookup_method_arity(Object *object, bstring name);
 struct vmmethod_s* Object_lookup_method(Object *object, bstring name);
 void Object_define_method(Object *object, bstring name, Instruction **instructions, int instructions_count, short arity);
+int Object_register_slot(Object *receiver, bstring slot_name, Object *value);
 
 Object *Integer_new(int value);
 Object *String_new(bstring value);

@@ -4,6 +4,10 @@
 #include <terror/dbg.h>
 #include <terror/bstrlib.h>
 
+#include <terror/object.h>
+#include <terror/gc.h>
+#include <terror/bstrlib.h>
+
 static int default_compare(void *a, void *b)
 {
   return bstrcmp((bstring)a, (bstring)b);
@@ -111,7 +115,7 @@ error:
   return NULL;
 }
 
-int Hashmap_set(Hashmap *map, void *key, void *data)
+int Hashmap_set(Hashmap *map, void *key, void *data, int type)
 {
   uint32_t hash = 0;
   DArray *bucket = Hashmap_find_bucket(map, key, 1, &hash);
@@ -119,6 +123,8 @@ int Hashmap_set(Hashmap *map, void *key, void *data)
 
   HashmapNode *node = Hashmap_node_create(hash, key, data);
   check_mem(node);
+
+  node->type = type;
 
   DArray_push(bucket, node);
 

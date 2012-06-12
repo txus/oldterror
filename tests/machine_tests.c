@@ -3,7 +3,7 @@
 #include <terror/runtime.h>
 #include <assert.h>
 
-#define MACHINE(A) Machine_new(instructions, A, literals, 3, locals, 1, 3)
+#define MACHINE(A) Machine_new(instructions, A, literals, 4, locals, 1, 3)
 
 #define MAX_INSTRUCTIONS 10
 #define DESTROY_INSTRUCTIONS() { \
@@ -29,6 +29,7 @@ void setup_method()
   literals[0] = 123;
   literals[1] = (long)"print";
   literals[2] = (long)"add";
+  literals[3] = (long)"price";
 
   locals = calloc(1, sizeof(Object*));
   locals[0] = Integer_new(444);
@@ -347,6 +348,35 @@ char *test_setlocal()
   return NULL;
 }
 
+char *test_setslot()
+{
+  instructions[0] = Instruction_new(OP_LOADSELF(0));
+  instructions[2] = Instruction_new(OP_LOADS(1, 3));
+  instructions[1] = Instruction_new(OP_LOADI(2, 0));
+  instructions[3] = Instruction_new(OP_SETSLOT(0, 1, 2));
+  instructions[4] = Instruction_new(OP_RET(0));
+
+  bstring slotname = bfromcstr("price");
+
+  machine = MACHINE(5);
+  Object *result = Machine_run(machine, self);
+  Object *slot_value = (Object*)Hashmap_get(result->slots, slotname);
+
+  mu_assert(slot_value->value.integer == 123, "SETSLOT failed.");
+
+  Machine_destroy(machine);
+
+  bdestroy(slotname);
+
+  Instruction_destroy(instructions[0]);
+  Instruction_destroy(instructions[1]);
+  Instruction_destroy(instructions[2]);
+  Instruction_destroy(instructions[3]);
+  Instruction_destroy(instructions[4]);
+  return NULL;
+}
+
+
 char *test_send()
 {
   instructions[0] = Instruction_new(OP_LOADI(0, 0));
@@ -415,6 +445,8 @@ char *all_tests() {
 
   mu_run_test(test_loadlocal);
   mu_run_test(test_setlocal);
+
+  /* mu_run_test(test_setslot); */
 
   mu_run_test(test_send);
   mu_run_test(test_dump);

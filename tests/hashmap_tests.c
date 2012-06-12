@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <terror/bstrlib.h>
 
+#define TYPE -1
+
 Hashmap *map = NULL;
 static int traverse_called = 0;
 struct tagbstring test1 = bsStatic("test data 1");
@@ -48,17 +50,17 @@ char *test_destroy()
 
 char *test_get_set()
 {
-  int rc = Hashmap_set(map, &test1, &expect1);
+  int rc = Hashmap_set(map, &test1, &expect1, TYPE);
   mu_assert(rc == 0, "Failed to set &test1");
   bstring result = Hashmap_get(map, &test1);
   mu_assert(result == &expect1, "Wrong value for test1.");
 
-  rc = Hashmap_set(map, &test2, &expect2);
+  rc = Hashmap_set(map, &test2, &expect2, TYPE);
   mu_assert(rc == 0, "Failed to set test2");
   result = Hashmap_get(map, &test2);
   mu_assert(result == &expect2, "Wrong value for test2.");
 
-  rc = Hashmap_set(map, &test3, &expect3);
+  rc = Hashmap_set(map, &test3, &expect3, TYPE);
   mu_assert(rc == 0, "Failed to set test3");
   result = Hashmap_get(map, &test3);
   mu_assert(result == &expect3, "Wrong value for test3.");

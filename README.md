@@ -130,6 +130,13 @@ for an example of a program, whose Ruby source code is at [compiler/examples/hel
 * **SETLOCAL A, B**: stores the contents of the register `A` in the locals
   table at index `B`.
 
+#### Slots
+
+* **GETSLOT A, B, C**: loads the slot named `C` from the object `B` to the
+  register `A`.
+* **SETSLOT A, B, C**: sets the slot named `B` from the object `A` to the
+  value in the register `C`.
+
 #### Message sending and call frames
 
 * **SEND A, B, C**: send a message specified by the string in the literals

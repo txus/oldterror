@@ -29,6 +29,9 @@ typedef enum {
   LOADLOCAL = 0x50,
   SETLOCAL,
 
+  LOADSLOT = 0x60,
+  SETSLOT,
+
   SEND = 0x80,
 
   RET = 0x90,
@@ -59,6 +62,9 @@ typedef enum {
 
 #define OP_LOADLOCAL(A,B) __OP__(LOADLOCAL, A, B, 0)
 #define OP_SETLOCAL(A,B)  __OP__(SETLOCAL, A, B, 0)
+
+#define OP_LOADSLOT(A,B,C) __OP__(LOADSLOT, A, B, C)
+#define OP_SETSLOT(A,B,C)  __OP__(SETSLOT, A, B, C)
 
 #define OP_SEND(A,B,C)    __OP__(SEND, A, B, C)
 #define OP_RET(A)         __OP__(RET, A, 0, 0)
