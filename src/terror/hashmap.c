@@ -1,4 +1,3 @@
-#undef NDEBUG
 #include <stdint.h>
 #include <terror/hashmap.h>
 #include <terror/dbg.h>

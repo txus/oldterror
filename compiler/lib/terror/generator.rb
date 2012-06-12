@@ -43,6 +43,9 @@ module Terror
       ]
       output << @literals.join("\n")
       output << "\n"
+      # instructions.each do |i|
+      #   p i
+      # end
       output << instructions.map(&:encode).join("\n")
       output
     end
@@ -148,6 +151,7 @@ module Terror
       @ip += 1
       slot = a.allocate name
       _loadslot slot, receiver, name
+      slot
     end
 
     def setslot(receiver, name, value)

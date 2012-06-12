@@ -119,6 +119,20 @@ module Terror
       end
     end
 
+    describe '#loadslot' do
+      it 'loads a slot from an object' do
+        slot = @g.loadslot 1, :foo
+        @g.registers[0].value.must_equal :foo
+        slot.must_equal 0
+      end
+    end
+
+    describe '#setslot' do
+      it 'loads a slot from an object' do
+        @g.setslot 0, :foo, 1
+      end
+    end
+
     describe '#send' do
       it 'sends a message to an object' do
         @g.send_message(0, 1, 2).must_equal 0
