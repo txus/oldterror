@@ -3,8 +3,8 @@
 
 #include <terror/bstrlib.h>
 #include <terror/instruction.h>
+#include <terror/hashmap.h>
 
-struct slot_s;
 struct vmmethod_s;
 
 enum {
@@ -23,7 +23,7 @@ typedef struct {
     int integer;
     bstring string;
   } value;
-  struct slot_s **slots;
+  Hashmap *slots;
   int refcount;
 } Object;
 
@@ -33,7 +33,7 @@ void Object_destroy_immortal(Object *object);
 void Object_print(Object *object);
 int Object_lookup_method_arity(Object *object, bstring name);
 struct vmmethod_s* Object_lookup_method(Object *object, bstring name);
-void Object_define_method(Object *object, int idx, bstring name, Instruction **instructions, int instructions_count, short arity);
+void Object_define_method(Object *object, bstring name, Instruction **instructions, int instructions_count, short arity);
 
 Object *Integer_new(int value);
 Object *String_new(bstring value);

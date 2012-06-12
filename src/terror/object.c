@@ -3,7 +3,6 @@
 #include <terror/dbg.h>
 #include <terror/object.h>
 #include <terror/vmmethod.h>
-#include <terror/slot.h>
 #include <terror/runtime.h>
 #include <assert.h>
 
@@ -18,13 +17,7 @@ Object *Object_new()
   object->refcount = 0;
   object->immortal = 0;
 
-  object->slots = calloc(10, sizeof(Slot*));
-
-  // Initialize slots to NULL
-  int i = 0;
-  for(i = 0; i < 10; i++) {
-    object->slots[i] = NULL;
-  }
+  object->slots = Hashmap_create(NULL, NULL);
 
   return object;
 
@@ -41,13 +34,7 @@ void Object_destroy(Object *object)
       bdestroy(object->value.string);
     }
 
-    if(object->slots) {
-      int i = 0;
-      for(i=0; i < 10; i++) {
-        if(object->slots[i]) Slot_destroy(object->slots[i]);
-      }
-      free(object->slots);
-    }
+    if(object->slots) Hashmap_destroy(object->slots);
 
     free(object);
   }
@@ -59,26 +46,17 @@ void Object_destroy_immortal(Object *object) {
       bdestroy(object->value.string);
     }
 
-    if(object->slots) {
-      int i = 0;
-      for(i=0; i < 10; i++) {
-        if(object->slots[i]) Slot_destroy(object->slots[i]);
-      }
-      free(object->slots);
-    }
+    if(object->slots) Hashmap_destroy(object->slots);
 
     free(object);
   }
 }
 
-void Object_define_method(Object *object, int idx, bstring name, Instruction **instructions, int instructions_count, short arity) {
+void Object_define_method(Object *object, bstring name, Instruction **instructions, int instructions_count, short arity) {
   long *literals = calloc(10, sizeof(long));
   VMMethod *method = VMMethod_new(instructions, instructions_count, literals, 10, arity);
 
-  Slot *slot = Slot_new(name);
-  slot->value.method = method;
-
-  object->slots[idx] = slot;
+  Hashmap_set(object->slots, name, method);
 }
 
 Object *Integer_new(int value)
@@ -94,7 +72,7 @@ Object *Integer_new(int value)
   instructions[1] = Instruction_new(OP_LOADLOCAL(2, 0));
   instructions[2] = Instruction_new(OP_ADD(0, 1, 2));
   instructions[3] = Instruction_new(OP_RET(0));
-  Object_define_method(object, 0, bfromcstr("add"), instructions, 4, 1);
+  Object_define_method(object, bfromcstr("add"), instructions, 4, 1);
 
   return object;
 }
@@ -164,13 +142,7 @@ Object *Main_new()
   object->type = tObject;
   object->immortal = 1;
 
-  object->slots = calloc(10, sizeof(Slot*));
-
-  // Initialize slots to NULL
-  int i = 0;
-  for(i = 0; i < 10; i++) {
-    object->slots[i] = NULL;
-  }
+  object->slots = Hashmap_create(NULL, NULL);
 
   return object;
 
@@ -204,14 +176,9 @@ void Object_print(Object* object) {
 }
 
 int Object_lookup_method_arity(Object *object, bstring name) {
-  int i = 0;
-
-  for (i = 0; i < 10; i++) {
-    if (object->slots[i]) {
-      if (bstrcmp(object->slots[i]->name, name) == 0) {
-        return object->slots[i]->value.method->arity;
-      }
-    }
+  VMMethod* method = (VMMethod*)Hashmap_get(object->slots, name);
+  if(method) {
+    return method->arity;
   }
 
   if (object == MainObject) {
@@ -222,22 +189,14 @@ int Object_lookup_method_arity(Object *object, bstring name) {
 }
 
 VMMethod* Object_lookup_method(Object *object, bstring name) {
-  int i = 0;
   VMMethod *method = NULL;
 
   if (object == MainObject) {
     method = calloc(1, sizeof(VMMethod));
     method->arity = 1;
     return method;
-  }
-
-  for (i = 0; i < 10; i++) {
-    if (object->slots[i]) {
-      if (bstrcmp(object->slots[i]->name, name) == 0) {
-        method = object->slots[i]->value.method;
-        break;
-      }
-    }
+  } else {
+    method = (VMMethod*)Hashmap_get(object->slots, name);
   }
 
   return method;
