@@ -54,6 +54,18 @@ static inline Object* call_kernel_method(bstring method, Object **argv) {
       case tFunction:
         printf("#<tFunction:%p @method=\"%p\">", argv[0], argv[0]->value.other);
         break;
+      case tArray:
+        printf("#<tArray:%p @contents=[", argv[0]);
+        DArray *array = (DArray*)argv[0]->value.other;
+
+        int i = 0, count = DArray_count(array);
+        for(i=0; i < count; i++) {
+          Object_print((Object*)DArray_at(array, i));
+          if (i+1 != count) printf(", ");
+        }
+
+        printf("]>");
+        break;
       case tTrue:
         printf("true");
         break;

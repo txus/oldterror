@@ -4,6 +4,7 @@
 #include <terror/bstrlib.h>
 #include <terror/instruction.h>
 #include <terror/hashmap.h>
+#include <terror/darray.h>
 
 struct vmmethod_s;
 
@@ -11,6 +12,7 @@ typedef enum {
   tObject,
   tInteger,
   tString,
+  tArray,
   tFunction,
   tTrue,
   tFalse,
@@ -43,6 +45,7 @@ Object* Object_get_slot(Object *receiver, bstring slot_name);
 Object *Integer_new(int value);
 Object *String_new(bstring value);
 Object *Function_new(Instruction **instructions, int instructions_count, short arity);
+Object *Array_new(Object** contents, int count);
 Object *True_new();
 Object *False_new();
 Object *Nil_new();

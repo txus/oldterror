@@ -43,6 +43,14 @@ void Object_destroy(Object *object)
     if(object->type == tFunction) {
       VMMethod_destroy((VMMethod*)object->value.other);
     }
+    if(object->type == tArray) {
+      DArray *array = (DArray*)object->value.other;
+      int i=0;
+      for(i=0; i < DArray_count(array); i++) {
+        release((Object*)DArray_at(array, i));
+      }
+      DArray_destroy(array);
+    }
 
     if(object->slots) {
       Hashmap_traverse(object->slots, delete_node);
@@ -115,6 +123,21 @@ Function_new(Instruction **instructions, int instructions_count, short arity)
   return object;
 }
 
+Object*
+Array_new(Object** contents, int count) {
+  DArray *array = DArray_create(sizeof(Object*), count);
+  int i=0;
+  for(i=0; i < count; i++) {
+    DArray_push(array, contents[i]);
+  }
+
+  Object *object      = Object_new();
+  object->type        = tArray;
+  object->value.other = array;
+
+  return object;
+}
+
 Object *True_new()
 {
   Object *object = calloc(1, sizeof(Object));
@@ -182,6 +205,18 @@ void Object_print(Object* object) {
       break;
     case tString:
       printf("#<tString:%p @value=\"%s\">", object, bdata(object->value.string));
+      break;
+    case tArray:
+      printf("#<tArray:%p @contents=[", object);
+      DArray *array = (DArray*)object->value.other;
+
+      int i = 0, count = DArray_count(array);
+      for(i=0; i < count; i++) {
+        Object_print((Object*)DArray_at(array, i));
+        if (i+1 != count) printf(", ");
+      }
+
+      printf("]>");
       break;
     case tFunction:
       printf("#<tFunction:%p @method=\"%p\">", object, object->value.other);

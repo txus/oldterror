@@ -50,6 +50,26 @@ char *test_strings()
   return NULL;
 }
 
+char *test_arrays()
+{
+  Object **contents = calloc(4, sizeof(Object*));
+  contents[0] = Integer_new(0);
+  contents[1] = Integer_new(1);
+  contents[2] = Integer_new(2);
+  contents[3] = Integer_new(3);
+
+  Object *object = Array_new(contents, 4);
+
+  mu_assert(object->type == tArray, "Array has the wrong type");
+  DArray *array = (DArray*)object->value.other;
+  Object *first = (Object*)DArray_at(array, 0);
+  mu_assert(first->value.integer == 0, "Array element is wrong.");
+
+  Object_destroy(object);
+  free(contents);
+  return NULL;
+}
+
 char *test_special()
 {
   object = True_new();
@@ -113,6 +133,7 @@ char *all_tests() {
 
   mu_run_test(test_integers);
   mu_run_test(test_strings);
+  mu_run_test(test_arrays);
 
   mu_run_test(test_special);
   mu_run_test(test_print);
