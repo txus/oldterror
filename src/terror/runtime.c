@@ -3,6 +3,7 @@
 #include <terror/object.h>
 #include <terror/vmmethod.h>
 #include <terror/dbg.h>
+#include <assert.h>
 
 Object *TrueObject = NULL;
 Object *FalseObject = NULL;
@@ -50,6 +51,9 @@ static inline Object* call_kernel_method(bstring method, Object **argv) {
       case tInteger:
         printf("%i", argv[0]->value.integer);
         break;
+      case tFunction:
+        printf("#<tFunction:%p @method=\"%p\">", argv[0], argv[0]->value.other);
+        break;
       case tTrue:
         printf("true");
         break;
@@ -90,20 +94,23 @@ Object* call_method(Object *receiver, bstring method, Object **argv, int argc, i
     return result;
   }
 
-  VMMethod *vmmethod = Object_lookup_method(receiver, method);
-
-  if (!vmmethod) {
-    // Native global methods
+  Object *fn = Object_get_slot(receiver, method);
+  if (fn == NULL) {
     printf("Could not find method %s on ", bdata(method));
     Object_print(receiver);
     printf("\n");
     exit(1);
   }
+  assert(fn->type == tFunction && "Tried to call a non-function");
 
-  Object *result = VMMethod_execute(vmmethod, argv, argc, registers_count, receiver);
+  Object *result = Function_call(fn, receiver, argv, argc, registers_count);
 
   debug("Returning from #%s", bdata(method));
 
   return result;
 }
 
+Object* Function_call(Object *fn, Object *receiver, Object **argv, int argc, int registers_count) {
+  VMMethod *method = (VMMethod*)fn->value.other;
+  return VMMethod_execute(method, argv, argc, registers_count, receiver);
+}

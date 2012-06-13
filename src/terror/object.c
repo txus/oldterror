@@ -28,13 +28,7 @@ error:
 
 static int delete_node(HashmapNode *node) {
   bdestroy((bstring)node->key);
-
-  if (node->type == tMethod) {
-    VMMethod_destroy(node->data);
-  } else {
-    release((Object*)node->data);
-  }
-
+  release((Object*)node->data);
   return 0;
 }
 
@@ -45,6 +39,9 @@ void Object_destroy(Object *object)
 
     if(object->type == tString) {
       bdestroy(object->value.string);
+    }
+    if(object->type == tFunction) {
+      VMMethod_destroy((VMMethod*)object->value.other);
     }
 
     if(object->slots) {
@@ -69,10 +66,8 @@ void Object_destroy_immortal(Object *object) {
 }
 
 void Object_define_method(Object *object, bstring name, Instruction **instructions, int instructions_count, short arity) {
-  long *literals = calloc(10, sizeof(long));
-  VMMethod *method = VMMethod_new(instructions, instructions_count, literals, 10, arity);
-
-  Hashmap_set(object->slots, name, method, tMethod);
+  Object *fn = Function_new(instructions, instructions_count, arity);
+  Hashmap_set(object->slots, name, fn, tFunction);
 }
 
 Object *Integer_new(int value)
@@ -106,6 +101,18 @@ Object *String_new(bstring value)
 
 error:
   return NULL;
+}
+
+Object*
+Function_new(Instruction **instructions, int instructions_count, short arity)
+{
+  long *literals      = calloc(10, sizeof(long));
+  VMMethod *method    = VMMethod_new(instructions, instructions_count, literals, 10, arity);
+  Object *object      = Object_new();
+  object->type        = tFunction;
+  object->value.other = method;
+
+  return object;
 }
 
 Object *True_new()
@@ -176,6 +183,9 @@ void Object_print(Object* object) {
     case tString:
       printf("#<tString:%p @value=\"%s\">", object, bdata(object->value.string));
       break;
+    case tFunction:
+      printf("#<tFunction:%p @method=\"%p\">", object, object->value.other);
+      break;
     case tTrue:
       printf("#<tTrue:%p>", object);
       break;
@@ -192,16 +202,13 @@ void Object_print(Object* object) {
 }
 
 int Object_lookup_method_arity(Object *object, bstring name) {
-  VMMethod* method = (VMMethod*)Hashmap_get(object->slots, name);
-  if(method) {
-    return method->arity;
-  }
-
   if (object == MainObject) {
     return 1;
   }
 
-  return -2;
+  Object *fn = (Object*)Hashmap_get(object->slots, name);
+  VMMethod *method = (VMMethod*)fn->value.other;
+  return method->arity;
 }
 
 VMMethod* Object_lookup_method(Object *object, bstring name) {
@@ -212,7 +219,8 @@ VMMethod* Object_lookup_method(Object *object, bstring name) {
     method->arity = 1;
     return method;
   } else {
-    method = (VMMethod*)Hashmap_get(object->slots, name);
+    Object *fn = (Object*)Hashmap_get(object->slots, name);
+    method = (VMMethod*)fn->value.other;
   }
 
   return method;

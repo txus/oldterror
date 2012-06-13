@@ -7,22 +7,23 @@
 
 struct vmmethod_s;
 
-enum {
+typedef enum {
   tObject,
   tInteger,
   tString,
+  tFunction,
   tTrue,
   tFalse,
-  tNil,
-  tMethod
-};
+  tNil
+} Type;
 
 typedef struct {
-  unsigned char type;
+  Type type;
   unsigned char immortal;
   union {
     int integer;
     bstring string;
+    void *other;
   } value;
   Hashmap *slots;
   int refcount;
@@ -41,6 +42,7 @@ Object* Object_get_slot(Object *receiver, bstring slot_name);
 
 Object *Integer_new(int value);
 Object *String_new(bstring value);
+Object *Function_new(Instruction **instructions, int instructions_count, short arity);
 Object *True_new();
 Object *False_new();
 Object *Nil_new();
