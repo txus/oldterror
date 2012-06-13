@@ -32,7 +32,6 @@ static int delete_node(HashmapNode *node) {
   if (node->type == tMethod) {
     VMMethod_destroy(node->data);
   } else {
-    debug("Not a method... destroying an object of type %i, with value %i", node->type, ((Object*)node->data)->value.integer);
     release((Object*)node->data);
   }
 
@@ -45,10 +44,7 @@ void Object_destroy(Object *object)
     if(object->immortal == 1) return;
 
     if(object->type == tString) {
-      debug("Destroying String %s", bdata(object->value.string));
       bdestroy(object->value.string);
-    } else {
-      debug("Destroying Integer %i", object->value.integer);
     }
 
     if(object->slots) {
