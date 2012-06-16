@@ -129,6 +129,10 @@ module Terror
       g.makearray first, node.body.count
     end
 
+    def empty_array(node, parent)
+      g.makearray 0, 0
+    end
+
     def hash_literal(node, parent)
       slf  = g.loadself
       meth = g.loads :hash

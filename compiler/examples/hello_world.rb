@@ -1,8 +1,8 @@
 a = 123
-a.message = ["Hello world!", "Goodbye world!"]
+a.message = [{ msg: "Hello world!"}, { msg: "Goodbye world!"}]
 b = false
 if b
-  puts a.message[1]
+  puts a.message[1]['msg']
 else
-  puts a.message[0]
+  puts a.message[0]['msg']
 end

@@ -213,13 +213,6 @@ Machine_run(Machine *machine, Object *self)
         bstring message    = regs[i->fields.b]->value.string;
         int arity          = Object_lookup_method_arity(receiver, message);
 
-        if (arity == -2) {
-          printf("Cannot find method %s on ", bdata(message));
-          Object_print(receiver);
-          printf("\n");
-          die("Method lookup error.");
-        }
-
         Object *argv[arity - 1];
         int j = 0;
 

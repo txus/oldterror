@@ -202,7 +202,7 @@ Object* Hash_native_get(void *a, void *b, void *_) {
 
 Object*
 Array_new(Object **contents, int count) {
-  DArray *array = DArray_create(sizeof(Object*), count);
+  DArray *array = DArray_create(sizeof(Object*), count || 1);
   int i=0;
   for(i=0; i < count; i++) {
     retain((Object*)contents[i]);
@@ -318,6 +318,14 @@ Lobby_native_puts(void *a, void *b, void *c)
   return NilObject;
 }
 
+Object*
+Lobby_native_hash(void *a, void *b, void *c)
+{
+  Object *array = (Object*)b;
+  assert(array->type == tArray && "Cannot create Hash from non-array.");
+  return Hash_new(array);
+}
+
 Object *Lobby_new()
 {
   Object *object = calloc(1, sizeof(Object));
@@ -335,6 +343,7 @@ Object *Lobby_new()
   // Add native methods
   Object_define_native_method(object, bfromcstr("print"), Lobby_native_print, 1);
   Object_define_native_method(object, bfromcstr("puts"), Lobby_native_puts, 1);
+  Object_define_native_method(object, bfromcstr("hash"), Lobby_native_hash, 1);
 
   return object;
 
@@ -347,13 +356,13 @@ void Object_print(Object* object) {
 
   switch(object->type) {
     case tInteger:
-      printf("#<tInteger:%p @value=%i>", object, object->value.integer);
+      printf("%i", object->value.integer);
       break;
     case tString:
-      printf("#<tString:%p @value=\"%s\">", object, bdata(object->value.string));
+      printf("%s", bdata(object->value.string));
       break;
     case tArray:
-      printf("#<tArray:%p @contents=[", object);
+      printf("[");
       DArray *array = (DArray*)object->value.other;
 
       int i = 0, count = DArray_count(array);
@@ -362,7 +371,7 @@ void Object_print(Object* object) {
         if (i+1 != count) printf(", ");
       }
 
-      printf("]>");
+      printf("]");
       break;
     case tHash:
       printf("#<tHash:%p>", object);
@@ -371,13 +380,13 @@ void Object_print(Object* object) {
       printf("#<tFunction:%p @method=\"%p\">", object, object->value.other);
       break;
     case tTrue:
-      printf("#<tTrue:%p>", object);
+      printf("true");
       break;
     case tFalse:
-      printf("#<tFalse:%p>", object);
+      printf("false");
       break;
     case tNil:
-      printf("#<tNil:%p>", object);
+      printf("nil");
       break;
     case tObject:
       printf("#<tObject:%p>", object);
@@ -396,23 +405,14 @@ int Object_lookup_method_arity(Object *object, bstring name) {
     Object_print(object);
     die("Could not find slot.");
   }
-  VMMethod *method = (VMMethod*)fn->value.other;
-  return method->arity;
-}
 
-VMMethod* Object_lookup_method(Object *object, bstring name) {
-  VMMethod *method = NULL;
-
-  if (object == Lobby) {
-    method = calloc(1, sizeof(VMMethod));
-    method->arity = 1;
-    return method;
+  if(fn->native) {
+    NativeMethod *method = (NativeMethod*)fn->value.other;
+    return method->arity;
   } else {
-    Object *fn = (Object*)Hashmap_get(object->slots, name);
-    method = (VMMethod*)fn->value.other;
+    VMMethod *method = (VMMethod*)fn->value.other;
+    return method->arity;
   }
-
-  return method;
 }
 
 int Object_register_slot(Object *receiver, bstring slot_name, Object *value) {

@@ -44,7 +44,6 @@ void Object_destroy(Object *object);
 void Object_destroy_immortal(Object *object);
 void Object_print(Object *object);
 int Object_lookup_method_arity(Object *object, bstring name);
-struct vmmethod_s* Object_lookup_method(Object *object, bstring name);
 void Object_define_native_method(Object *object, bstring name, native_fn native_function, short arity);
 void Object_define_method(Object *object, bstring name, Instruction **instructions, int instructions_count, short arity);
 int Object_register_slot(Object *receiver, bstring slot_name, Object *value);
