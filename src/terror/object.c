@@ -233,10 +233,22 @@ error:
   return NULL;
 }
 
-static inline Object*
-build_toplevel_object() {
-  Object *obj = Object_new();
-  return obj;
+Object*
+Object_native_clone(void *a, void *b, void *c)
+{
+  Object *self = (Object*)a;
+  return Object_new_with_parent(self);
+}
+
+static inline Object *build_toplevel_object()
+{
+  Object *object = Object_new();
+
+  // Define basic native methods
+  bstring name = bfromcstr("clone");
+  Object_define_native_method(object, name, Object_native_clone, 0);
+
+  return object;
 }
 
 Object *Lobby_new()
@@ -249,7 +261,6 @@ Object *Lobby_new()
 
   object->slots = Hashmap_create(NULL, NULL);
 
-  // Add toplevel Object constant
   Object *toplevel_object = build_toplevel_object();
   bstring constant_name   = bfromcstr("Object");
   Object_register_slot(object, constant_name, toplevel_object);

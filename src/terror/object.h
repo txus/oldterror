@@ -60,4 +60,8 @@ Object *False_new();
 Object *Nil_new();
 Object *Lobby_new();
 
+// native functions
+Object *Array_native_at(void*, void*, void*);
+Object *Object_native_clone(void*, void*, void*);
+
 #endif
