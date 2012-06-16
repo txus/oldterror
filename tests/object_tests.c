@@ -81,6 +81,28 @@ char *test_arrays()
   return NULL;
 }
 
+char *test_hashes()
+{
+  Object **contents = calloc(4, sizeof(Object*));
+  contents[0] = String_new(bfromcstr("foo"));
+  contents[1] = Integer_new(1);
+  contents[2] = String_new(bfromcstr("bar"));
+  contents[3] = Integer_new(2);
+
+  Object *object = Hash_new(contents, 4);
+
+  mu_assert(object->type == tHash, "Hash has the wrong type");
+  Hashmap *map = (Hashmap*)object->value.other;
+  Object *foo = (Object*)Hashmap_get(map, contents[0]);
+  mu_assert(foo->value.integer == 1, "Hash element 'foo' is wrong.");
+  Object *bar = (Object*)Hashmap_get(map, contents[2]);
+  mu_assert(bar->value.integer == 2, "Hash element 'bar' is wrong.");
+
+  Object_destroy(object);
+  free(contents);
+  return NULL;
+}
+
 char *test_special()
 {
   object = True_new();
@@ -145,6 +167,7 @@ char *all_tests() {
   mu_run_test(test_integers);
   mu_run_test(test_strings);
   mu_run_test(test_arrays);
+  mu_run_test(test_hashes);
 
   mu_run_test(test_special);
   mu_run_test(test_print);

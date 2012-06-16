@@ -44,28 +44,45 @@ static int delete_node(HashmapNode *node) {
   return 0;
 }
 
+static int delete_object_node(HashmapNode *node) {
+  release((Object*)node->key);
+  release((Object*)node->data);
+  return 0;
+}
+
 void Object_destroy(Object *object)
 {
   if(object != NULL) {
     if(object->immortal == 1) return;
 
-    if(object->type == tString) {
-      bdestroy(object->value.string);
-    }
-    if(object->type == tFunction) {
-      if (object->native) {
-        NativeMethod_destroy((NativeMethod*)object->value.other);
-      } else {
-        VMMethod_destroy((VMMethod*)object->value.other);
+    switch(object->type) {
+      case tString:
+        bdestroy(object->value.string);
+        break;
+      case tFunction:
+        if (object->native) {
+          NativeMethod_destroy((NativeMethod*)object->value.other);
+        } else {
+          VMMethod_destroy((VMMethod*)object->value.other);
+        }
+        break;
+      case tArray: {
+        DArray *array = (DArray*)object->value.other;
+        int i=0;
+        for(i=0; i < DArray_count(array); i++) {
+          release((Object*)DArray_at(array, i));
+        }
+        DArray_destroy(array);
+        break;
       }
-    }
-    if(object->type == tArray) {
-      DArray *array = (DArray*)object->value.other;
-      int i=0;
-      for(i=0; i < DArray_count(array); i++) {
-        release((Object*)DArray_at(array, i));
+      case tHash: {
+        Hashmap *map = (Hashmap*)object->value.other;
+        Hashmap_traverse(map, delete_object_node);
+        Hashmap_destroy(map);
+        break;
       }
-      DArray_destroy(array);
+      default:
+        break;
     }
 
     if(object->slots) {
@@ -175,6 +192,14 @@ Object* Array_native_at(void *a, void *b, void *_) {
   }
 }
 
+Object* Hash_native_get(void *a, void *b, void *_) {
+  Object *self  = (Object*)a;
+  Object *key   = (Object*)b;
+  Hashmap *hash = (Hashmap*)self->value.other;
+
+  return Hashmap_get(hash, key);
+}
+
 Object*
 Array_new(Object **contents, int count) {
   DArray *array = DArray_create(sizeof(Object*), count);
@@ -188,9 +213,30 @@ Array_new(Object **contents, int count) {
   object->type        = tArray;
   object->value.other = array;
 
-  bstring name = bfromcstr("[]");
+  Object_define_native_method(object, bfromcstr("[]"), Array_native_at, 1);
 
-  Object_define_native_method(object, name, Array_native_at, 1);
+  return object;
+}
+
+Object*
+Hash_new(Object **contents, int count) {
+  assert(count % 2 == 0 && "Hash element count must be even.");
+
+  Hashmap *hash = Hashmap_create(String_compare, String_hash);
+
+  int i=0;
+  for(i=0; i < count; i += 2) {
+    Object *key = (Object*)contents[i];
+    Object *value = (Object*)contents[i+1];
+    assert(key->type == tString && "All hash keys must be strings");
+    Hashmap_set(hash, key, value, value->type);
+  }
+
+  Object *object      = Object_new();
+  object->type        = tHash;
+  object->value.other = hash;
+
+  Object_define_native_method(object, bfromcstr("[]"), Hash_native_get, 1);
 
   return object;
 }
@@ -258,44 +304,7 @@ static inline Object *build_toplevel_object_from(Object *lobby)
 Object*
 Lobby_native_print(void *a, void *b, void *c)
 {
-  Object *obj = (Object*)b;
-
-  switch(obj->type) {
-    case tString:
-      printf("%s", bdata(obj->value.string));
-      break;
-    case tInteger:
-      printf("%i", obj->value.integer);
-      break;
-    case tFunction:
-      printf("#<tFunction:%p @method=\"%p\">", obj, obj->value.other);
-      break;
-    case tArray:
-      printf("#<tArray:%p @contents=[", obj);
-      DArray *array = (DArray*)obj->value.other;
-
-      int i = 0, count = DArray_count(array);
-      for(i=0; i < count; i++) {
-        Object_print((Object*)DArray_at(array, i));
-        if (i+1 != count) printf(", ");
-      }
-
-      printf("]>");
-      break;
-    case tTrue:
-      printf("true");
-      break;
-    case tFalse:
-      printf("false");
-      break;
-    case tNil:
-      printf("nil");
-      break;
-    case tObject:
-      Object_print(obj);
-      printf("%i", obj->value.integer);
-      break;
-  }
+  Object_print((Object*)b);
   return NilObject;
 }
 
@@ -352,6 +361,9 @@ void Object_print(Object* object) {
       }
 
       printf("]>");
+      break;
+    case tHash:
+      printf("#<tHash:%p>", object);
       break;
     case tFunction:
       printf("#<tFunction:%p @method=\"%p\">", object, object->value.other);

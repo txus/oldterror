@@ -13,6 +13,7 @@ typedef enum {
   tInteger,
   tString,
   tArray,
+  tHash,
   tFunction,
   tTrue,
   tFalse,
@@ -55,6 +56,7 @@ Object *String_new(bstring value);
 Object *Function_native_new(native_fn function, short arity);
 Object *Function_new(Instruction **instructions, int instructions_count, short arity);
 Object *Array_new(Object **contents, int count);
+Object *Hash_new(Object **contents, int count);
 Object *True_new();
 Object *False_new();
 Object *Nil_new();
