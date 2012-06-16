@@ -6,7 +6,7 @@
 extern Object *TrueObject;
 extern Object *FalseObject;
 extern Object *NilObject;
-extern Object *MainObject;
+extern Object *Lobby;
 
 void Runtime_init();
 void Runtime_destroy();

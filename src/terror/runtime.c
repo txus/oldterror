@@ -9,14 +9,14 @@
 Object *TrueObject = NULL;
 Object *FalseObject = NULL;
 Object *NilObject = NULL;
-Object *MainObject = NULL;
+Object *Lobby = NULL;
 
 void Runtime_init() {
   // Init extern constants
   TrueObject  = True_new();
   FalseObject = False_new();
   NilObject   = Nil_new();
-  MainObject  = Main_new();
+  Lobby       = Lobby_new();
 }
 
 void Runtime_destroy() {
@@ -29,8 +29,8 @@ void Runtime_destroy() {
   Object_destroy_immortal(NilObject);
   NilObject = NULL;
 
-  Object_destroy_immortal(MainObject);
-  MainObject = NULL;
+  Object_destroy_immortal(Lobby);
+  Lobby = NULL;
 }
 
 static inline Object* call_kernel_method(bstring method, Object **argv) {
@@ -94,7 +94,7 @@ static inline Object* call_kernel_method(bstring method, Object **argv) {
    */
 
   printf("Could not find method %s on ", bdata(method));
-  Object_print(MainObject);
+  Object_print(Lobby);
   printf("\n");
   exit(1);
 }
@@ -102,7 +102,7 @@ static inline Object* call_kernel_method(bstring method, Object **argv) {
 Object* call_method(Object *receiver, bstring method, Object **argv, int argc, int registers_count) {
   debug("Entering #%s", bdata(method));
 
-  if (receiver == MainObject) {
+  if (receiver == Lobby) {
     Object *result = call_kernel_method(method, argv);
     return result;
   }

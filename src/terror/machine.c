@@ -10,7 +10,7 @@
 Object *TrueObject;
 Object *FalseObject;
 Object *NilObject;
-Object *MainObject;
+Object *Lobby;
 
 Machine*
 Machine_new(Instruction **instructions, int instructions_count, long *literals, int literals_count, Object **locals, int locals_count, int registers_count)

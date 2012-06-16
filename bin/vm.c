@@ -11,7 +11,7 @@
 Object *TrueObject;
 Object *FalseObject;
 Object *NilObject;
-Object *MainObject;
+Object *Lobby;
 
 int main(int argc, char const *argv[])
 {
@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
     main_method->registers_count
     );
 
-  Object *result = Machine_run(machine, MainObject);
+  Object *result = Machine_run(machine, Lobby);
 
 #ifndef NDEBUG
   debug("---------- Return value");

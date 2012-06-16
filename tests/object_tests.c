@@ -3,6 +3,7 @@
 #include <assert.h>
 
 static Object *object = NULL;
+static Object *parent = NULL;
 static Object *immortal = NULL;
 
 char *test_create()
@@ -17,9 +18,19 @@ char *test_create()
   return NULL;
 }
 
+char *test_create_with_parent() {
+  parent = Object_new();
+  object = Object_new_with_parent(parent);
+
+  mu_assert(object->parent == parent, "Object didn't get assigned a parent.");
+
+  return NULL;
+}
+
 char *test_destroy()
 {
   Object_destroy(object);
+  Object_destroy(parent);
 
   Object_destroy(immortal);
   mu_assert(immortal->immortal == 1, "Immortal object was destroyed.");
@@ -87,9 +98,9 @@ char *test_special()
   mu_assert(object->immortal == 1, "Nil is not immortal");
   Object_destroy_immortal(object);
 
-  object = Main_new();
-  mu_assert(object->type == tObject, "Main has the wrong type");
-  mu_assert(object->immortal == 1, "Main is not immortal");
+  object = Lobby_new();
+  mu_assert(object->type == tObject, "Lobby has the wrong type");
+  mu_assert(object->immortal == 1, "Lobby is not immortal");
   Object_destroy_immortal(object);
 
   return NULL;

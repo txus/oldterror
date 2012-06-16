@@ -19,7 +19,7 @@ typedef enum {
   tNil
 } Type;
 
-typedef struct {
+struct object_s {
   Type type;
   unsigned char immortal;
   unsigned char native;
@@ -29,12 +29,16 @@ typedef struct {
     void *other;
   } value;
   Hashmap *slots;
+  struct object_s *parent;
   int refcount;
-} Object;
+};
+
+typedef struct object_s Object;
 
 typedef Object* (*native_fn)(void*, void*, void*);
 
 Object *Object_new();
+Object *Object_new_with_parent(Object *parent);
 void Object_destroy(Object *object);
 void Object_destroy_immortal(Object *object);
 void Object_print(Object *object);
@@ -54,6 +58,6 @@ Object *Array_new(Object **contents, int count);
 Object *True_new();
 Object *False_new();
 Object *Nil_new();
-Object *Main_new();
+Object *Lobby_new();
 
 #endif

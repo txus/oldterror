@@ -9,7 +9,7 @@
 #include <terror/gc.h>
 #include <assert.h>
 
-Object *MainObject;
+Object *Lobby;
 Object *NilObject;
 
 Object *Object_new()
@@ -21,6 +21,7 @@ Object *Object_new()
   object->refcount = 0;
   object->immortal = 0;
   object->native = 0;
+  object->parent = NULL;
 
   object->slots = Hashmap_create(NULL, NULL);
 
@@ -28,6 +29,13 @@ Object *Object_new()
 
 error:
   return NULL;
+}
+
+Object *Object_new_with_parent(Object *parent)
+{
+  Object *object = Object_new();
+  object->parent = parent;
+  return object;
 }
 
 static int delete_node(HashmapNode *node) {
@@ -75,7 +83,10 @@ void Object_destroy_immortal(Object *object) {
       bdestroy(object->value.string);
     }
 
-    if(object->slots) Hashmap_destroy(object->slots);
+    if(object->slots) {
+      Hashmap_traverse(object->slots, delete_node);
+      Hashmap_destroy(object->slots);
+    }
 
     free(object);
   }
@@ -222,7 +233,13 @@ error:
   return NULL;
 }
 
-Object *Main_new()
+static inline Object*
+build_toplevel_object() {
+  Object *obj = Object_new();
+  return obj;
+}
+
+Object *Lobby_new()
 {
   Object *object = calloc(1, sizeof(Object));
   check_mem(object);
@@ -231,6 +248,11 @@ Object *Main_new()
   object->immortal = 1;
 
   object->slots = Hashmap_create(NULL, NULL);
+
+  // Add toplevel Object constant
+  Object *toplevel_object = build_toplevel_object();
+  bstring constant_name   = bfromcstr("Object");
+  Object_register_slot(object, constant_name, toplevel_object);
 
   return object;
 
@@ -279,7 +301,7 @@ void Object_print(Object* object) {
 }
 
 int Object_lookup_method_arity(Object *object, bstring name) {
-  if (object == MainObject) {
+  if (object == Lobby) {
     return 1;
   }
 
@@ -296,7 +318,7 @@ int Object_lookup_method_arity(Object *object, bstring name) {
 VMMethod* Object_lookup_method(Object *object, bstring name) {
   VMMethod *method = NULL;
 
-  if (object == MainObject) {
+  if (object == Lobby) {
     method = calloc(1, sizeof(VMMethod));
     method->arity = 1;
     return method;

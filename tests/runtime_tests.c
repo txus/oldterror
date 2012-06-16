@@ -9,7 +9,7 @@ char *test_init()
   mu_assert(TrueObject->type == tTrue, "TrueObject didn't initialize");
   mu_assert(FalseObject->type == tFalse, "FalseObject didn't initialize");
   mu_assert(NilObject->type == tNil, "NilObject didn't initialize");
-  mu_assert(MainObject->type == tObject, "MainObject didn't initialize");
+  mu_assert(Lobby->type == tObject, "Lobby didn't initialize");
 
   return NULL;
 }
@@ -21,7 +21,7 @@ char *test_destroy()
   mu_assert(TrueObject == NULL, "TrueObject wasn't destroyed with the runtime");
   mu_assert(FalseObject == NULL, "FalseObject wasn't destroyed with the runtime");
   mu_assert(NilObject == NULL, "NilObject wasn't destroyed with the runtime");
-  mu_assert(MainObject == NULL, "MainObject wasn't destroyed with the runtime");
+  mu_assert(Lobby == NULL, "Lobby wasn't destroyed with the runtime");
 
   return NULL;
 }
