@@ -89,7 +89,8 @@ char *test_hashes()
   contents[2] = String_new(bfromcstr("bar"));
   contents[3] = Integer_new(2);
 
-  Object *object = Hash_new(contents, 4);
+  Object *array = Array_new(contents, 4);
+  Object *object = Hash_new(array);
 
   mu_assert(object->type == tHash, "Hash has the wrong type");
   Hashmap *map = (Hashmap*)object->value.other;
@@ -99,6 +100,7 @@ char *test_hashes()
   mu_assert(bar->value.integer == 2, "Hash element 'bar' is wrong.");
 
   Object_destroy(object);
+  Object_destroy(array);
   free(contents);
   return NULL;
 }

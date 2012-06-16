@@ -219,15 +219,17 @@ Array_new(Object **contents, int count) {
 }
 
 Object*
-Hash_new(Object **contents, int count) {
+Hash_new(Object *array_obj) {
+  DArray *array = (DArray*)array_obj->value.other;
+  int count = DArray_count(array);
   assert(count % 2 == 0 && "Hash element count must be even.");
 
   Hashmap *hash = Hashmap_create(String_compare, String_hash);
 
   int i=0;
   for(i=0; i < count; i += 2) {
-    Object *key = (Object*)contents[i];
-    Object *value = (Object*)contents[i+1];
+    Object *key   = retain((Object*)DArray_at(array, i));
+    Object *value = retain((Object*)DArray_at(array, i+1));
     assert(key->type == tString && "All hash keys must be strings");
     Hashmap_set(hash, key, value, value->type);
   }
