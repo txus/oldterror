@@ -153,6 +153,12 @@ module Terror
       g.loads node.value
     end
 
+    def constant_access(node, parent)
+      receiver  = g.loadself
+      name      = g.loads node.name
+      g.loadslot receiver, name
+    end
+
     def finalize
       g.encode
     end

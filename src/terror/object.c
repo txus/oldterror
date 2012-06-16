@@ -338,7 +338,7 @@ Object *Lobby_new()
 
   // Add toplevel object
   Object *toplevel_object = build_toplevel_object_from(object);
-  Object_register_slot(object, bfromcstr("Object"), toplevel_object);
+  Object_register_slot(object, bfromcstr("Object"), retain(toplevel_object));
 
   // Add native methods
   Object_define_native_method(object, bfromcstr("print"), Lobby_native_print, 1);
@@ -395,15 +395,15 @@ void Object_print(Object* object) {
 }
 
 int Object_lookup_method_arity(Object *object, bstring name) {
-  if (object == Lobby) {
-    return 1;
-  }
-
-  Object *fn = (Object*)Hashmap_get(object->slots, name);
+  Object *fn = Object_lookup_slot(object, name);
   if(!fn) {
     printf("Undefined slot #%s for ", bdata(name));
     Object_print(object);
     die("Could not find slot.");
+  }
+
+  if(fn->type != tFunction) { // it is a normal attribute
+    return -2;
   }
 
   if(fn->native) {
@@ -434,7 +434,7 @@ Object* Object_lookup_slot(Object *receiver, bstring slot_name) {
   Object *result = NULL;
 
   do {
-    result = Hashmap_get(obj->slots, slot_name);
+    result = (Object*)Hashmap_get(obj->slots, slot_name);
     if(result) return result;
   } while((obj = obj->parent));
 

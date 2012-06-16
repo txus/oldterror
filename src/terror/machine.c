@@ -213,17 +213,25 @@ Machine_run(Machine *machine, Object *self)
         bstring message    = regs[i->fields.b]->value.string;
         int arity          = Object_lookup_method_arity(receiver, message);
 
-        Object *argv[arity - 1];
-        int j = 0;
+        if(arity > 0) {
+          Object *argv[arity - 1];
+          int j = 0;
 
-        // From the start register of the arguments (C),
-        // get the arguments R(C+0), R(C+1) ... R(C+ARITY)
-        for(j=0; j < arity; j++) {
-          argv[j] = regs[i->fields.c + j];
+          // From the start register of the arguments (C),
+          // get the arguments R(C+0), R(C+1) ... R(C+ARITY)
+          for(j=0; j < arity; j++) {
+            argv[j] = regs[i->fields.c + j];
+          }
+
+          REGISTER(regs[i->fields.a],
+              call_method(receiver, message, argv, arity, machine->registers_count));
+        } else if (arity == 0) {
+          REGISTER(regs[i->fields.a],
+              call_method(receiver, message, NULL, arity, machine->registers_count));
+        } else {
+          REGISTER(regs[i->fields.a],
+              Object_lookup_slot(receiver, message));
         }
-
-        REGISTER(regs[i->fields.a],
-            call_method(receiver, message, argv, arity, machine->registers_count));
 
         release(receiver);
 

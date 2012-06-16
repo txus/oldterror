@@ -126,9 +126,6 @@ char *test_slots()
   mu_assert(Object_lookup_slot(parent, money)->value.integer == 1000, "Parent money is wrong");
   mu_assert(Object_lookup_slot(child, money)->value.integer == 1000, "Child money is wrong");
 
-  debug("Refcount of parent: %i", parent->refcount);
-  debug("Refcount of child: %i", child->refcount);
-
   Object_destroy(child);
 
   bdestroy(money);

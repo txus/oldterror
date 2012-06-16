@@ -175,5 +175,18 @@ module Terror
         end
       end
     end
+
+    describe 'constants' do
+      it 'are compiled down to normal identifiers' do
+        compiles("Object.clone") do
+          _loadself 0
+          _loads 1, 0 # 'Object'
+          _loadslot 2, 0, 1
+
+          _loads 3, 1 # 'clone'
+          _send 2, 3, 4
+        end
+      end
+    end
   end
 end
