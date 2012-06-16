@@ -105,6 +105,37 @@ char *test_hashes()
   return NULL;
 }
 
+char *test_slots()
+{
+  Object *parent_age   = Integer_new(50);
+  Object *parent_money = Integer_new(1000);
+  Object *child_age    = Integer_new(25);
+
+  Object *parent = Object_new();
+  Object *child  = Object_new_with_parent(parent);
+
+  bstring money = bfromcstr("money");
+  bstring age   = bfromcstr("age");
+
+  Object_register_slot(parent, bfromcstr("money"), parent_money);
+  Object_register_slot(parent, bfromcstr("age"), parent_age);
+  Object_register_slot(child, bfromcstr("age"), child_age);
+
+  mu_assert(Object_lookup_slot(parent, age)->value.integer == 50, "Parent age is wrong");
+  mu_assert(Object_lookup_slot(child, age)->value.integer == 25, "Child age is wrong");
+  mu_assert(Object_lookup_slot(parent, money)->value.integer == 1000, "Parent money is wrong");
+  mu_assert(Object_lookup_slot(child, money)->value.integer == 1000, "Child money is wrong");
+
+  debug("Refcount of parent: %i", parent->refcount);
+  debug("Refcount of child: %i", child->refcount);
+
+  Object_destroy(child);
+
+  bdestroy(money);
+  bdestroy(age);
+  return NULL;
+}
+
 char *test_special()
 {
   object = True_new();
@@ -170,6 +201,8 @@ char *all_tests() {
   mu_run_test(test_strings);
   mu_run_test(test_arrays);
   mu_run_test(test_hashes);
+
+  mu_run_test(test_slots);
 
   mu_run_test(test_special);
   mu_run_test(test_print);

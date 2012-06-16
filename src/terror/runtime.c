@@ -36,7 +36,7 @@ void Runtime_destroy() {
 Object* call_method(Object *receiver, bstring method, Object **argv, int argc, int registers_count) {
   debug("Entering #%s", bdata(method));
 
-  Object *fn = Object_get_slot(receiver, method);
+  Object *fn = Object_lookup_slot(receiver, method);
   if (fn == NULL) {
     printf("Could not find method %s on ", bdata(method));
     Object_print(receiver);

@@ -49,6 +49,7 @@ void Object_define_method(Object *object, bstring name, Instruction **instructio
 int Object_register_slot(Object *receiver, bstring slot_name, Object *value);
 void* Object_delete_slot(Object *receiver, bstring slot_name);
 Object* Object_get_slot(Object *receiver, bstring slot_name);
+Object* Object_lookup_slot(Object *receiver, bstring slot_name);
 
 Object *Integer_new(int value);
 Object *String_new(bstring value);

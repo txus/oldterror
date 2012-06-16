@@ -428,3 +428,15 @@ void* Object_delete_slot(Object *receiver, bstring slot_name) {
 Object* Object_get_slot(Object *receiver, bstring slot_name) {
   return Hashmap_get(receiver->slots, slot_name);
 }
+
+Object* Object_lookup_slot(Object *receiver, bstring slot_name) {
+  Object *obj    = receiver;
+  Object *result = NULL;
+
+  do {
+    result = Hashmap_get(obj->slots, slot_name);
+    if(result) return result;
+  } while((obj = obj->parent));
+
+  return NULL;
+}
