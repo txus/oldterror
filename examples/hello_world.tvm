@@ -4,7 +4,7 @@ _main
 "message
 "Hello world!
 "Goodbye world!
-"print
+"puts
 "[]
 1
 0

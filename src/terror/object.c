@@ -299,6 +299,14 @@ Lobby_native_print(void *a, void *b, void *c)
   return NilObject;
 }
 
+Object*
+Lobby_native_puts(void *a, void *b, void *c)
+{
+  Lobby_native_print(a, b, c);
+  printf("\n");
+  return NilObject;
+}
+
 Object *Lobby_new()
 {
   Object *object = calloc(1, sizeof(Object));
@@ -313,8 +321,9 @@ Object *Lobby_new()
   Object *toplevel_object = build_toplevel_object();
   Object_register_slot(object, bfromcstr("Object"), toplevel_object);
 
-  // Add native kernel methods
+  // Add native methods
   Object_define_native_method(object, bfromcstr("print"), Lobby_native_print, 1);
+  Object_define_native_method(object, bfromcstr("puts"), Lobby_native_puts, 1);
 
   return object;
 
