@@ -34,7 +34,7 @@ error:
 Object *Object_new_with_parent(Object *parent)
 {
   Object *object = Object_new();
-  object->parent = parent;
+  object->parent = retain(parent);
   return object;
 }
 
@@ -71,6 +71,10 @@ void Object_destroy(Object *object)
     if(object->slots) {
       Hashmap_traverse(object->slots, delete_node);
       Hashmap_destroy(object->slots);
+    }
+
+    if(object->parent) {
+      release(object->parent);
     }
 
     free(object);
