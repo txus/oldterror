@@ -159,6 +159,13 @@ module Terror
       _setslot receiver, name, value
     end
 
+    def makearray(start, count)
+      @ip += 1
+      slot = a.allocate :array
+      _makearray slot, start, count
+      slot
+    end
+
     def send_message(a, b, c)
       @ip += 1
       _send a, b, c

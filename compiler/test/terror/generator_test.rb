@@ -133,6 +133,13 @@ module Terror
       end
     end
 
+    describe '#makearray' do
+      it 'makes an array from a collection of objects' do
+        @g.makearray 1, 3
+        @g.registers[0].value.must_equal :array
+      end
+    end
+
     describe '#send' do
       it 'sends a message to an object' do
         @g.send_message(0, 1, 2).must_equal 0

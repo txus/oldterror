@@ -147,5 +147,16 @@ module Terror
         end
       end
     end
+
+    describe 'arrays' do
+      it 'compiles arrays' do
+        compiles("[1, 'hey', 3]") do
+          _loadi 0, 0
+          _loads 1, 1
+          _loadi 2, 2
+          _makearray 3, 0, 3
+        end
+      end
+    end
   end
 end

@@ -119,6 +119,16 @@ module Terror
       g.setslot receiver, name, value
     end
 
+    def array_literal(node, parent)
+      first = nil
+      node.body.each do |element|
+        slot = element.lazy_visit self
+        # Save the register of only the first element
+        first ||= slot
+      end
+      g.makearray first, node.body.count
+    end
+
     def finalize
       g.encode
     end

@@ -139,6 +139,8 @@ module Terror
     op :loadslot,  0x60, 3
     op :setslot,   0x61, 3
 
+    op :makearray, 0x70, 3
+
     op :send,      0x80, 3
     op :ret,       0x90, 1
     op :dump,      0x91, 0
