@@ -255,6 +255,50 @@ static inline Object *build_toplevel_object()
   return object;
 }
 
+Object*
+Lobby_native_print(void *a, void *b, void *c)
+{
+  Object *obj = (Object*)b;
+
+  switch(obj->type) {
+    case tString:
+      printf("%s", bdata(obj->value.string));
+      break;
+    case tInteger:
+      printf("%i", obj->value.integer);
+      break;
+    case tFunction:
+      printf("#<tFunction:%p @method=\"%p\">", obj, obj->value.other);
+      break;
+    case tArray:
+      printf("#<tArray:%p @contents=[", obj);
+      DArray *array = (DArray*)obj->value.other;
+
+      int i = 0, count = DArray_count(array);
+      for(i=0; i < count; i++) {
+        Object_print((Object*)DArray_at(array, i));
+        if (i+1 != count) printf(", ");
+      }
+
+      printf("]>");
+      break;
+    case tTrue:
+      printf("true");
+      break;
+    case tFalse:
+      printf("false");
+      break;
+    case tNil:
+      printf("nil");
+      break;
+    case tObject:
+      Object_print(obj);
+      printf("%i", obj->value.integer);
+      break;
+  }
+  return NilObject;
+}
+
 Object *Lobby_new()
 {
   Object *object = calloc(1, sizeof(Object));
@@ -265,9 +309,12 @@ Object *Lobby_new()
 
   object->slots = Hashmap_create(NULL, NULL);
 
+  // Add toplevel object
   Object *toplevel_object = build_toplevel_object();
-  bstring constant_name   = bfromcstr("Object");
-  Object_register_slot(object, constant_name, toplevel_object);
+  Object_register_slot(object, bfromcstr("Object"), toplevel_object);
+
+  // Add native kernel methods
+  Object_define_native_method(object, bfromcstr("print"), Lobby_native_print, 1);
 
   return object;
 

@@ -33,79 +33,8 @@ void Runtime_destroy() {
   Lobby = NULL;
 }
 
-static inline Object* call_kernel_method(bstring method, Object **argv) {
-  /*
-   * #print
-   */
-
-  bstring print = bfromcstr("print");
-
-  if (bstrcmp(method, print)==0) {
-    if (!argv[0]) {
-      printf("[#print] Wrong number of arguments: 0 for 1\n");
-      exit(1);
-    }
-    switch(argv[0]->type) {
-      case tString:
-        printf("%s", bdata(argv[0]->value.string));
-        break;
-      case tInteger:
-        printf("%i", argv[0]->value.integer);
-        break;
-      case tFunction:
-        printf("#<tFunction:%p @method=\"%p\">", argv[0], argv[0]->value.other);
-        break;
-      case tArray:
-        printf("#<tArray:%p @contents=[", argv[0]);
-        DArray *array = (DArray*)argv[0]->value.other;
-
-        int i = 0, count = DArray_count(array);
-        for(i=0; i < count; i++) {
-          Object_print((Object*)DArray_at(array, i));
-          if (i+1 != count) printf(", ");
-        }
-
-        printf("]>");
-        break;
-      case tTrue:
-        printf("true");
-        break;
-      case tFalse:
-        printf("false");
-        break;
-      case tNil:
-        printf("nil");
-        break;
-      case tObject:
-        Object_print(argv[0]);
-        printf("%i", argv[0]->value.integer);
-        break;
-    }
-    return NilObject;
-  }
-
-  /*
-   * #. . .
-   */
-
-
-  /*
-   * RAISE!
-   */
-
-  printf("Could not find method %s on ", bdata(method));
-  Object_print(Lobby);
-  printf("\n");
-  exit(1);
-}
-
 Object* call_method(Object *receiver, bstring method, Object **argv, int argc, int registers_count) {
   debug("Entering #%s", bdata(method));
-
-  if (receiver == Lobby) {
-    Object *result = call_kernel_method(method, argv);
-    return result;
-  }
 
   Object *fn = Object_get_slot(receiver, method);
   if (fn == NULL) {
