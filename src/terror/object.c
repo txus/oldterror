@@ -244,9 +244,9 @@ Object_native_clone(void *a, void *b, void *c)
   return Object_new_with_parent(self);
 }
 
-static inline Object *build_toplevel_object()
+static inline Object *build_toplevel_object_from(Object *lobby)
 {
-  Object *object = Object_new();
+  Object *object = Object_new_with_parent(lobby);
 
   // Define basic native methods
   bstring name = bfromcstr("clone");
@@ -318,7 +318,7 @@ Object *Lobby_new()
   object->slots = Hashmap_create(NULL, NULL);
 
   // Add toplevel object
-  Object *toplevel_object = build_toplevel_object();
+  Object *toplevel_object = build_toplevel_object_from(object);
   Object_register_slot(object, bfromcstr("Object"), toplevel_object);
 
   // Add native methods
