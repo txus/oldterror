@@ -158,5 +158,22 @@ module Terror
         end
       end
     end
+
+    describe 'hashes' do
+      it 'compiles hashes' do
+        compiles("{a: 123, b: 'hey'}") do
+          _loadself 0
+          _loads 1, 0 # 'hash'
+
+          _loads 2, 1
+          _loadi 3, 2
+          _loads 4, 3
+          _loads 5, 4
+          _makearray 6, 2, 4
+
+          _send 0, 1, 6
+        end
+      end
+    end
   end
 end

@@ -129,6 +129,26 @@ module Terror
       g.makearray first, node.body.count
     end
 
+    def hash_literal(node, parent)
+      slf  = g.loadself
+      meth = g.loads :hash
+
+      # Create an array
+      first = nil
+      node.array.each do |element|
+        slot = element.lazy_visit self
+        # Save the register of only the first element
+        first ||= slot
+      end
+      ary = g.makearray first, node.array.count
+
+      g.send_message slf, meth, ary
+    end
+
+    def symbol_literal(node, parent)
+      g.loads node.value
+    end
+
     def finalize
       g.encode
     end
