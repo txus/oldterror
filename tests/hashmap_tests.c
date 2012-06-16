@@ -1,5 +1,6 @@
 #include "minunit.h"
 #include <terror/hashmap.h>
+#include <terror/object.h>
 #include <assert.h>
 #include <terror/bstrlib.h>
 
@@ -68,6 +69,32 @@ char *test_get_set()
   return NULL;
 }
 
+char *test_get_set_terror_strings()
+{
+  Hashmap *object_map = Hashmap_create(String_compare, String_hash);
+  Object *str_test1   = String_new(bfromcstr("hello"));
+  Object *value_test1 = Integer_new(123);
+  Object *str_test2   = String_new(bfromcstr("goodbye"));
+  Object *value_test2 = Integer_new(321);
+
+  int rc = Hashmap_set(object_map, str_test1, value_test1, TYPE);
+  mu_assert(rc == 0, "Failed to set str_test1");
+  Object *result = Hashmap_get(object_map, str_test1);
+  mu_assert(result->value.integer == 123, "Wrong value for str_test1.");
+
+  rc = Hashmap_set(object_map, str_test2, value_test2, TYPE);
+  mu_assert(rc == 0, "Failed to set str_test2");
+  result = Hashmap_get(object_map, str_test2);
+  mu_assert(result->value.integer == 321, "Wrong value for str_test2.");
+
+  Object_destroy(str_test1);
+  Object_destroy(str_test2);
+  Object_destroy(value_test1);
+  Object_destroy(value_test2);
+  Hashmap_destroy(object_map);
+  return NULL;
+}
+
 char *test_traverse()
 {
   int rc = Hashmap_traverse(map, traverse_good_cb);
@@ -111,6 +138,7 @@ char *all_tests()
 
   mu_run_test(test_create);
   mu_run_test(test_get_set);
+  mu_run_test(test_get_set_terror_strings);
   mu_run_test(test_traverse);
   mu_run_test(test_delete);
   mu_run_test(test_destroy);

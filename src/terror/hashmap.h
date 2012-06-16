@@ -34,4 +34,8 @@ int Hashmap_traverse(Hashmap *map, Hashmap_traverse_cb traverse_cb);
 
 void *Hashmap_delete(Hashmap *map, void *key);
 
+// Functions to compare Terror strings rather than normal strings
+int String_compare(void *a, void *b);
+uint32_t String_hash(void *a);
+
 #endif

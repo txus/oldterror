@@ -4,7 +4,6 @@
 #include <terror/bstrlib.h>
 
 #include <terror/object.h>
-#include <terror/gc.h>
 #include <terror/bstrlib.h>
 
 static int default_compare(void *a, void *b)
@@ -31,6 +30,21 @@ static uint32_t default_hash(void *a)
   hash += (hash << 15);
 
   return hash;
+}
+
+int String_compare(void *a, void *b) {
+  Object *one_obj     = (Object*)a;
+  Object *another_obj = (Object*)b;
+
+  bstring one     = one_obj->value.string;
+  bstring another = another_obj->value.string;
+
+  return bstrcmp(one, another);
+}
+
+uint32_t String_hash(void *a) {
+  Object *obj = (Object*)a;
+  return default_hash(obj->value.string);
 }
 
 Hashmap *Hashmap_create(Hashmap_compare compare, Hashmap_hash hash)
