@@ -2,6 +2,7 @@
 #include <terror/runtime.h>
 #include <terror/object.h>
 #include <terror/vmmethod.h>
+#include <terror/native_method.h>
 #include <terror/dbg.h>
 #include <assert.h>
 
@@ -123,6 +124,11 @@ Object* call_method(Object *receiver, bstring method, Object **argv, int argc, i
 }
 
 Object* Function_call(Object *fn, Object *receiver, Object **argv, int argc, int registers_count) {
-  VMMethod *method = (VMMethod*)fn->value.other;
-  return VMMethod_execute(method, argv, argc, registers_count, receiver);
+  if(fn->native) {
+    NativeMethod *method = (NativeMethod*)fn->value.other;
+    return NativeMethod_execute(method, argv, argc, registers_count, receiver);
+  } else {
+    VMMethod *method = (VMMethod*)fn->value.other;
+    return VMMethod_execute(method, argv, argc, registers_count, receiver);
+  }
 }

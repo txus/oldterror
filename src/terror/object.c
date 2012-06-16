@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <terror/dbg.h>
+#include <terror/util.h>
 #include <terror/object.h>
 #include <terror/vmmethod.h>
+#include <terror/native_method.h>
 #include <terror/runtime.h>
 #include <terror/gc.h>
 #include <assert.h>
 
 Object *MainObject;
+Object *NilObject;
 
 Object *Object_new()
 {
@@ -17,6 +20,7 @@ Object *Object_new()
   object->type = tObject;
   object->refcount = 0;
   object->immortal = 0;
+  object->native = 0;
 
   object->slots = Hashmap_create(NULL, NULL);
 
@@ -41,7 +45,11 @@ void Object_destroy(Object *object)
       bdestroy(object->value.string);
     }
     if(object->type == tFunction) {
-      VMMethod_destroy((VMMethod*)object->value.other);
+      if (object->native) {
+        NativeMethod_destroy((NativeMethod*)object->value.other);
+      } else {
+        VMMethod_destroy((VMMethod*)object->value.other);
+      }
     }
     if(object->type == tArray) {
       DArray *array = (DArray*)object->value.other;
@@ -71,6 +79,11 @@ void Object_destroy_immortal(Object *object) {
 
     free(object);
   }
+}
+
+void Object_define_native_method(Object *object, bstring name, native_fn native_function, short arity) {
+  Object *fn = Function_native_new(native_function, arity);
+  Hashmap_set(object->slots, name, fn, tFunction);
 }
 
 void Object_define_method(Object *object, bstring name, Instruction **instructions, int instructions_count, short arity) {
@@ -123,6 +136,30 @@ Function_new(Instruction **instructions, int instructions_count, short arity)
   return object;
 }
 
+Object *
+Function_native_new(native_fn function, short arity) {
+  NativeMethod *method = NativeMethod_new(function, arity);
+  Object *object      = Object_new();
+
+  object->native      = 1;
+  object->type        = tFunction;
+  object->value.other = method;
+
+  return object;
+}
+
+Object* Array_native_at(void *a, void *b, void *_) {
+  Object *self  = (Object*)a;
+  int idx       = ((Object*)b)->value.integer;
+  DArray *array = (DArray*)self->value.other;
+
+  if(idx >= DArray_count(array)) {
+    return NilObject;
+  } else {
+    return (Object*)DArray_at(array, idx);
+  }
+}
+
 Object*
 Array_new(Object **contents, int count) {
   DArray *array = DArray_create(sizeof(Object*), count);
@@ -135,6 +172,10 @@ Array_new(Object **contents, int count) {
   Object *object      = Object_new();
   object->type        = tArray;
   object->value.other = array;
+
+  bstring name = bfromcstr("[]");
+
+  Object_define_native_method(object, name, Array_native_at, 1);
 
   return object;
 }
@@ -243,6 +284,11 @@ int Object_lookup_method_arity(Object *object, bstring name) {
   }
 
   Object *fn = (Object*)Hashmap_get(object->slots, name);
+  if(!fn) {
+    printf("Undefined slot #%s for ", bdata(name));
+    Object_print(object);
+    die("Could not find slot.");
+  }
   VMMethod *method = (VMMethod*)fn->value.other;
   return method->arity;
 }
