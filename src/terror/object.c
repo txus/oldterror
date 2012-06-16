@@ -124,10 +124,11 @@ Function_new(Instruction **instructions, int instructions_count, short arity)
 }
 
 Object*
-Array_new(Object** contents, int count) {
+Array_new(Object **contents, int count) {
   DArray *array = DArray_create(sizeof(Object*), count);
   int i=0;
   for(i=0; i < count; i++) {
+    retain((Object*)contents[i]);
     DArray_push(array, contents[i]);
   }
 

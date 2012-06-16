@@ -172,15 +172,6 @@ Machine_run(Machine *machine, Object *self)
         locals[i->fields.b] = regs[i->fields.a];
         break;
       }
-      case SETSLOT: {
-        debug("SETSLOT %i %i %i", i->fields.a, i->fields.b, i->fields.c);
-        Object *receiver  = regs[i->fields.a];
-        bstring slot_name = bstrcpy(regs[i->fields.b]->value.string);
-        Object *value     = retain(regs[i->fields.c]);
-
-        Object_register_slot(receiver, slot_name, value);
-        break;
-      }
       case LOADSLOT: {
         debug("LOADSLOT %i %i %i", i->fields.a, i->fields.b, i->fields.c);
         Object *receiver  = regs[i->fields.b];
@@ -190,6 +181,29 @@ Machine_run(Machine *machine, Object *self)
 
         CLEAN_REGISTER(regs[i->fields.a]);
         REGISTER(regs[i->fields.a], value);
+        break;
+      }
+      case SETSLOT: {
+        debug("SETSLOT %i %i %i", i->fields.a, i->fields.b, i->fields.c);
+        Object *receiver  = regs[i->fields.a];
+        bstring slot_name = bstrcpy(regs[i->fields.b]->value.string);
+        Object *value     = retain(regs[i->fields.c]);
+
+        Object_register_slot(receiver, slot_name, value);
+        break;
+      }
+      case MAKEARRAY: {
+        debug("MAKEARRAY %i %i %i", i->fields.a, i->fields.b, i->fields.c);
+        CLEAN_REGISTER(regs[i->fields.a]);
+
+        // Advance to the starting register
+        Object **contents = regs;
+        int j=0;
+        for(j=0; j < i->fields.b; j++) contents++;
+
+        Object *array = Array_new(contents, i->fields.c);
+
+        REGISTER(regs[i->fields.a], array);
         break;
       }
       case SEND: {

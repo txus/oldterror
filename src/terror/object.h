@@ -45,7 +45,7 @@ Object* Object_get_slot(Object *receiver, bstring slot_name);
 Object *Integer_new(int value);
 Object *String_new(bstring value);
 Object *Function_new(Instruction **instructions, int instructions_count, short arity);
-Object *Array_new(Object** contents, int count);
+Object *Array_new(Object **contents, int count);
 Object *True_new();
 Object *False_new();
 Object *Nil_new();

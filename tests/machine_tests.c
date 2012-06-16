@@ -1,9 +1,10 @@
 #include "minunit.h"
 #include <terror/machine.h>
 #include <terror/runtime.h>
+#include <terror/gc.h>
 #include <assert.h>
 
-#define MACHINE(A) Machine_new(instructions, A, literals, 4, locals, 1, 3)
+#define MACHINE(A) Machine_new(instructions, A, literals, 4, locals, 1, 4)
 
 #define MAX_INSTRUCTIONS 10
 #define DESTROY_INSTRUCTIONS() { \
@@ -409,6 +410,48 @@ char *test_setslot()
   return NULL;
 }
 
+char *test_makearray()
+{
+  instructions[0] = Instruction_new(OP_LOADSELF(1));
+  instructions[1] = Instruction_new(OP_LOADS(2, 1));
+  instructions[2] = Instruction_new(OP_LOADI(3, 0));
+  instructions[3] = Instruction_new(OP_MAKEARRAY(0, 1, 3));
+  instructions[4] = Instruction_new(OP_RET(0));
+
+  machine = MACHINE(5);
+  Object *result = Machine_run(machine, self);
+  DArray *array = (DArray*)result->value.other;
+
+  mu_assert(DArray_count(array) == 3, "Array has not a length of 3.");
+
+  Object *e_self = (Object*)DArray_at(array, 0);
+  Object *e_str  = (Object*)DArray_at(array, 1);
+  Object *e_int  = (Object*)DArray_at(array, 2);
+
+  printf("Refcount for self: %i\n", e_self->refcount);
+  printf("Refcount for str: %i\n", e_str->refcount);
+  printf("Refcount for int: %i\n", e_int->refcount);
+
+  bstring print = bfromcstr("print");
+
+  mu_assert(result->type == tArray, "Array type is not array.");
+  mu_assert(e_self == self, "First array element is not self.");
+  mu_assert(bstrcmp(e_str->value.string, print) == 0, "Second array element is not 'print'.");
+  mu_assert(e_int->value.integer == 123, "Third array element is not 123.");
+
+  Machine_destroy(machine);
+  Object_destroy(result);
+
+  bdestroy(print);
+
+  Instruction_destroy(instructions[0]);
+  Instruction_destroy(instructions[1]);
+  Instruction_destroy(instructions[2]);
+  Instruction_destroy(instructions[3]);
+  Instruction_destroy(instructions[4]);
+  return NULL;
+}
+
 
 char *test_send()
 {
@@ -481,6 +524,8 @@ char *all_tests() {
 
   mu_run_test(test_loadslot);
   mu_run_test(test_setslot);
+
+  mu_run_test(test_makearray);
 
   mu_run_test(test_send);
   mu_run_test(test_dump);

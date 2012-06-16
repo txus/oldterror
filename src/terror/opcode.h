@@ -32,6 +32,8 @@ typedef enum {
   LOADSLOT = 0x60,
   SETSLOT,
 
+  MAKEARRAY = 0x70,
+
   SEND = 0x80,
 
   RET = 0x90,
@@ -65,6 +67,8 @@ typedef enum {
 
 #define OP_LOADSLOT(A,B,C) __OP__(LOADSLOT, A, B, C)
 #define OP_SETSLOT(A,B,C)  __OP__(SETSLOT, A, B, C)
+
+#define OP_MAKEARRAY(A,B,C)  __OP__(MAKEARRAY, A, B, C)
 
 #define OP_SEND(A,B,C)    __OP__(SEND, A, B, C)
 #define OP_RET(A)         __OP__(RET, A, 0, 0)

@@ -137,6 +137,11 @@ for an example of a program, whose Ruby source code is at [compiler/examples/hel
 * **SETSLOT A, B, C**: sets the slot named `B` from the object `A` to the
   value in the register `C`.
 
+#### Arrays
+
+* **MAKEARRAY A, B, C**: Takes `C` registers starting from register `B`,
+  creates an array with them and stores it in register `A`.
+
 #### Message sending and call frames
 
 * **SEND A, B, C**: send a message specified by the string in the literals
