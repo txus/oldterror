@@ -64,17 +64,6 @@ module Terror
         @g.registers[1].value.must_equal 0
       end
     end
-    
-    %w(add sub mul div).each do |op|
-      describe "##{op}" do
-        it "performs a #{op} operation" do
-          @g.loadi 1
-          @g.loadi 2
-          @g.send op, 0, 1
-          @g.registers[2].value.must_equal op.to_sym
-        end
-      end
-    end
 
     describe '#jmp' do
       it 'performs an inconditional jump' do

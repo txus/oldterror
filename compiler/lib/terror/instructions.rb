@@ -122,11 +122,6 @@ module Terror
     op :loadnil,   0x08, 1
     op :loadbool,  0x09, 2
 
-    op :add,       0x10, 3
-    op :sub,       0x11, 3
-    op :mul,       0x12, 3
-    op :div,       0x13, 3
-
     op :jmp,       0x20, 1
     op :jif,       0x21, 2
     op :jit,       0x22, 2

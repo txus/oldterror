@@ -94,19 +94,6 @@ module Terror
       slot
     end
 
-    %w(add sub mul div).each do |op|
-      define_method(op) do |b, c|
-        @ip += 1
-
-        register_error b unless registers[b]
-        register_error c unless registers[c]
-
-        slot = a.allocate op.to_sym
-        send :"_#{op}", b, c
-        slot
-      end
-    end
-
     def jmp(label)
       label.start!
       @ip += 1
