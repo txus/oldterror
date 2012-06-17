@@ -169,26 +169,36 @@ Machine_run(Machine *machine, Object *self)
         bstring message    = regs[i->fields.b]->value.string;
         int arity          = Object_lookup_method_arity(receiver, message);
 
-        if(arity > 0) {
-          Object *argv[arity - 1];
-          int j = 0;
+        Object **argv = extract_args(regs, i->fields.c, arity);
 
-          // From the start register of the arguments (C),
-          // get the arguments R(C+0), R(C+1) ... R(C+ARITY)
-          for(j=0; j < arity; j++) {
-            argv[j] = regs[i->fields.c + j];
-          }
+        // Special case: Function#apply
+        bstring special_call = bfromcstr("apply");
+        if(receiver->type == tFunction && bstrcmp(message, special_call)==0) {
+          Object *slf = argv[0];
+          // shift arguments to the right, because the first argument will be
+          // self.
+          argv++;
 
+          REGISTER(regs[i->fields.a],
+            Function_call(receiver, slf, argv, arity, machine->registers_count));
+
+          /* free(argv); */
+          release(receiver);
+          break; // end instruction
+        }
+        bdestroy(special_call);
+        // End of special case
+
+        if(arity > -2) {
           REGISTER(regs[i->fields.a],
               call_method(receiver, message, argv, arity, machine->registers_count));
-        } else if (arity == 0) {
-          REGISTER(regs[i->fields.a],
-              call_method(receiver, message, NULL, arity, machine->registers_count));
         } else {
+          // Look up slot
           REGISTER(regs[i->fields.a],
               Object_lookup_slot(receiver, message));
         }
 
+        free(argv);
         release(receiver);
 
         break;

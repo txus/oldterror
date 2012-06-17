@@ -319,11 +319,20 @@ void Object_print(Object* object) {
 }
 
 int Object_lookup_method_arity(Object *object, bstring name) {
+  // Special case: Function#apply
+  bstring special_call = bfromcstr("apply");
+  if(object->type == tFunction && bstrcmp(name, special_call)==0) {
+    return 2;
+  }
+  bdestroy(special_call);
+  // end of special
+
   Object *fn = Object_lookup_slot(object, name);
   if(!fn) {
     printf("Undefined slot #%s for ", bdata(name));
     Object_print(object);
-    die("Could not find slot.");
+    printf("\n");
+    die("\nCould not find slot.");
   }
 
   if(fn->type != tFunction) { // it is a normal attribute

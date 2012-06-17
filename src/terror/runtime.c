@@ -122,3 +122,21 @@ Object* Function_call(Object *fn, Object *receiver, Object **argv, int argc, int
     return VMMethod_execute(method, argv, argc, registers_count, receiver);
   }
 }
+
+Object **extract_args(Object **regs, int from, int arity)
+{
+  if(arity > 0) {
+    Object **argv = calloc(arity, sizeof(Object*));
+    int i = 0;
+
+    // From the start register of the arguments (C),
+    // get the arguments R(C+0), R(C+1) ... R(C+ARITY)
+    for(i=0; i < arity; i++) {
+      argv[i] = regs[from + i];
+    }
+
+    return argv;
+  } else {
+    return NULL;
+  }
+}

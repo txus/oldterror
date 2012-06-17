@@ -44,13 +44,18 @@ has its own Readme, and the `compiler/examples` where we have the
 TerrorVM doesn't need Ruby to run; even the example compiler is a proof of
 concept and could be written in any language (even in C obviously).
 
-## Building for Android
+## Implementing your own dynamic language running on TerrorVM
 
-TerrorVM can also be built for Android devices. You'll need to install
-the Android NDK 5c (latest 7 doesn't work), and export the environment variable
-`ANDROID_NDK` to where you installed it.
+TerrorVM is designed to run dynamic languages. You can easily implement a
+compiler of your own that compiles your favorite dynamic language down to TVM
+bytecode.
 
-    $ make -f Makefile.android
+I've written a demo compiler in Ruby under the `compiler/` folder, just to
+show how easy it is to write your own. This demo compiler compiles a subset of
+Ruby down to TerrorVM bytecode, so you can easily peek at the source code or
+just copy and modify it.
+
+You can write your compiler in whatever language you prefer, of course.
 
 ## Bytecode format
 
@@ -85,8 +90,22 @@ And then all the instructions:
 Instructions have a compact 3-operand representation, 8-bit each, for a total
 of 32-bit per instruction.
 
-Take a look at [examples/hello_world.tvm](https://github.com/txus/terrorvm/blob/master/examples/hello_world.tvm)
-for an example of a program, whose Ruby source code is at [compiler/examples/hello_world.rb](https://github.com/txus/terrorvm/blob/master/compiler/examples/hello_world.rb).
+## VM primitive functions
+
+TerrorVM exposes a `VM` object that responds to `primitive`, which returns a
+hash with some VM primitive functions exposed as Terror Function objects.
+A simple example of those are arithmetic functions (`+`, `-`, `*`, `/`) used
+by Integer objects, for example. To use this in your functions, do it like
+this:
+
+    VM.primitive[:+].apply(3, 4) # this is the same as 3 + 4 or 3.+(4)
+
+### Examples
+
+* Hello world ([Ruby code](https://github.com/txus/terrorvm/blob/master/compiler/examples/hello_world.rb), [TVM bytecode](https://github.com/txus/terrorvm/blob/master/examples/hello_world.tvm))
+* Numbers ([Ruby code](https://github.com/txus/terrorvm/blob/master/compiler/examples/numbers.rb), [TVM code](https://github.com/txus/terrorvm/blob/master/examples/numbers.tvm))
+* Objects with prototypal inheritance ([Ruby code](https://github.com/txus/terrorvm/blob/master/compiler/examples/objects.rb), [TVM bytecode](https://github.com/txus/terrorvm/blob/master/examples/objects.tvm))
+* Exposed VM primitives ([Ruby code](https://github.com/txus/terrorvm/blob/master/compiler/examples/primitives.rb), [TVM bytecode](https://github.com/txus/terrorvm/blob/master/examples/primitives.tvm))
 
 ### Instruction set
 
