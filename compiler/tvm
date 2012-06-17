@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+
+bin/terror $1 > /tmp/file.tvm && ../bin/vm /tmp/file.tvm && rm /tmp/file.tvm

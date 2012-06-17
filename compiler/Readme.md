@@ -13,3 +13,8 @@ me to read about this.
 
     $ rvm use rbx-head
     $ bin/terror examples/hello_world.rb > myprogram.tvm
+
+Or just use the easy shell script to compile and run on the fly:
+
+    $ rvm use rbx-head
+    $ ./tvm examples/hello_world.rb
