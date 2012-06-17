@@ -9,6 +9,7 @@ extern Object *NilObject;
 extern Object *Lobby;
 
 void Runtime_init();
+void Runtime_Lobby_bootstrap();
 void Runtime_destroy();
 
 Object* call_method(Object *receiver, bstring method, Object **argv, int argc, int registers_count);

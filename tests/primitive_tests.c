@@ -23,7 +23,7 @@ char *test_add()
 {
   setup();
 
-  result = Primitive_add(foo, bar, NULL);
+  result = Primitive_Integer_add(foo, bar, NULL);
   mu_assert(result->value.integer == 10, "Primitive add failed.");
 
   teardown();
@@ -35,7 +35,7 @@ char *test_sub()
 {
   setup();
 
-  result = Primitive_sub(foo, bar, NULL);
+  result = Primitive_Integer_sub(foo, bar, NULL);
   mu_assert(result->value.integer == 6, "Primitive sub failed.");
 
   teardown();
@@ -47,7 +47,7 @@ char *test_mul()
 {
   setup();
 
-  result = Primitive_mul(foo, bar, NULL);
+  result = Primitive_Integer_mul(foo, bar, NULL);
   mu_assert(result->value.integer == 16, "Primitive mul failed.");
 
   teardown();
@@ -59,7 +59,7 @@ char *test_div()
 {
   setup();
 
-  result = Primitive_div(foo, bar, NULL);
+  result = Primitive_Integer_div(foo, bar, NULL);
   mu_assert(result->value.integer == 4, "Primitive div failed.");
 
   teardown();

@@ -2,6 +2,8 @@
 #include <terror/runtime.h>
 #include <terror/object.h>
 #include <terror/vmmethod.h>
+#include <terror/primitives.h>
+#include <terror/gc.h>
 #include <terror/native_method.h>
 #include <terror/dbg.h>
 #include <assert.h>
@@ -11,12 +13,71 @@ Object *FalseObject = NULL;
 Object *NilObject = NULL;
 Object *Lobby = NULL;
 
+// Bootstrap routines
+
+static inline Object *build_toplevel_object()
+{
+  Object *object = Object_new_with_parent(Lobby);
+
+  // Define basic native methods
+  bstring name = bfromcstr("clone");
+  Object_define_native_method(object, name, Primitive_Object_clone, 0);
+
+  return object;
+}
+
+#define DEF_PRIMITIVE(F, N, K, V, A) (F)[(N)] = String_new(bfromcstr(K)); (F)[(N)+1] = Function_native_new(V, A);
+
+static inline Object *build_primitive_object()
+{
+  Object **fields = calloc(8, sizeof(Object*));
+  DEF_PRIMITIVE(fields, 0, "+", Primitive_Integer_add, 1);
+  DEF_PRIMITIVE(fields, 2, "-", Primitive_Integer_sub, 1);
+  DEF_PRIMITIVE(fields, 4, "*", Primitive_Integer_mul, 1);
+  DEF_PRIMITIVE(fields, 6, "/", Primitive_Integer_div, 1);
+
+  Object *array     = Array_new(fields, 8);
+  Object *primitive = Hash_new(array);
+
+  Object_destroy(array);
+  free(fields);
+
+  return primitive;
+}
+
+static inline Object *build_vm_object_from(Object *toplevel)
+{
+  Object *vm = Object_new_with_parent(toplevel);
+
+  Object *primitive = build_primitive_object();
+  Object_register_slot(vm, bfromcstr("primitive"), retain(primitive));
+
+  return vm;
+}
+
+void Runtime_Lobby_bootstrap()
+{
+  // Add toplevel object
+  Object *toplevel_object = build_toplevel_object();
+  Object_register_slot(Lobby, bfromcstr("Object"), retain(toplevel_object));
+
+  // Add native methods
+  Object_define_native_method(Lobby, bfromcstr("print"), Primitive_print, 1);
+  Object_define_native_method(Lobby, bfromcstr("puts"), Primitive_puts, 1);
+  Object_define_native_method(Lobby, bfromcstr("hash"), Primitive_Object_hash, 1);
+
+  // Define VM object
+  Object *vm_object = build_vm_object_from(toplevel_object);
+  Object_register_slot(Lobby, bfromcstr("VM"), retain(vm_object));
+}
+
 void Runtime_init() {
   // Init extern constants
   TrueObject  = True_new();
   FalseObject = False_new();
   NilObject   = Nil_new();
   Lobby       = Lobby_new();
+  Runtime_Lobby_bootstrap();
 }
 
 void Runtime_destroy() {
