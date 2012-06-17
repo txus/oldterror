@@ -301,7 +301,7 @@ static inline Object *build_toplevel_object_from(Object *lobby)
   return object;
 }
 
-#define DEF_PRIMITIVE(F, N, K, V, A) (F)[(N)] = retain(String_new(bfromcstr(K))); (F)[(N)+1] = retain(Function_native_new(V, A));
+#define DEF_PRIMITIVE(F, N, K, V, A) (F)[(N)] = String_new(bfromcstr(K)); (F)[(N)+1] = Function_native_new(V, A);
 
 static inline Object *build_primitive_object()
 {
@@ -311,9 +311,13 @@ static inline Object *build_primitive_object()
   DEF_PRIMITIVE(fields, 4, "*", Primitive_mul, 1);
   DEF_PRIMITIVE(fields, 6, "/", Primitive_div, 1);
 
-  Object *array = Array_new(fields, 4);
+  Object *array     = Array_new(fields, 8);
+  Object *primitive = Hash_new(array);
 
-  return Hash_new(array);
+  Object_destroy(array);
+  free(fields);
+
+  return primitive;
 }
 
 static inline Object *build_vm_object_from(Object *toplevel)
