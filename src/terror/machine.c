@@ -77,50 +77,6 @@ Machine_run(Machine *machine, Object *self)
         }
         break;
       }
-      case ADD: {
-        debug("ADD %i %i %i", i->fields.a, i->fields.b, i->fields.c);
-        CLEAN_REGISTER(regs[i->fields.a]);
-
-        Object *left   = regs[i->fields.b];
-        Object *right  = regs[i->fields.c];
-        Object *result = Primitive_add(left, right);
-
-        REGISTER(regs[i->fields.a], result);
-        break;
-      }
-      case SUB: {
-        debug("SUB %i %i %i", i->fields.a, i->fields.b, i->fields.c);
-        CLEAN_REGISTER(regs[i->fields.a]);
-
-        Object *left  = regs[i->fields.b];
-        Object *right = regs[i->fields.c];
-        Object *result = Primitive_sub(left, right);
-
-        REGISTER(regs[i->fields.a], result);
-        break;
-      }
-      case MUL: {
-        debug("MUL %i %i %i", i->fields.a, i->fields.b, i->fields.c);
-        CLEAN_REGISTER(regs[i->fields.a]);
-
-        Object *left  = regs[i->fields.b];
-        Object *right = regs[i->fields.c];
-        Object *result = Primitive_mul(left, right);
-
-        REGISTER(regs[i->fields.a], result);
-        break;
-      }
-      case DIV: {
-        debug("DIV %i %i %i", i->fields.a, i->fields.b, i->fields.c);
-        CLEAN_REGISTER(regs[i->fields.a]);
-
-        Object *left  = regs[i->fields.b];
-        Object *right = regs[i->fields.c];
-        Object *result = Primitive_div(left, right);
-
-        REGISTER(regs[i->fields.a], result);
-        break;
-      }
       case LOADSELF: {
         debug("LOADSELF %i", i->fields.a);
         CLEAN_REGISTER(regs[i->fields.a]);

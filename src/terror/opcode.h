@@ -10,13 +10,6 @@ typedef enum {
   LOADNIL = 0x08,
   LOADBOOL,
 
-  // Numerical operations.
-  //  Each instruction takes three registers.
-  ADD = 0x10,
-  SUB,
-  MUL,
-  DIV,
-
   // Branching
   JMP = 0x20,
   JIF, // Jump if false
@@ -50,11 +43,6 @@ typedef enum {
 
 #define OP_LOADNIL(A)     __OP__(LOADNIL, A, 0, 0)
 #define OP_LOADBOOL(A,B)  __OP__(LOADBOOL, A, B, 0)
-
-#define OP_ADD(A,B,C)     __OP__(ADD, A, B, C)
-#define OP_SUB(A,B,C)     __OP__(SUB, A, B, C)
-#define OP_MUL(A,B,C)     __OP__(MUL, A, B, C)
-#define OP_DIV(A,B,C)     __OP__(DIV, A, B, C)
 
 #define OP_JMP(A)         __OP__(JMP, A, 0, 0)
 #define OP_JIF(A,B)       __OP__(JIF, A, B, 0)

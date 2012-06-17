@@ -5,6 +5,7 @@
 #include <terror/object.h>
 #include <terror/vmmethod.h>
 #include <terror/native_method.h>
+#include <terror/primitives.h>
 #include <terror/runtime.h>
 #include <terror/gc.h>
 #include <assert.h>
@@ -130,13 +131,10 @@ Object *Integer_new(int value)
   object->type = tInteger;
   object->value.integer = value;
 
-  // Define #add
-  Instruction **instructions = calloc(4, sizeof(Instruction*));
-  instructions[0] = Instruction_new(OP_LOADSELF(1));
-  instructions[1] = Instruction_new(OP_LOADLOCAL(2, 0));
-  instructions[2] = Instruction_new(OP_ADD(0, 1, 2));
-  instructions[3] = Instruction_new(OP_RET(0));
-  Object_define_method(object, bfromcstr("add"), instructions, 4, 1);
+  Object_define_native_method(object, bfromcstr("+"), Primitive_add, 1);
+  Object_define_native_method(object, bfromcstr("-"), Primitive_sub, 1);
+  Object_define_native_method(object, bfromcstr("*"), Primitive_mul, 1);
+  Object_define_native_method(object, bfromcstr("/"), Primitive_div, 1);
 
   return object;
 }
@@ -303,6 +301,31 @@ static inline Object *build_toplevel_object_from(Object *lobby)
   return object;
 }
 
+#define DEF_PRIMITIVE(F, N, K, V, A) (F)[(N)] = retain(String_new(bfromcstr(K))); (F)[(N)+1] = retain(Function_native_new(V, A));
+
+static inline Object *build_primitive_object()
+{
+  Object **fields = calloc(8, sizeof(Object*));
+  DEF_PRIMITIVE(fields, 0, "+", Primitive_add, 1);
+  DEF_PRIMITIVE(fields, 2, "-", Primitive_sub, 1);
+  DEF_PRIMITIVE(fields, 4, "*", Primitive_mul, 1);
+  DEF_PRIMITIVE(fields, 6, "/", Primitive_div, 1);
+
+  Object *array = Array_new(fields, 4);
+
+  return Hash_new(array);
+}
+
+static inline Object *build_vm_object_from(Object *toplevel)
+{
+  Object *vm = Object_new_with_parent(toplevel);
+
+  Object *primitive = build_primitive_object();
+  Object_register_slot(vm, bfromcstr("primitive"), retain(primitive));
+
+  return vm;
+}
+
 Object*
 Lobby_native_print(void *a, void *b, void *c)
 {
@@ -328,24 +351,28 @@ Lobby_native_hash(void *a, void *b, void *c)
 
 Object *Lobby_new()
 {
-  Object *object = calloc(1, sizeof(Object));
-  check_mem(object);
+  Object *lobby = calloc(1, sizeof(Object));
+  check_mem(lobby);
 
-  object->type = tObject;
-  object->immortal = 1;
+  lobby->type = tObject;
+  lobby->immortal = 1;
 
-  object->slots = Hashmap_create(NULL, NULL);
+  lobby->slots = Hashmap_create(NULL, NULL);
 
   // Add toplevel object
-  Object *toplevel_object = build_toplevel_object_from(object);
-  Object_register_slot(object, bfromcstr("Object"), retain(toplevel_object));
+  Object *toplevel_object = build_toplevel_object_from(lobby);
+  Object_register_slot(lobby, bfromcstr("Object"), retain(toplevel_object));
 
   // Add native methods
-  Object_define_native_method(object, bfromcstr("print"), Lobby_native_print, 1);
-  Object_define_native_method(object, bfromcstr("puts"), Lobby_native_puts, 1);
-  Object_define_native_method(object, bfromcstr("hash"), Lobby_native_hash, 1);
+  Object_define_native_method(lobby, bfromcstr("print"), Lobby_native_print, 1);
+  Object_define_native_method(lobby, bfromcstr("puts"), Lobby_native_puts, 1);
+  Object_define_native_method(lobby, bfromcstr("hash"), Lobby_native_hash, 1);
 
-  return object;
+  // Define VM object
+  Object *vm_object = build_vm_object_from(toplevel_object);
+  Object_register_slot(lobby, bfromcstr("VM"), retain(vm_object));
+
+  return lobby;
 
 error:
   return NULL;

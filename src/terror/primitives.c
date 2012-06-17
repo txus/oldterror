@@ -1,53 +1,48 @@
 #include <terror/primitives.h>
 #include <assert.h>
 
-Object *Primitive_add(Object *left, Object *right)
+Object *Primitive_add(void *a, void *b, void *c)
 {
+  Object *left  = (Object*)a;
+  Object *right = (Object*)b;
+
   CHECK_TYPE(left, tInteger);
   CHECK_TYPE(right, tInteger);
 
-  int a, b;
-
-  a = left->value.integer;
-  b = right->value.integer;
-
-  return Integer_new(a + b);
+  return Integer_new(left->value.integer + right->value.integer);
 }
 
-Object *Primitive_sub(Object *left, Object *right)
+Object *Primitive_sub(void *a, void *b, void *c)
 {
+  Object *left  = (Object*)a;
+  Object *right = (Object*)b;
+
   CHECK_TYPE(left, tInteger);
   CHECK_TYPE(right, tInteger);
 
-  int a, b;
-  a = left->value.integer;
-  b = right->value.integer;
-
-  return Integer_new(a - b);
+  return Integer_new(left->value.integer - right->value.integer);
 }
 
-Object *Primitive_mul(Object *left, Object *right)
+Object *Primitive_mul(void *a, void *b, void *c)
 {
+  Object *left  = (Object*)a;
+  Object *right = (Object*)b;
+
   CHECK_TYPE(left, tInteger);
   CHECK_TYPE(right, tInteger);
 
-  int a, b;
-  a = left->value.integer;
-  b = right->value.integer;
-
-  return Integer_new(a * b);
+  return Integer_new(left->value.integer * right->value.integer);
 }
 
-Object *Primitive_div(Object *left, Object *right)
+Object *Primitive_div(void *a, void *b, void *c)
 {
+  Object *left  = (Object*)a;
+  Object *right = (Object*)b;
+
   CHECK_TYPE(left, tInteger);
   CHECK_TYPE(right, tInteger);
 
-  int a, b;
-  a = left->value.integer;
-  b = right->value.integer;
+  assert(right->value.integer != 0 && "Cannot divide by zero");
 
-  assert(b != 0 && "Cannot divide by zero");
-
-  return Integer_new(a / b);
+  return Integer_new(left->value.integer / right->value.integer);
 }

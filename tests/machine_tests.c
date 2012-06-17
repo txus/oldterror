@@ -29,7 +29,7 @@ void setup_method()
   literals = calloc(4, sizeof(long));
   literals[0] = 123;
   literals[1] = (long)"print";
-  literals[2] = (long)"add";
+  literals[2] = (long)"+";
   literals[3] = (long)"price";
 
   locals = calloc(1, sizeof(Object*));
@@ -152,86 +152,6 @@ char *test_loadbool()
 
   Machine_destroy(machine);
 
-  DESTROY_INSTRUCTIONS();
-  return NULL;
-}
-
-char *test_add()
-{
-  instructions[0] = Instruction_new(OP_LOADI(1, 0));
-  instructions[1] = Instruction_new(OP_LOADI(2, 0));
-  instructions[2] = Instruction_new(OP_ADD(0, 1, 2));
-  instructions[3] = Instruction_new(OP_RET(0));
-
-  machine = MACHINE(4);
-
-  Object *result = Machine_run(machine, self);
-
-  mu_assert(result->value.integer == 246, "ADD failed.");
-
-  Machine_destroy(machine);
-
-  Object_destroy(result);
-  DESTROY_INSTRUCTIONS();
-  return NULL;
-}
-
-char *test_sub()
-{
-  instructions[0] = Instruction_new(OP_LOADI(1, 0));
-  instructions[1] = Instruction_new(OP_LOADI(2, 0));
-  instructions[2] = Instruction_new(OP_SUB(0, 1, 2));
-  instructions[3] = Instruction_new(OP_RET(0));
-
-  machine = MACHINE(4);
-
-  Object *result = Machine_run(machine, self);
-
-  mu_assert(result->value.integer == 0, "SUB failed.");
-
-  Machine_destroy(machine);
-
-  Object_destroy(result);
-  DESTROY_INSTRUCTIONS();
-  return NULL;
-}
-
-char *test_mul()
-{
-  instructions[0] = Instruction_new(OP_LOADI(1, 0));
-  instructions[1] = Instruction_new(OP_LOADI(2, 0));
-  instructions[2] = Instruction_new(OP_MUL(0, 1, 2));
-  instructions[3] = Instruction_new(OP_RET(0));
-
-  machine = MACHINE(4);
-
-  Object *result = Machine_run(machine, self);
-
-  mu_assert(result->value.integer == 15129, "MUL failed.");
-
-  Machine_destroy(machine);
-
-  Object_destroy(result);
-  DESTROY_INSTRUCTIONS();
-  return NULL;
-}
-
-char *test_div()
-{
-  instructions[0] = Instruction_new(OP_LOADI(1, 0));
-  instructions[1] = Instruction_new(OP_LOADI(2, 0));
-  instructions[2] = Instruction_new(OP_DIV(0, 1, 2));
-  instructions[3] = Instruction_new(OP_RET(0));
-
-  machine = MACHINE(4);
-
-  Object *result = Machine_run(machine, self);
-
-  mu_assert(result->value.integer == 1, "DIV failed.");
-
-  Machine_destroy(machine);
-
-  Object_destroy(result);
   DESTROY_INSTRUCTIONS();
   return NULL;
 }
@@ -507,11 +427,6 @@ char *all_tests() {
   Runtime_init(); // for nil and booleans
   mu_run_test(test_loadnil);
   mu_run_test(test_loadbool);
-
-  mu_run_test(test_add);
-  mu_run_test(test_sub);
-  mu_run_test(test_mul);
-  mu_run_test(test_div);
 
   mu_run_test(test_jmp);
   mu_run_test(test_jif);

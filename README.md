@@ -104,17 +104,6 @@ for an example of a program, whose Ruby source code is at [compiler/examples/hel
   the number 1 or false if `B` is 0.
 * **LOADSELF A**: loads the current `self` into register `A`.
 
-#### Arithmetic operations (to be deprecated)
-
-* **ADD A, B, C**: adds the contents of the registers `B` and `C` and saves
-  the result into the register `A`.
-* **SUB A, B, C**: substracts the contents of the register `C` from the
-  contents in `B` and saves the result into the register `A`.
-* **MUL A, B, C**: multiplies the contents of the registers `B` and `C` and saves
-  the result into the register `A`.
-* **DIV A, B, C**: divides the contents of the registers `B` and `C` and saves
-  the result into the register `A`.
-
 #### Branching
 
 * **JMP A**: unconditionally jumps `A` instructions.
