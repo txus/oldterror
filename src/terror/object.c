@@ -10,9 +10,6 @@
 #include <terror/gc.h>
 #include <assert.h>
 
-Object *Lobby;
-Object *NilObject;
-
 Object *Object_new()
 {
   Object *object = calloc(1, sizeof(Object));
