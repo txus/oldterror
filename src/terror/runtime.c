@@ -18,10 +18,13 @@ Object *Lobby = NULL;
 static inline Object *build_toplevel_object()
 {
   Object *object = Object_new_with_parent(Lobby);
+  debug("TOPLEVEL OBJECT IS %p", object);
 
   // Define basic native methods
   bstring name = bfromcstr("clone");
   Object_define_native_method(object, name, Primitive_Object_clone, 0);
+
+  debug("Object.clone IS %p", Object_get_slot(object, name));
 
   return object;
 }
@@ -42,12 +45,15 @@ static inline Object *build_primitive_object()
   Object_destroy(array);
   free(fields);
 
+  debug("VM.primitive IS %p", primitive);
+
   return primitive;
 }
 
 static inline Object *build_vm_object_from(Object *toplevel)
 {
   Object *vm = Object_new_with_parent(toplevel);
+  debug("VM IS %p", vm);
 
   Object *primitive = build_primitive_object();
   Object_register_slot(vm, bfromcstr("primitive"), retain(primitive));

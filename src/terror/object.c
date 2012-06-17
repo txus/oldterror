@@ -89,7 +89,13 @@ void Object_destroy(Object *object)
     }
 
     if(object->parent) {
-      release(object->parent);
+      // FIXME: Releasing toplevel Object causes segfault :(
+      /* printf("Me ("); */
+      /* Object_print(object); */
+      /* printf(") I am releasing my parent ("); */
+      /* Object_print(object->parent); */
+      /* printf(")\\n"); */
+      /* release(object->parent); */
     }
 
     free(object);
@@ -277,6 +283,11 @@ error:
 
 void Object_print(Object* object) {
   assert(object != NULL && "Cannot print null object");
+
+  if(object == Lobby) {
+    printf("Lobby");
+    return;
+  }
 
   switch(object->type) {
     case tInteger:

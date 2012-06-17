@@ -13,13 +13,13 @@ Object *FalseObject;
 Object *NilObject;
 Object *Lobby;
 
-int main(int argc, char const *argv[])
+Object *File_run(const char *name)
 {
-  if (!argv[1]) die("USAGE: ./vm filename.tvm");
-  bstring filename          = bfromcstr(argv[1]);
-  BytecodeFile *main_method = BytecodeFile_new(filename);
+  assert(Lobby != NULL && "Runtime has not been initialized");
+  debug("Executing %s", name);
 
-  Runtime_init();
+  bstring filename          = bfromcstr(name);
+  BytecodeFile *main_method = BytecodeFile_new(filename);
 
   Object *locals[main_method->locals_count];
 
@@ -35,13 +35,25 @@ int main(int argc, char const *argv[])
 
   Object *result = Machine_run(machine, Lobby);
 
+  Machine_destroy(machine);
+
+  return result;
+}
+
+int main(int argc, char const *argv[])
+{
+  if (!argv[1]) die("USAGE: ./vm filename.tvm");
+  Runtime_init();
+
+  File_run("kernel/prelude.tvm");
+  Object *result = File_run(argv[1]);
+
 #ifndef NDEBUG
   debug("---------- Return value");
   Object_print(result);
 #endif
 
   Object_destroy(result);
-  Machine_destroy(machine);
 
   Runtime_destroy();
 
